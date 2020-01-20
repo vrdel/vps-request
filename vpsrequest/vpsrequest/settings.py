@@ -11,10 +11,43 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from configparser import ConfigParser, NoSectionError
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Config parse
+# -vrdel
+VENV = '/data/vps-request/'
+APP_PATH = os.path.abspath(os.path.split(__file__)[0])
+CONFIG_FILE = '{}/etc/vpsrequest/vpsrequest.conf'.format(VENV)
+
+try:
+    config = ConfigParser()
+
+    if not config.read([CONFIG_FILE]):
+        raise ImproperlyConfigured('Unable to parse config file %s' % CONFIG_FILE)
+
+    # General
+    DEBUG = bool(config.get('GENERAL', 'debug'))
+
+    ALLOWED_HOSTS = config.get('SECURITY', 'AllowedHosts')
+    HOST_CERT = config.get('SECURITY', 'HostCert')
+    HOST_KEY = config.get('SECURITY', 'HostKey')
+
+except NoSectionError as e:
+    print(e)
+    raise SystemExit(1)
+
+except ImproperlyConfigured as e:
+    print(e)
+    raise SystemExit(1)
+
+if ',' in ALLOWED_HOSTS:
+    ALLOWED_HOSTS = [h.strip() for h in ALLOWED_HOSTS.split(',')]
+else:
+    ALLOWED_HOSTS = [ALLOWED_HOSTS]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -24,9 +57,6 @@ SECRET_KEY = 'b*d7p#f(xbo$bf68j*k@t-)3*r*hfi@w)gg-o(#%z03e@5e&jk'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 

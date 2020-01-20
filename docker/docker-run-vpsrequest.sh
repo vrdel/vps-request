@@ -2,7 +2,7 @@
 
 IMAGE="ipanema:5000/vps-request"
 VENV=/data/vps-request
-WORKDIR=$HOME/my_work/srce/
+WORKDIR=$HOME/my_work/srce/git.vps-request/vps-request/
 
 if [ -z "$1" ]
 then
@@ -17,7 +17,9 @@ docker run --privileged --rm --name vps-request -ti -p 80:80 -p 443:443 -p 8000:
 -v /etc/localtime:/etc/localtime:ro \
 --log-driver json-file --log-opt max-size=10m \
 -v /dev/log/:/dev/log \
--v $WORKDIR/git.vps-request/vps-request/vpsrequest/:$VENV/lib64/python3.5/site-packages/vpsrequest \
--v $WORKDIR/git.vps-request/vps-request/bin/vpsreq-db:$VENV/bin/vpsreq-db \
+-v $WORKDIR/vpsrequest/:$VENV/lib64/python3.5/site-packages/vpsrequest \
+-v $WORKDIR/bin/vpsreq-db:$VENV/bin/vpsreq-db \
+-v $WORKDIR/bin/vpsreq-manage:$VENV/bin/vpsreq-manage \
+-v $WORKDIR/etc/vpsrequest.conf:$VENV/etc/vpsrequest/vpsrequest.conf \
 $IMG \
 /bin/bash
