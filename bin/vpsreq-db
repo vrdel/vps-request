@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# RUNASUSER="apache"
+RUNASUSER="root"
+SITEPACK=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
+PYTHON=$(which python)
+DJANGO_SETTINGS="export DJANGO_SETTINGS_MODULE=vpsrequest.settings"
+MANAGEPY=$SITEPACK/vpsrequest/manage.py
+
+usage()
+{
+	printf "Usage: %s [argument]\n" $(basename $0) >&2
+	printf "       [-c]                                  - create database\n" >&2
+	printf "       [-l]                                  - list migrations\n" >&2
+	exit 2
+}
+
+if [[ $# == 0 ]]
+then
+    usage
+fi
+
+while getopts 'clh' OPTION
+do
+    case $OPTION in
+        c)
+            su -m -s /bin/sh $RUNASUSER -c \
+            "$DJANGO_SETTINGS && \
+            $PYTHON $MANAGEPY migrate"
+            ;;
+        l)
+            su -m -s /bin/sh $RUNASUSER -c \
+            "$DJANGO_SETTINGS && \
+            $PYTHON $MANAGEPY showmigrations"
+            ;;
+        h)
+            usage
+            ;;
+        ?)
+            usage
+            ;;
+    esac
+done
