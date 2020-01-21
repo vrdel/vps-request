@@ -12,6 +12,8 @@ usage()
 	printf "Usage: %s [argument]\n" $(basename $0) >&2
 	printf "       [-c]                                  - create database\n" >&2
 	printf "       [-l]                                  - list migrations\n" >&2
+	printf "       [-l]                                  - list migrations\n" >&2
+	printf "       [-u]                                  - create superuser\n" >&2
 	exit 2
 }
 
@@ -20,7 +22,7 @@ then
     usage
 fi
 
-while getopts 'clh' OPTION
+while getopts 'clhu' OPTION
 do
     case $OPTION in
         c)
@@ -33,6 +35,11 @@ do
             "$DJANGO_SETTINGS && \
             $PYTHON $MANAGEPY showmigrations"
             ;;
+        u)
+            su -m -s /bin/sh $RUNASUSER -c \
+            "$DJANGO_SETTINGS && \
+            $PYTHON $MANAGEPY superuser"
+             ;;
         h)
             usage
             ;;
