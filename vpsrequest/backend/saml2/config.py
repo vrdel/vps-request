@@ -39,7 +39,7 @@ def get_saml_config(request):
         'key_file': settings.HOST_KEY,  # private part
         'cert_file': settings.HOST_CERT,  # public part
         'metadata': {
-            'local': ['{}/etc/vpsrequest/metadata.xml'.format(settings.VENV)]
+            'local': [settings.SAML_METADATA]
         }
     }
 

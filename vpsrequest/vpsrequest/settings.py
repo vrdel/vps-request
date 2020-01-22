@@ -36,6 +36,8 @@ try:
     HOST_CERT = config.get('SECURITY', 'HostCert')
     HOST_KEY = config.get('SECURITY', 'HostKey')
 
+    SAML_METADATA = config.get('SAML2', 'Metadata')
+
 except NoSectionError as e:
     print(e)
     raise SystemExit(1)

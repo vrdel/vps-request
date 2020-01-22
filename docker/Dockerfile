@@ -10,7 +10,9 @@ RUN apt-get install -y \
     python3-pip \
     python3-venv \
     tree \
-    xmlsec1
+    xmlsec1 \
+    vim \
+    wget 
 RUN python3 -m venv /data/vps-request
 RUN . /data/vps-request/bin/activate && pip install wheel 
 RUN . /data/vps-request/bin/activate && pip install ipdb
