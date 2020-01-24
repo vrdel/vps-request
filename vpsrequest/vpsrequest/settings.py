@@ -54,6 +54,13 @@ else:
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
                            'authbackend.saml2.backends.SAML2Backend']
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211'
+    }
+}
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -165,3 +172,4 @@ LOGOUT_REDIRECT_URL = '/ui/login'
 SAML_CONFIG_LOADER = 'backend.saml2.config.get_saml_config'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_SAMESITE = None
+

@@ -6,13 +6,15 @@ RUN apt-get install -y \
     dialog \
     htop \
     libapache2-mod-wsgi-py3 \
+    memcached \
+    net-tools \
     python3 \
     python3-pip \
     python3-venv \
     tree \
-    xmlsec1 \
     vim \
-    wget 
+    wget \ 
+    xmlsec1
 RUN python3 -m venv /data/vps-request
 RUN . /data/vps-request/bin/activate && pip install wheel 
 RUN . /data/vps-request/bin/activate && pip install ipdb
