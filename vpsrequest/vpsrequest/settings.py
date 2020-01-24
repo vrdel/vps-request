@@ -51,6 +51,9 @@ if ',' in ALLOWED_HOSTS:
 else:
     ALLOWED_HOSTS = [ALLOWED_HOSTS]
 
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
+                           'authbackend.saml2.backends.SAML2Backend']
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
