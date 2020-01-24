@@ -101,7 +101,7 @@ ROOT_URLCONF = 'vpsrequest.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['{}/templates/'.format(APP_PATH)],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -113,6 +113,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'vpsrequest.wsgi.application'
 
@@ -165,6 +166,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '{}/share/vpsrequest/static/'.format(VENV)
+STATICFILES_DIRS = [os.path.join(APP_PATH, 'frontend/bundles/')]
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'reactbundle/',
+        'STATS_FILE': os.path.join(APP_PATH, 'webpack-stats.json')
+    }
+}
 
 # load SAML settings
 LOGIN_REDIRECT_URL = '/ui/home'
@@ -172,4 +182,3 @@ LOGOUT_REDIRECT_URL = '/ui/login'
 SAML_CONFIG_LOADER = 'backend.saml2.config.get_saml_config'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_SAMESITE = None
-

@@ -18,6 +18,7 @@ docker run --privileged --rm --name vps-request -ti -p 80:80 -p 443:443 -p 8000:
 --log-driver json-file --log-opt max-size=10m \
 -v /dev/log/:/dev/log \
 -v $WORKDIR/vpsrequest/:$VENV/lib64/python3.5/site-packages/vpsrequest \
+-v $WORKDIR/vpsrequest/static:$VENV/share/vpsrequest/static \
 -v $WORKDIR/bin/vpsreq-db:$VENV/bin/vpsreq-db \
 -v $WORKDIR/bin/vpsreq-manage:$VENV/bin/vpsreq-manage \
 -v $WORKDIR/etc/vpsrequest.conf:$VENV/etc/vpsrequest/vpsrequest.conf \
