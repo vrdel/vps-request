@@ -17,13 +17,15 @@ docker run --privileged --rm --name vps-request -ti -p 80:80 -p 443:443 -p 8000:
 -v /etc/localtime:/etc/localtime:ro \
 --log-driver json-file --log-opt max-size=10m \
 -v /dev/log/:/dev/log \
+-v $WORKDIR/docker/collectstatic.sh:/root/collectstatic.sh \
+-v $WORKDIR/docker/restarthttpd.sh:/root/restarthttpd.sh \
+-v $WORKDIR/docker/syncsite.sh:/root/syncsite.sh \
+-v $WORKDIR/docker/pysitepkg:/root/pysitepkg \
 -v $WORKDIR/vpsrequest/:$VENV/lib64/python3.5/site-packages/vpsrequest \
 -v $WORKDIR/vpsrequest/static:$VENV/share/vpsrequest/static \
 -v $WORKDIR/apache/vpsrequest.example.com.conf:/etc/apache2/sites-available/vpsrequest.example.com.conf \
 -v $WORKDIR/bin/vpsreq-db:$VENV/bin/vpsreq-db \
 -v $WORKDIR/bin/vpsreq-manage:$VENV/bin/vpsreq-manage \
 -v $WORKDIR/etc/vpsrequest.conf:$VENV/etc/vpsrequest/vpsrequest.conf \
--v $WORKDIR/docker/collectstatic.sh:/root/collectstatic.sh \
--v $WORKDIR/docker/syncsite.sh:/root/syncsite.sh \
 $IMG \
 /bin/bash
