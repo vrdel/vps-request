@@ -13,7 +13,7 @@ fi
 
 docker run --privileged --rm --name vps-request -ti -p 80:80 -p 443:443 -p 8000:8000 \
 -e ZDOTDIR=/mnt \
--v /home/dvrcic/:/mnt/ \
+-v $HOME:/mnt/ \
 -v /etc/localtime:/etc/localtime:ro \
 --log-driver json-file --log-opt max-size=10m \
 -v /dev/log/:/dev/log \
@@ -23,5 +23,7 @@ docker run --privileged --rm --name vps-request -ti -p 80:80 -p 443:443 -p 8000:
 -v $WORKDIR/bin/vpsreq-db:$VENV/bin/vpsreq-db \
 -v $WORKDIR/bin/vpsreq-manage:$VENV/bin/vpsreq-manage \
 -v $WORKDIR/etc/vpsrequest.conf:$VENV/etc/vpsrequest/vpsrequest.conf \
+-v $WORKDIR/docker/collectstatic.sh:/root/collectstatic.sh \
+-v $WORKDIR/docker/syncsite.sh:/root/syncsite.sh \
 $IMG \
 /bin/bash

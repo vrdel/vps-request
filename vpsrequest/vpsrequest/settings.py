@@ -167,12 +167,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '{}/share/vpsrequest/static/'.format(VENV)
-STATICFILES_DIRS = [os.path.join(APP_PATH, 'frontend/bundles/')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'frontend/bundles/')]
 
 WEBPACK_LOADER = {
     'DEFAULT': {
         'BUNDLE_DIR_NAME': 'reactbundle/',
-        'STATS_FILE': os.path.join(APP_PATH, 'webpack-stats.json')
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
     }
 }
 
