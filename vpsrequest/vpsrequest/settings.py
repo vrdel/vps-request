@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     'djangosaml2',
     'rest_framework',
     'rest_auth',
+    'webpack_loader',
     'frontend',
     'backend',
 ]
@@ -101,7 +102,7 @@ ROOT_URLCONF = 'vpsrequest.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['{}/templates/'.format(APP_PATH)],
+        'DIRS': ['{}/templates/'.format(BASE_DIR)],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -172,7 +173,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'frontend/bundles/')]
 WEBPACK_LOADER = {
     'DEFAULT': {
         'BUNDLE_DIR_NAME': 'reactbundle/',
-        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
+        'STATS_FILE': os.path.join(BASE_DIR, 'frontend/webpack-stats.json')
     }
 }
 

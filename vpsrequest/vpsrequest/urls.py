@@ -16,9 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    re_path(r'^ui', TemplateView.as_view(template_name='index.html')),
     re_path(r'^saml2/', include(('djangosaml2.urls', 'backend'), namespace='saml2')),
     re_path(r'^rest-auth/', include('rest_auth.urls'))
 ]
