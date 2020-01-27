@@ -3,10 +3,13 @@ MAINTAINER dvrcic@srce.hr
 RUN apt-get update -y
 RUN apt-get install -y \
     apache2 \
+    default-libmysqlclient-dev \
     dialog \
     htop \
     libapache2-mod-wsgi-py3 \
     memcached \
+    mysql-client \
+    mysql-server \
     net-tools \
     python3 \
     python3-pip \
