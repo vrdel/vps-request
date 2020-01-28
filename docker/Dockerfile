@@ -27,7 +27,8 @@ COPY collectstatic.sh /root
 COPY restarthttpd.sh /root
 COPY syncsite.sh /root
 COPY mysql_setup.sh /root
-COPY user.sql /root
+COPY create_dbuser.sql /root
+COPY 60-allifaces.cnf /etc/mysql/mariadb.conf.d/
 COPY entrypoint.sh /root
 RUN mkdir /root/pysitepkg
 RUN . /data/vps-request/bin/activate && pip install -U -r /root/requirements.txt
