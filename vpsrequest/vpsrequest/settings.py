@@ -38,6 +38,10 @@ try:
 
     SAML_METADATA = config.get('SAML2', 'Metadata')
 
+    DBNAME = config.get('DATABASE', 'name')
+    DBUSER = config.get('DATABASE', 'user')
+    DBPASSWORD = config.get('DATABASE', 'password')
+
 except NoSectionError as e:
     print(e)
     raise SystemExit(1)
@@ -124,10 +128,10 @@ WSGI_APPLICATION = 'vpsrequest.wsgi.application'
 
 DATABASES = {
     'default': {
-        'NAME': 'vpsreq',
+        'NAME': DBNAME,
         'ENGINE': 'django.db.backends.mysql',
-        'USER': 'dbuser',
-        'PASSWORD': 'dbuser'
+        'USER': DBUSER,
+        'PASSWORD': DBPASSWORD
     }
 }
 
