@@ -14,8 +14,10 @@ import os
 from configparser import ConfigParser, NoSectionError
 from django.core.exceptions import ImproperlyConfigured
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 # Config parse
 # -vrdel
@@ -55,6 +57,7 @@ if ',' in ALLOWED_HOSTS:
 else:
     ALLOWED_HOSTS = [ALLOWED_HOSTS]
 
+
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
                            'authbackend.saml2.backends.SAML2Backend']
 
@@ -76,6 +79,7 @@ DEBUG = True
 
 # Application definition
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -85,11 +89,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'djangosaml2',
     'rest_framework',
+    'rest_framework.authtoken',
     'rest_auth',
     'webpack_loader',
     'frontend',
     'backend',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -101,7 +107,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'vpsrequest.urls'
+
 
 TEMPLATES = [
     {
@@ -120,7 +128,16 @@ TEMPLATES = [
 ]
 
 
+# Django REST Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+
+
 WSGI_APPLICATION = 'vpsrequest.wsgi.application'
+
 
 
 # Database
