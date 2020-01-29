@@ -18,10 +18,11 @@ docker run --privileged --rm --name vps-request -ti \
 -v /etc/localtime:/etc/localtime:ro \
 --log-driver json-file --log-opt max-size=10m \
 -v /dev/log/:/dev/log \
--v $WORKDIR/docker/collectstatic.sh:/root/collectstatic.sh \
--v $WORKDIR/docker/restarthttpd.sh:/root/restarthttpd.sh \
--v $WORKDIR/docker/syncsite.sh:/root/syncsite.sh \
--v $WORKDIR/docker/pysitepkg:/root/pysitepkg \
+-v $WORKDIR:/root/vps-request \
+-v $WORKDIR/docker/collectstatic.sh:/home/user/collectstatic.sh \
+-v $WORKDIR/docker/restarthttpd.sh:/home/user/restarthttpd.sh \
+-v $WORKDIR/docker/syncsite.sh:/home/user/syncsite.sh \
+-v $WORKDIR/docker/pysitepkg:/home/user/pysitepkg \
 -v $WORKDIR/vpsrequest/:$VENV/lib64/python3.5/site-packages/vpsrequest \
 -v $WORKDIR/vpsrequest/static:$VENV/share/vpsrequest/static \
 -v $WORKDIR/apache/vpsrequest.example.com.conf:/etc/apache2/sites-available/vpsrequest.example.com.conf \

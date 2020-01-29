@@ -1,4 +1,4 @@
 #!/bin/bash
 
 /etc/init.d/mysql start
-mysql < /root/create_dbuser.sql
+mysql < /home/user/create_dbuser.sql
