@@ -31,6 +31,7 @@ COPY requirements.txt /home/user
 COPY collectstatic.sh /home/user
 COPY restarthttpd.sh /home/user
 COPY syncsite.sh /home/user
+COPY bundle_create.sh /home/user
 COPY mysql_setup.sh /home/user
 COPY create_dbuser.sql /home/user
 COPY 60-allifaces.cnf /etc/mysql/mariadb.conf.d/
