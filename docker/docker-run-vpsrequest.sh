@@ -18,7 +18,7 @@ docker run --privileged --rm --name vps-request -ti \
 -v /etc/localtime:/etc/localtime:ro \
 --log-driver json-file --log-opt max-size=10m \
 -v /dev/log/:/dev/log \
--v $WORKDIR:/root/vps-request \
+-v $WORKDIR/vpsrequest/frontend:/home/user/frontend \
 -v $WORKDIR/docker/collectstatic.sh:/home/user/collectstatic.sh \
 -v $WORKDIR/docker/restarthttpd.sh:/home/user/restarthttpd.sh \
 -v $WORKDIR/docker/syncsite.sh:/home/user/syncsite.sh \
