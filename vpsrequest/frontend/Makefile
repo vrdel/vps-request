@@ -9,9 +9,11 @@ prod-container:
 	node_modules/.bin/webpack --config webpack.config.js --progress --mode production
 
 devel:
-	docker exec -ti $(container_name) ./bundle_create.sh devel-container
-	docker exec -ti $(container_name) ./collectstatic.sh
+	docker exec -t $(container_name) ./wrap_make.sh devel-container
+	docker exec -t $(container_name) ./collectstatic.sh
+	docker exec -u root -t $(container_name) ./restarthttpd.sh
 
 prod:
-	docker exec -ti $(container_name) ./bundle_create.sh prod-container
-	docker exec -ti $(container_name) ./collectstatic.sh
+	docker exec -t $(container_name) ./wrap_make.sh prod-container
+	docker exec -t $(container_name) ./collectstatic.sh
+	docker exec -u root -t $(container_name) ./restarthttpd.sh
