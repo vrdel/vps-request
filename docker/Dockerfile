@@ -2,6 +2,7 @@ FROM debian:9
 MAINTAINER dvrcic@srce.hr
 RUN apt-get update -y
 RUN apt-get install -y \
+		curl \
     apache2 \
     default-libmysqlclient-dev \
     dialog \
@@ -19,6 +20,8 @@ RUN apt-get install -y \
     vim \
     wget \
     xmlsec1
+RUN curl -sL https://deb.nodesource.com/setup_12.x | /bin/bash -
+RUN apt-get install -y nodejs 
 RUN python3 -m venv /data/vps-request
 RUN . /data/vps-request/bin/activate && pip install wheel
 RUN . /data/vps-request/bin/activate && pip install ipdb
