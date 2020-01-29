@@ -165,7 +165,7 @@ class Login extends Component {
                   </Form>
                 </Formik>
               </CardBody>
-              <CardFooter id="vps-loginfooter">
+              <CardFooter id="vpsreq-loginfooter">
                 <Footer loginPage={true}/>
               </CardFooter>
             </Card>
