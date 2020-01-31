@@ -1,22 +1,18 @@
-#argo-contentwrap {
+#vpsreq-contentwrap {
   background-color: white;
 }
 #sidebar-grow {
   background-color: white;
   margin-bottom: 1px;
 }
-#argo-nav {
+#vpsreq-nav {
   background-color: #416090;
 }
 
-#argo-breadcrumb {
+#vpsreq-breadcrumb {
   background-color: #ecf0f5;
 }
 
-#sidebar-col {
-  max-width: 215px;
-}
-
-#argo-breadcrumb > ol {
+#vpsreq-breadcrumb > ol {
   background-color: #ecf0f5;
 }
