@@ -20,7 +20,6 @@ import {
   ModalFooter,
   Collapse} from 'reactstrap';
 import {Link} from 'react-router-dom';
-import './UIElements.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSignOutAlt,
@@ -31,20 +30,33 @@ import { NotificationManager } from 'react-notifications';
 import { Field } from 'formik';
 import Autocomplete from 'react-autocomplete';
 import { Backend } from './DataManager';
+import SrceLogo from './pravisrce.png';
+import SrceLogoTiny from './srce-logo-e-mail-sig.png';
 
+import './UIElements.css';
 
-var list_pages = ['administration','requests'];
+var list_pages = ['novi-zahtjevi', 'odobreni-zahtjevi', 'odbijeni-zahtjevi', 'zahtjevi-novi-vm', 'stanje-zahtjeva'];
 
 var link_title = new Map();
-link_title.set('administration', 'Administracija');
-link_title.set('requests', 'Zahtjevi');
+link_title.set('novi-zahtjevi', 'Novi zahtjevi');
+link_title.set('odobreni-zahtjevi', 'Odobreni zahtjevi');
+link_title.set('odbijeni-zahtjevi', 'Odbijeni zahtjevi');
+link_title.set('zahtjevi-novi-vm', 'Zahtjev za novim VM-om');
+link_title.set('stanje-zahtjeva', 'Stanje zahtjeva');
 
 
 export const Icon = props =>
 {
   let link_icon = new Map();
-  link_icon.set('administration', faWrench);
-  link_icon.set('requests', faFileAlt);
+  link_icon.set('novi-zahtjevi', faFileAlt);
+  link_icon.set('odobreni-zahtjevi', faFileAlt);
+  link_icon.set('odbijeni-zahtjevi', faFileAlt);
+  link_icon.set('zahtjevi-novi-vm', faFileAlt);
+  link_icon.set('stanje-zahtjeva', faFileAlt);
+
+  return <FontAwesomeIcon
+            icon={link_icon.get(props.i)}
+            size='1x' fixedWidth/>
 }
 
 
@@ -113,60 +125,6 @@ export const ModalAreYouSure = ({isOpen, toggle, title, msg, onYes}) =>
 )
 
 
-export const CustomBreadcrumb = ({location, history}) =>
-{
-  let spliturl = location.pathname.split('/');
-  let breadcrumb_elements = new Array();
-
-  breadcrumb_elements.push({'url': '/ui/home', 'title': 'Home'});
-  let two_level = new Object({'url': '/ui/' + spliturl[2]});
-  two_level['title'] = link_title.get(spliturl[2]);
-  breadcrumb_elements.push(two_level);
-
-  if (spliturl.length > 3) {
-    var three_level = new Object({'url': two_level['url'] + '/' + spliturl[3]});
-    three_level['title'] = two_level['title'] === 'Administration' ? link_title.get(spliturl[3]) : spliturl[3];
-    breadcrumb_elements.push(three_level)
-  }
-
-  if (spliturl.length > 4) {
-    var four_level = new Object({'url': three_level['url'] + '/' + spliturl[4]});
-    four_level['title'] = spliturl[4];
-    breadcrumb_elements.push(four_level)
-  }
-
-  if (spliturl.length > 5) {
-    var five_level = new Object({'url': four_level['url'] + '/' + spliturl[5]});
-    five_level['title'] = spliturl[5];
-    breadcrumb_elements.push(five_level);
-  }
-
-  if (spliturl.length > 6 && five_level['title'] === 'history') {
-    var six_level = new Object({'url': five_level['url'] + '/' + spliturl[6]});
-    six_level['title'] = spliturl[6];
-    breadcrumb_elements.push(six_level);
-  }
-
-  return (
-    <Breadcrumb id='vpsreq-breadcrumb' className="border-top rounded">
-      {
-        breadcrumb_elements.map((item, i) =>
-          i !== breadcrumb_elements.length - 1
-          ?
-            <BreadcrumbItem key={i}>
-              <Link to={item['url']}>{item['title']}</Link>
-            </BreadcrumbItem>
-          :
-            <BreadcrumbItem key={i} active>
-              {item['title']}
-            </BreadcrumbItem>
-        )
-      }
-    </Breadcrumb>
-  );
-}
-
-
 export const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal, msgModal}) =>
 (
   <React.Fragment>
@@ -208,32 +166,17 @@ export const NavigationLinks = ({location}) => {
   data = list_pages
 
   return (
-    <Nav vertical pills id="vpsreq-navlinks" className="border-left border-right border-top rounded-top sticky-top">
+    <Nav horizontal tabs id="vpsreq-navlinks" className="border-left border-right border-top rounded-top sticky-top">
         {
           data.map((item, i) =>
-            item === 'administration'
-              ?
-                localStorage.getItem('authIsSuperuser') === 'true'
-                  ?
-                    <NavItem key={i}>
-                      <NavLink
-                        tag={Link}
-                        active={location.pathname.includes(item) ? true : false}
-                        className={location.pathname.includes(item) ? "text-white bg-info" : "text-dark"}
-                        to={'/ui/' + item}><Icon i={item}/> {link_title.get(item)}
-                      </NavLink>
-                    </NavItem>
-                  :
-                    null
-              :
-                <NavItem key={i}>
-                  <NavLink
-                    tag={Link}
-                    active={location.pathname.split('/')[2] === item ? true : false}
-                    className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
-                    to={'/ui/' + item}><Icon i={item}/> {link_title.get(item)}
-                  </NavLink>
-                </NavItem>
+            <NavItem key={i}>
+              <NavLink
+                tag={Link}
+                active={location.pathname.split('/')[2] === item ? true : false}
+                className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
+                to={'/ui/' + item}><Icon i={item}/> {link_title.get(item)}
+              </NavLink>
+            </NavItem>
           )
         }
       </Nav>
@@ -241,32 +184,31 @@ export const NavigationLinks = ({location}) => {
 }
 
 
-const InnerFooter = ({border=false}) =>
-(
-  <React.Fragment>
-    {
-      border && <div className="pt-1"/>
-    }
-    <div className="text-center pt-1">
-      <a href="http://www.srce.unizg.hr/" title="University computing centre">SRCE</a>&nbsp;
-    </div>
-  </React.Fragment>
-)
-
-
 export const Footer = ({loginPage=false}) =>
 {
+  const InnerFooter = ({border=false, img=undefined}) =>
+  (
+    <React.Fragment>
+      {
+        border && <div className="pt-1"/>
+      }
+      <div className="text-center pt-1">
+        <img href="http://www.srce.unizg.hr/" src={img} id="srcelogo" alt="SRCE Logo"/>
+      </div>
+    </React.Fragment>
+  )
+
   if (!loginPage) {
     return (
       <div id="vpsreq-footer" className="border rounded">
-        <InnerFooter border={true}/>
+        <InnerFooter border={true} img={SrceLogo}/>
       </div>
     )
   }
   else {
     return (
       <div id="vpsreq-loginfooter">
-        <InnerFooter />
+        <InnerFooter img={SrceLogoTiny} />
       </div>
     )
   }
@@ -294,7 +236,7 @@ export const NotifyOk = ({msg='', title='', callback=undefined}) => {
 }
 
 
-export const BaseArgoView = ({resourcename='', location=undefined,
+export const BaseView = ({resourcename='', location=undefined,
     infoview=false, addview=false, listview=false, modal=false,
     state=undefined, toggle=undefined, submitperm=true, history=true,
     addnew=true, clone=false, cloneview=false, tenantview=false, children}) =>
