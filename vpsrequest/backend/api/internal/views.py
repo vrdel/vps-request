@@ -7,6 +7,7 @@ from rest_framework.exceptions import APIException
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from backend import serializers
+from django.conf import settings
 
 
 class NotFound(APIException):
@@ -17,7 +18,10 @@ class NotFound(APIException):
 
 
 class ListUsers(APIView):
-    authentication_classes = (SessionAuthentication,)
+    if settings.ALWAYS_LOGGEDIN:
+        authentication_classes = (SessionAuthentication,)
+    else:
+        authentication_classes = ()
 
     def get(self, request, username=None):
         if username:
@@ -91,3 +95,24 @@ class ListUsers(APIView):
 
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetConfigOptions(APIView):
+    authentication_classes = ()
+    permission_classes = ()
+
+    def get(self, request):
+        options = dict()
+
+        if settings.ALWAYS_LOGGEDIN:
+            options.update(AlwaysLoggedIn=settings.ALWAYS_LOGGEDIN)
+            options.update(SuperUser=settings.SUPERUSER_NAME)
+
+        return Response({'result': options})
+
+
+class IsSessionActive(APIView):
+    authentication_classes = (SessionAuthentication,)
+
+    def get(self, request):
+        return Response({'active': True})
