@@ -34,7 +34,7 @@ class Login extends Component {
   }
 
   isSaml2Logged() {
-    return fetch('/api/v2/internal/saml2login', {
+    return fetch('/api/v1/internal/saml2login', {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ class Login extends Component {
   flushSaml2Cache() {
     let cookies = new Cookies();
 
-    return fetch('/api/v2/internal/saml2login', {
+    return fetch('/api/v1/internal/saml2login', {
       method: 'DELETE',
       mode: 'cors',
       cache: 'no-cache',
@@ -80,7 +80,7 @@ class Login extends Component {
   }
 
   fetchUserDetails(username) {
-    return fetch('/api/v2/internal/users/' + username, {
+    return fetch('/api/v1/internal/users/' + username, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
