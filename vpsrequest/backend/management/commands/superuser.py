@@ -8,18 +8,6 @@ from configparser import ConfigParser
 
 # based on django/contrib/auth/management/commands/createsuperuser.py
 
-def superuser_conf():
-    config = ConfigParser()
-    config.read(settings.CONFIG_FILE)
-
-    SUPERUSER_NAME = config.get('SUPERUSER', 'name')
-    SUPERUSER_PASS = config.get('SUPERUSER', 'password')
-    SUPERUSER_EMAIL = config.get('SUPERUSER', 'email')
-
-    return {'SUPERUSER_NAME': SUPERUSER_NAME,
-            'SUPERUSER_PASS': SUPERUSER_PASS,
-            'SUPERUSER_EMAIL': SUPERUSER_EMAIL}
-
 
 class Command(BaseCommand):
     help = 'Used to create a superuser.'
@@ -30,12 +18,11 @@ class Command(BaseCommand):
         self.UserModel = get_user_model()
 
     def handle(self, *args, **kwargs):
-        data = superuser_conf()
         user_data = dict()
 
-        user_data[self.UserModel.USERNAME_FIELD] = data['SUPERUSER_NAME']
-        user_data['password'] = data['SUPERUSER_PASS']
-        user_data['email'] = data['SUPERUSER_EMAIL']
+        user_data[self.UserModel.USERNAME_FIELD] = settings.SUPERUSER_NAME
+        user_data['password'] = settings.SUPERUSER_PASS
+        user_data['email'] = settings.SUPERUSER_EMAIL
 
         try:
             self.UserModel._default_manager.db_manager(DEFAULT_DB_ALIAS).create_superuser(**user_data)

@@ -32,7 +32,8 @@ try:
         raise ImproperlyConfigured('Unable to parse config file %s' % CONFIG_FILE)
 
     # General
-    DEBUG = bool(config.get('GENERAL', 'debug'))
+    DEBUG = bool(config.getboolean('GENERAL', 'debug'))
+    ALWAYS_LOGGEDIN = bool(config.getboolean('GENERAL', 'alwaysloggedin'))
 
     ALLOWED_HOSTS = config.get('SECURITY', 'AllowedHosts')
     HOST_CERT = config.get('SECURITY', 'HostCert')
@@ -43,6 +44,10 @@ try:
     DBNAME = config.get('DATABASE', 'name')
     DBUSER = config.get('DATABASE', 'user')
     DBPASSWORD = config.get('DATABASE', 'password')
+
+    SUPERUSER_NAME = config.get('SUPERUSER', 'name')
+    SUPERUSER_PASS = config.get('SUPERUSER', 'password')
+    SUPERUSER_EMAIL = config.get('SUPERUSER', 'email')
 
 except NoSectionError as e:
     print(e)
