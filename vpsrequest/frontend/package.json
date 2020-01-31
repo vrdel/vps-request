@@ -47,9 +47,9 @@
     "url-loader": "^1.1.2"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.17",
-    "@fortawesome/free-solid-svg-icons": "^5.8.1",
-    "@fortawesome/react-fontawesome": "^0.1.4",
+    "@fortawesome/fontawesome-svg-core": "^1.2.26",
+    "@fortawesome/free-solid-svg-icons": "^5.12.0",
+    "@fortawesome/react-fontawesome": "^0.1.8",
     "react": "^16.12.0",
     "react-autocomplete": "^1.8.1",
     "react-dom": "^16.12.0",
