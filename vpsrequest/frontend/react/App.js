@@ -13,7 +13,6 @@ import './App.css';
 
 const NavigationBarWithRouter = withRouter(NavigationBar);
 const NavigationLinksWithRouter = withRouter(NavigationLinks);
-const CustomBreadcrumbWithRouter = withRouter(CustomBreadcrumb);
 
 
 class App extends Component {
@@ -140,12 +139,8 @@ class App extends Component {
               </Col>
             </Row>
             <Row className="no-gutters">
-              <Col sm={{size: 2}} md={{size: 2}} id="sidebar-col" className="d-flex flex-column">
-                <NavigationLinksWithRouter />
-                <div id="sidebar-grow" className="flex-grow-1 border-left border-right rounded-bottom"/>
-              </Col>
               <Col>
-                <CustomBreadcrumbWithRouter />
+                <NavigationLinksWithRouter />
                 <Switch>
                 </Switch>
               </Col>
