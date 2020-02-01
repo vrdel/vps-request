@@ -1,18 +1,19 @@
+from backend import serializers
+
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.core.cache import cache
+from django.db import IntegrityError
+
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import APIException
 
-from django.contrib.auth import get_user_model
-from django.db import IntegrityError
-from backend import serializers
-from django.conf import settings
-
 
 class BaseProtectedAPIView(APIView):
     if settings.ALWAYS_LOGGEDIN:
-        print(settings.ALWAYS_LOGGEDIN)
         authentication_classes = ()
         permission_classes = ()
     else:
@@ -118,3 +119,28 @@ class GetConfigOptions(APIView):
 class IsSessionActive(BaseProtectedAPIView):
     def get(self, request):
         return Response({'active': True})
+
+
+class Saml2Login(BaseProtectedAPIView):
+    keys = ['username', 'first_name', 'last_name', 'is_superuser']
+
+    def _prefix(self, keys):
+        return ['saml2_' + key for key in keys]
+
+    def _remove_prefix(self, keys):
+        new_keys = dict()
+
+        for k, v in keys.items():
+            new_keys[k.split('saml2_')[1]] = v
+
+        return new_keys
+
+    def get(self, request):
+        result = cache.get_many(self._prefix(self.keys))
+
+        return Response(self._remove_prefix(result))
+
+    def delete(self, request):
+        cache.delete_many(self._prefix(self.keys))
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

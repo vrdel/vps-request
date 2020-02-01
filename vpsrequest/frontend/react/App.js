@@ -4,7 +4,7 @@ import Home from './Home';
 import NotFound from './NotFound';
 import { Route, Switch, BrowserRouter, Redirect, withRouter } from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
-import { NavigationBar, CustomBreadcrumb, NavigationLinks, Footer } from './UIElements';
+import { NavigationBar, NavigationLinks, Footer } from './UIElements';
 import { NotificationContainer } from 'react-notifications';
 import { Backend } from './DataManager';
 import Cookies from 'universal-cookie';
