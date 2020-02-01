@@ -25,12 +25,18 @@ class Login extends Component {
     this._isMounted = false;
 
     this.state = {
-      samlIdpString: null,
       loginFailedVisible: false,
-      isTenantSchema: null
     };
 
     this.dismissLoginAlert = this.dismissLoginAlert.bind(this);
+  }
+
+  fetchConfigOptions() {
+    return fetch('/api/v1/internal/config_options')
+      .then(response => {
+        if (response.ok)
+          return response.json()
+      })
   }
 
   isSaml2Logged() {
@@ -61,18 +67,27 @@ class Login extends Component {
   componentDidMount() {
     this._isMounted = true;
 
-      this.isSaml2Logged().then(response => {
-        response.ok && response.json().then(
-          json => {
-            if (Object.keys(json).length > 0) {
-              this.flushSaml2Cache().then(
-                response => response.ok &&
-                  this.props.onLogin(json, this.props.history)
-              )
+    this.fetchConfigOptions().then(json => {
+      if (json.result.AlwaysLoggedIn) {
+        this.fetchUserDetails(json.result.SuperUser)
+          .then(response => response.json())
+          .then(json => this.props.onLogin(json, this.props.history))
+      }
+      else {
+        this.isSaml2Logged().then(response => {
+          response.ok && response.json().then(
+            json => {
+              if (Object.keys(json).length > 0) {
+                this.flushSaml2Cache().then(
+                  response => response.ok &&
+                    this.props.onLogin(json, this.props.history)
+                )
+              }
             }
-          }
-        )
-      })
+          )
+        })
+      }
+    })
   }
 
   componentWillUnmount() {

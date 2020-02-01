@@ -10,6 +10,15 @@ from backend import serializers
 from django.conf import settings
 
 
+class BaseProtectedAPIView(APIView):
+    if settings.ALWAYS_LOGGEDIN:
+        print(settings.ALWAYS_LOGGEDIN)
+        authentication_classes = ()
+        permission_classes = ()
+    else:
+        authentication_classes = (SessionAuthentication,)
+
+
 class NotFound(APIException):
     def __init__(self, status, detail, code=None):
         self.status_code = status
@@ -17,12 +26,7 @@ class NotFound(APIException):
         self.code = code if code else detail
 
 
-class ListUsers(APIView):
-    if settings.ALWAYS_LOGGEDIN:
-        authentication_classes = (SessionAuthentication,)
-    else:
-        authentication_classes = ()
-
+class ListUsers(BaseProtectedAPIView):
     def get(self, request, username=None):
         if username:
             try:
@@ -111,8 +115,6 @@ class GetConfigOptions(APIView):
         return Response({'result': options})
 
 
-class IsSessionActive(APIView):
-    authentication_classes = (SessionAuthentication,)
-
+class IsSessionActive(BaseProtectedAPIView):
     def get(self, request):
         return Response({'active': True})
