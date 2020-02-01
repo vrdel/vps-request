@@ -136,7 +136,7 @@ class Login extends Component {
               <CardHeader
                 id='vpsreq-loginheader'
                 className="d-sm-inline-flex align-items-center justify-content-around">
-                <h4 className="text-light"><strong>VPS Srce</strong></h4>
+                <h4 className="text-dark"><strong>VPS Zahtjev</strong></h4>
               </CardHeader>
               <CardBody>
                 <Formik

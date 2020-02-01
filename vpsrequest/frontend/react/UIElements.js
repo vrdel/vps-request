@@ -30,8 +30,9 @@ import { NotificationManager } from 'react-notifications';
 import { Field } from 'formik';
 import Autocomplete from 'react-autocomplete';
 import { Backend } from './DataManager';
-import SrceLogo from './pravisrce.png';
+import SrceLogo from './pravisrce-smaller.png';
 import SrceLogoTiny from './srce-logo-e-mail-sig.png';
+import CloudLogo from './logo_cloud.png';
 
 import './UIElements.css';
 
@@ -45,8 +46,7 @@ link_title.set('zahtjevi-novi-vm', 'Zahtjev za novim VM-om');
 link_title.set('stanje-zahtjeva', 'Stanje zahtjeva');
 
 
-export const Icon = props =>
-{
+export const Icon = props => {
   let link_icon = new Map();
   link_icon.set('novi-zahtjevi', faFileAlt);
   link_icon.set('odobreni-zahtjevi', faFileAlt);
@@ -87,8 +87,7 @@ export const SearchField = ({form, field, ...rest}) =>
   </div>
 
 
-const doLogout = (history, onLogout) =>
-{
+const doLogout = (history, onLogout) => {
   let cookies = new Cookies();
 
   onLogout();
@@ -107,8 +106,7 @@ const doLogout = (history, onLogout) =>
 }
 
 
-export const ModalAreYouSure = ({isOpen, toggle, title, msg, onYes}) =>
-(
+export const ModalAreYouSure = ({isOpen, toggle, title, msg, onYes}) => (
   <Modal isOpen={isOpen} toggle={toggle}>
     <ModalHeader toggle={toggle}>{title}</ModalHeader>
     <ModalBody>
@@ -125,8 +123,7 @@ export const ModalAreYouSure = ({isOpen, toggle, title, msg, onYes}) =>
 )
 
 
-export const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal, msgModal}) =>
-(
+export const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal, msgModal}) => (
   <React.Fragment>
     <ModalAreYouSure
       isOpen={isOpenModal}
@@ -134,28 +131,34 @@ export const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModa
       title={titleModal}
       msg={msgModal}
       onYes={() => doLogout(history, onLogout)} />
-    <Navbar expand="md" id="vpsreq-nav" className="border rounded">
-      <NavbarBrand className="text-light">
-        <span className="pl-3">
-          Zahtjev za virtualnim poslužiteljem (VM) u usluzi Virtual Private Server
-        </span>
+    <Navbar expand="md" id="vpsreq-nav" className="border rounded d-flex justify-content-between pt-3 pb-3">
+      <NavbarBrand className="text-dark">
+        <img src={CloudLogo} id="cloud logo" alt="VPS Cloud Logo"/>
       </NavbarBrand>
-      <NavbarToggler/>
-      <Collapse navbar className='justify-content-end'>
-        <Nav navbar >
-          <NavItem className='m-2 text-light'>
-            Welcome, {localStorage.getItem('authUsername')}
-          </NavItem>
-          <NavItem className='m-2'>
-            <Button
-              id="vpsreq-navbar-logout"
-              size="sm"
-              onClick={() => toggle()}>
-              <FontAwesomeIcon icon={faSignOutAlt} />
-            </Button>
-          </NavItem>
-        </Nav>
-      </Collapse>
+      <Nav navbar className="m-1">
+        <span className="pl-3 font-weight-bold text-center">
+          <h3>
+            Zahtjev za virtualnim poslužiteljem (VM) u usluzi Virtual Private Server
+          </h3>
+        </span>
+      </Nav>
+      <Nav navbar >
+        <NavItem className='m-2 text-dark'>
+          <React.Fragment>
+            Dobrodošli,
+            <br/>
+            <strong>{localStorage.getItem('authUsername')}</strong>
+          </React.Fragment>
+        </NavItem>
+        <NavItem className='m-2 text-light'>
+          <Button
+            size="sm"
+            className='btn-danger'
+            onClick={() => toggle()}>
+            <FontAwesomeIcon icon={faSignOutAlt} color="white" />
+          </Button>
+        </NavItem>
+      </Nav>
     </Navbar>
   </React.Fragment>
 )
@@ -166,33 +169,29 @@ export const NavigationLinks = ({location}) => {
   data = list_pages
 
   return (
-    <Nav horizontal tabs id="vpsreq-navlinks" className="border-left border-right border-top rounded-top sticky-top">
-        {
-          data.map((item, i) =>
-            <NavItem key={i}>
-              <NavLink
-                tag={Link}
-                active={location.pathname.split('/')[2] === item ? true : false}
-                className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
-                to={'/ui/' + item}><Icon i={item}/> {link_title.get(item)}
-              </NavLink>
-            </NavItem>
-          )
-        }
-      </Nav>
-    )
+    <Nav tabs id="vpsreq-navlinks" className="d-flex justify-content-center border-left border-right border-top rounded-top sticky-top pl-3 pr-3">
+      {
+        data.map((item, i) =>
+          <NavItem key={i} className='mt-1 mr-2'>
+            <NavLink
+              tag={Link}
+              active={location.pathname.split('/')[2] === item ? true : false}
+              className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
+              to={'/ui/' + item}><Icon i={item}/> {link_title.get(item)}
+            </NavLink>
+          </NavItem>
+        )
+      }
+    </Nav>
+  )
 }
 
 
-export const Footer = ({loginPage=false}) =>
-{
+export const Footer = ({loginPage=false}) => {
   const InnerFooter = ({border=false, img=undefined}) =>
   (
     <React.Fragment>
-      {
-        border && <div className="pt-1"/>
-      }
-      <div className="text-center pt-1">
+      <div className={`text-center ${border && 'pt-2 pb-2'}`}>
         <img href="http://www.srce.unizg.hr/" src={img} id="srcelogo" alt="SRCE Logo"/>
       </div>
     </React.Fragment>
@@ -215,8 +214,7 @@ export const Footer = ({loginPage=false}) =>
 }
 
 
-export const LoadingAnim = () =>
-(
+export const LoadingAnim = () => (
   <Card className="text-center">
     <CardHeader className="bg-light">
       <h4 className="text-dark">Loading data...</h4>

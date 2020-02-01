@@ -126,7 +126,7 @@ class App extends Component {
     else if (this.state.isLogged && cookie) {
       return (
         <BrowserRouter>
-          <Container fluid>
+          <Container>
             <Row>
               <NotificationContainer />
               <Col>
