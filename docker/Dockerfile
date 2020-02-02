@@ -27,18 +27,18 @@ RUN apt-get install -y nodejs
 RUN python3 -m venv /data/vps-request
 RUN . /data/vps-request/bin/activate && pip install wheel
 RUN . /data/vps-request/bin/activate && pip install ipdb
-COPY requirements.txt /home/user
-COPY collectstatic.sh /home/user
-COPY restarthttpd.sh /home/user
-COPY syncsite.sh /home/user
-COPY wrap_make.sh /home/user
-COPY mysql_setup.sh /home/user
-COPY create_dbuser.sql /home/user
+COPY \
+     create_dbuser.sql \
+     entrypoint.sh\
+     mysql_setup.sh \
+     requirements.txt \
+     wrap_make.sh \
+     /home/user/
 COPY 60-allifaces.cnf /etc/mysql/mariadb.conf.d/
-COPY entrypoint.sh /home/user/
 RUN mkdir /home/user/pysitepkg
 RUN . /data/vps-request/bin/activate && pip install -U -r /home/user/requirements.txt
 RUN /home/user/mysql_setup.sh
+COPY key.pem cert.pem /data/vps-request/etc/vpsrequest/
 USER user
 WORKDIR /home/user
 ENTRYPOINT ["/home/user/entrypoint.sh"]
