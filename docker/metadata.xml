@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="https://fed-lab.aaiedu.hr/sso/saml2/idp/metadata.php">
+  <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:Extensions>
+      <mdui:UIInfo xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui">
+        <mdui:DisplayName xml:lang="en">AAI@EduHr Federation Lab Single Sign-On Service</mdui:DisplayName>
+        <mdui:DisplayName xml:lang="hr">AAI@EduHr razvojno okru&#x17E;enje sustava jedinstvene autentikacije korisnika</mdui:DisplayName>
+        <mdui:Description xml:lang="en">Federation Lab Central Login Service for the AAI@EduHr Federation</mdui:Description>
+        <mdui:Description xml:lang="hr">Sredi&#x161;nji autentikacijski servis AAI@EduHr federacije namijenjen razvoju i testiranju novih aplikacija</mdui:Description>
+      </mdui:UIInfo>
+    </md:Extensions>
+    <md:KeyDescriptor use="signing">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>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</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:KeyDescriptor use="encryption">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>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</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://fed-lab.aaiedu.hr/sso/saml2/idp/SingleLogoutService.php"/>
+    <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://fed-lab.aaiedu.hr/sso/saml2/idp/SSOService.php"/>
+  </md:IDPSSODescriptor>
+  <md:Organization>
+    <md:OrganizationName xml:lang="en">AAI@EduHr</md:OrganizationName>
+    <md:OrganizationName xml:lang="hr">AAI@EduHr</md:OrganizationName>
+    <md:OrganizationDisplayName xml:lang="en">AAI@EduHr - Croatian Research and Education Federation</md:OrganizationDisplayName>
+    <md:OrganizationDisplayName xml:lang="hr">AAI@EduHr - Autentikacijska i autorizacijska infrastruktura sustava znanosti i visokog obrazovanja u Republici Hrvatskoj</md:OrganizationDisplayName>
+    <md:OrganizationURL xml:lang="en">http://www.aaiedu.hr/en</md:OrganizationURL>
+    <md:OrganizationURL xml:lang="hr">http://www.aaiedu.hr</md:OrganizationURL>
+  </md:Organization>
+  <md:ContactPerson contactType="technical">
+    <md:GivenName>AAI@EduHr technical support service</md:GivenName>
+    <md:EmailAddress>aosi@aaiedu.hr</md:EmailAddress>
+  </md:ContactPerson>
+</md:EntityDescriptor>

@@ -39,7 +39,7 @@ COPY 60-allifaces.cnf /etc/mysql/mariadb.conf.d/
 RUN mkdir /home/user/pysitepkg
 RUN . ${virtenvdir}/bin/activate && pip install -U -r /home/user/requirements.txt
 RUN /home/user/mysql_setup.sh
-COPY key.pem cert.pem ${virtenvdir}/etc/vpsrequest/
+COPY key.pem cert.pem metadata.xml ${virtenvdir}/etc/vpsrequest/
 USER user
 WORKDIR /home/user
 ENTRYPOINT ["/home/user/entrypoint.sh"]
