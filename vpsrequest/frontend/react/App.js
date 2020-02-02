@@ -134,8 +134,8 @@ class App extends Component {
                   onLogout={this.onLogout}
                   isOpenModal={this.state.areYouSureModal}
                   toggle={this.toggleAreYouSure}
-                  titleModal='Log out'
-                  msgModal='Are you sure you want to log out?'/>
+                  titleModal='Odjava'
+                  msgModal='Da li ste sigurno da se želite odjaviti?'/>
               </Col>
             </Row>
             <Row className="no-gutters">
