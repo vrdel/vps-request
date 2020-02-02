@@ -30,7 +30,7 @@ import { NotificationManager } from 'react-notifications';
 import { Field } from 'formik';
 import Autocomplete from 'react-autocomplete';
 import { Backend } from './DataManager';
-import SrceLogo from './logos/pravisrce-smaller.png';
+import SrceLogo from './logos/pravisrce.png';
 import SrceLogoTiny from './logos/srce-logo-e-mail-sig.png';
 import CloudLogo from './logos/logo_cloud.png';
 

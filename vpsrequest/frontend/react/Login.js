@@ -15,6 +15,7 @@ import {Formik, Field, Form} from 'formik';
 import './Login.css';
 import {Footer} from './UIElements.js';
 import Cookies from 'universal-cookie';
+import CloudLogoSmall from './logos/logo_cloud-smaller.png';
 
 
 class Login extends Component {
@@ -136,6 +137,7 @@ class Login extends Component {
               <CardHeader
                 id='vpsreq-loginheader'
                 className="d-sm-inline-flex align-items-center justify-content-around">
+                <img src={CloudLogoSmall} id="cloud logo" alt="VPS Cloud Logo"/>
                 <h4 className="text-dark"><strong>VPS Zahtjev</strong></h4>
               </CardHeader>
               <CardBody>
