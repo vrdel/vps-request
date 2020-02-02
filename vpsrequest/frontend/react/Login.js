@@ -159,24 +159,24 @@ class Login extends Component {
                   }>
                   <Form>
                     <FormGroup>
-                      <Label for="username">Username: </Label>
+                      <Label for="username">Korisničko ime: </Label>
                       <Field name="username" className="form-control"/>
                     </FormGroup>
                     <FormGroup>
-                      <Label for="password">Password: </Label>
+                      <Label for="password">Lozinka: </Label>
                       <Field name="password" className="form-control" type="password"/>
                     </FormGroup>
                     <FormGroup>
                       <Alert color="danger" isOpen={this.state.loginFailedVisible} toggle={this.dismissLoginAlert} fade={false}>
                         <p className="text-center">
-                          Login failed, invalid username and password provided
+                          Prijava neuspjela, pogrešno korisničko ime i lozinka
                         </p>
                       </Alert>
                     </FormGroup>
                     <div className="pt-3">
                     </div>
                     <FormGroup>
-                      <Button color="success" type="submit" block>Log in using username and password</Button>
+                      <Button color="success" type="submit" block>Prijava korisničkim imenom i lozinkom</Button>
                       <a className="btn btn-success btn-block" role="button" href="/saml2/login">AAI @ EduHR</a>
                     </FormGroup>
                   </Form>
