@@ -1,5 +1,6 @@
 FROM debian:9
 MAINTAINER dvrcic@srce.hr
+ENV virtenvdir /data/vps-request/
 RUN groupadd user -g 1000 && useradd -u 1000 -g 1000 user -m -d /home/user
 RUN passwd -d root
 RUN apt-get update -y
@@ -25,8 +26,8 @@ RUN apt-get install -y \
 RUN curl -sL https://deb.nodesource.com/setup_12.x | /bin/bash -
 RUN apt-get install -y nodejs
 RUN python3 -m venv /data/vps-request
-RUN . /data/vps-request/bin/activate && pip install wheel
-RUN . /data/vps-request/bin/activate && pip install ipdb
+RUN . ${virtenvdir}/bin/activate && pip install wheel
+RUN . ${virtenvdir}/bin/activate && pip install ipdb
 COPY \
      create_dbuser.sql \
      entrypoint.sh\
@@ -36,9 +37,9 @@ COPY \
      /home/user/
 COPY 60-allifaces.cnf /etc/mysql/mariadb.conf.d/
 RUN mkdir /home/user/pysitepkg
-RUN . /data/vps-request/bin/activate && pip install -U -r /home/user/requirements.txt
+RUN . ${virtenvdir}/bin/activate && pip install -U -r /home/user/requirements.txt
 RUN /home/user/mysql_setup.sh
-COPY key.pem cert.pem /data/vps-request/etc/vpsrequest/
+COPY key.pem cert.pem ${virtenvdir}/etc/vpsrequest/
 USER user
 WORKDIR /home/user
 ENTRYPOINT ["/home/user/entrypoint.sh"]
