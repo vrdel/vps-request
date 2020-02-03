@@ -42,7 +42,7 @@ class App extends Component {
     localStorage.setItem('authIsSuperuser', json.is_superuser);
     this.initalizeState(true, true).then(
       setTimeout(() => {
-        history.push('/ui/home');
+        history.push('/ui/novi-zahtjevi');
       }, 50
     )).then(this.cookies.set('activeSession', true))
   }
@@ -104,17 +104,17 @@ class App extends Component {
           <Switch>
             <Route
               exact
-              path="/ui/login"
+              path="/ui/prijava"
               render={props =>
                   <Login onLogin={this.onLogin} {...props} />
               }
             />
             <Route
               exact
-              path="/ui/(home|requests)"
+              path="/ui/(prijava|novi-zahtjevi)"
               render={props => (
                 <Redirect to={{
-                  pathname: '/ui/login',
+                  pathname: '/ui/prijava',
                   state: {from: props.location}
                 }}/>
               )}/>
@@ -135,7 +135,7 @@ class App extends Component {
                   isOpenModal={this.state.areYouSureModal}
                   toggle={this.toggleAreYouSure}
                   titleModal='Odjava'
-                  msgModal='Da li ste sigurno da se želite odjaviti?'/>
+                  msgModal='Da li ste sigurni da se želite odjaviti?'/>
               </Col>
             </Row>
             <Row className="no-gutters">
