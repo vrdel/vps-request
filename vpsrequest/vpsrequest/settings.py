@@ -38,6 +38,7 @@ try:
     ALLOWED_HOSTS = config.get('SECURITY', 'AllowedHosts')
     HOST_CERT = config.get('SECURITY', 'HostCert')
     HOST_KEY = config.get('SECURITY', 'HostKey')
+    SECRET_KEY_FILE = config.get('SECURITY', 'SecretKeyFile')
 
     SAML_METADATA = config.get('SAML2', 'Metadata')
 
@@ -77,7 +78,11 @@ CACHES = {
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'b*d7p#f(xbo$bf68j*k@t-)3*r*hfi@w)gg-o(#%z03e@5e&jk'
+try:
+    SECRET_KEY = open(SECRET_KEY_FILE, 'r').read()
+except Exception as e:
+    print(SECRET_KEY_FILE + ': %s' % repr(e))
+    raise SystemExit(1)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
