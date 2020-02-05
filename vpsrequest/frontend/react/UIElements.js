@@ -25,7 +25,11 @@ import {
   faSignOutAlt,
   faSearch,
   faWrench,
-  faFileAlt} from '@fortawesome/free-solid-svg-icons';
+  faFileAlt,
+  faFileSignature,
+  faHandshake,
+  faThumbsDown,
+  faBatteryHalf} from '@fortawesome/free-solid-svg-icons';
 import { NotificationManager } from 'react-notifications';
 import { Field } from 'formik';
 import Autocomplete from 'react-autocomplete';
@@ -49,10 +53,10 @@ link_title.set('stanje-zahtjeva', 'Stanje zahtjeva');
 export const Icon = props => {
   let link_icon = new Map();
   link_icon.set('novi-zahtjevi', faFileAlt);
-  link_icon.set('odobreni-zahtjevi', faFileAlt);
-  link_icon.set('odbijeni-zahtjevi', faFileAlt);
-  link_icon.set('zahtjevi-novi-vm', faFileAlt);
-  link_icon.set('stanje-zahtjeva', faFileAlt);
+  link_icon.set('odobreni-zahtjevi', faHandshake);
+  link_icon.set('odbijeni-zahtjevi', faThumbsDown);
+  link_icon.set('zahtjevi-novi-vm', faFileSignature);
+  link_icon.set('stanje-zahtjeva', faBatteryHalf);
 
   return <FontAwesomeIcon
             icon={link_icon.get(props.i)}
