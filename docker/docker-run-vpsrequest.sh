@@ -11,7 +11,7 @@ else
 	IMG="$IMAGE:$1"
 fi
 
-docker run --privileged --rm --name vps-request -ti \
+docker run --net vrdel-net --ip 172.18.0.10 --privileged --rm --name vps-request -ti \
 	-p 80:80 -p 443:443 -p 3306:3306 -p 8000:8000 \
 -e ZDOTDIR=/mnt \
 -v $HOME:/mnt/ \
