@@ -30,6 +30,5 @@ docker run --privileged --rm --name vps-request -ti \
 -v $WORKDIR/bin/vpsreq-manage:$VENV/bin/vpsreq-manage \
 -v $WORKDIR/bin/vpsreq-genseckey:$VENV/bin/vpsreq-genseckey \
 -v $WORKDIR/etc/vpsrequest.conf:$VENV/etc/vpsrequest/vpsrequest.conf \
--v $WORKDIR/etc/security:$VENV/etc/vpsrequest/security \
 $IMG \
 /bin/bash
