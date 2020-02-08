@@ -1,17 +1,9 @@
 from django.db import models
-from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
-class UserProfile(models.Model):
-    class Meta:
-        app_label = 'backend'
-
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
-    )
-
+class User(AbstractUser):
     aaieduhr = models.CharField(
         'hrEduPersonUniqueID',
         max_length=256,

@@ -12,7 +12,6 @@ usage()
 	printf "Usage: %s [argument]\n" $(basename $0) >&2
 	printf "       [-c]                                  - create database\n" >&2
 	printf "       [-l]                                  - list migrations\n" >&2
-	printf "       [-l]                                  - list migrations\n" >&2
 	printf "       [-u]                                  - create superuser\n" >&2
 	printf "       [-m]                                  - create new migrations\n" >&2
 	exit 2

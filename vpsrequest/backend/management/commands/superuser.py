@@ -25,7 +25,11 @@ class Command(BaseCommand):
         user_data['email'] = settings.SUPERUSER_EMAIL
 
         try:
-            self.UserModel._default_manager.db_manager(DEFAULT_DB_ALIAS).create_superuser(**user_data)
+            user = self.UserModel._default_manager.db_manager(DEFAULT_DB_ALIAS).create_superuser(**user_data)
+            user.aaieduhr = None
+            user.institution = 'SRCE'
+            user.role = 'Superuser'
+            user.save()
             self.stdout.write("Superuser created successfully.")
         except IntegrityError:
             self.stderr.write("Superuser already created.")
