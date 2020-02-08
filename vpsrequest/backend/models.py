@@ -24,6 +24,10 @@ class User(AbstractUser):
     )
 
 class Request(models.Model):
+    class Meta:
+        permissions = (
+            ("approve_request", "Can approve request"),
+        )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     timestamp = models.DateTimeField('Request update')
     location = models.CharField(
