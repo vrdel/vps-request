@@ -10,26 +10,43 @@ import { LoadingAnim, BaseView } from './UIElements.js';
 import { Formik, Form, Field } from 'formik';
 
 
-const RowRequestField = ({label='', labelFor='', refValue=''}) =>
-(
-  <Row className="form-group align-items-center">
-    <Col md={{size:2, offset: 1}} className="d-flex justify-content-end">
-      <Label
-        for={labelFor}
-        className="mr-2">
-        {label}
-      </Label>
-    </Col>
+const RowRequestField = ({label='', labelFor='', refValue='', fieldType="input"}) =>
+{
+  const RequestInputField = (props) => (
     <Col md={{size: 7}}>
       <Field
-        type="text"
-        name={refValue}
         className="form-control"
-        id={labelFor}
+        {...props}
       />
     </Col>
-  </Row>
-)
+  )
+
+  return (
+    <Row className="form-group align-items-center">
+      <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
+        <Label
+          for={labelFor}
+          className="mr-2">
+          {label}
+        </Label>
+      </Col>
+      {
+        fieldType === 'textarea' ?
+          <RequestInputField
+            id={labelFor}
+            name={refValue}
+            component={fieldType}
+            rows="5"/>
+          :
+          <RequestInputField
+            id={labelFor}
+            name={refValue}
+            component={fieldType}/>
+      }
+    </Row>
+  )
+}
+
 
 const RequestHorizontalRule = () =>
 (
@@ -37,6 +54,7 @@ const RequestHorizontalRule = () =>
     <hr/>
   </div>
 )
+
 
 export class NewRequest extends Component
 {
@@ -76,13 +94,15 @@ export class NewRequest extends Component
           title='Novi zahtjev'>
           <Formik
             initialValues={{
-              location: undefined,
-              first_name: undefined,
-              last_name: undefined,
-              institution: undefined,
-              role: undefined,
-              email: undefined,
-              fqdn: undefined,
+              location: '',
+              first_name: '',
+              last_name: '',
+              institution: '',
+              role: '',
+              email: '',
+              vm_fqdn: '',
+              vm_purpose: '',
+              vm_remark: ''
             }}
             onSubmit={(values) => alert(JSON.stringify(values, null, 2))}
             render = {props => (
@@ -97,7 +117,9 @@ export class NewRequest extends Component
                 <RequestHorizontalRule/>
 
                 <h5 className="mb-3 mt-4">Zahtijevani resursi</h5>
-                <RowRequestField label="Puno ime poslužitelja (FQDN):" labelFor="fqdn" refValue="fqdn"/>
+                <RowRequestField label="Namjena:" labelFor="vmPurpose" refValue="vm_purpose" fieldType="textarea"/>
+                <RowRequestField label="Puno ime poslužitelja (FQDN):" labelFor="fqdn" refValue="vm_fqdn"/>
+                <RowRequestField label="Napomena:" labelFor="vmRemark" refValue="vm_remark" fieldType="textarea"/>
               </Form>
             )}
           />
@@ -109,5 +131,6 @@ export class NewRequest extends Component
       return null
   }
 }
+
 
 export default NewRequest;
