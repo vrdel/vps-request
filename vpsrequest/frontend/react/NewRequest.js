@@ -33,6 +33,7 @@ const RowRequestField = ({field, ...propsRest}) =>
         <Col md={{size: 7}}>
           <input
             id={propsRest.labelFor}
+            type={propsRest.fieldType}
             className="form-control"
             {...field}/>
         </Col>
@@ -101,16 +102,16 @@ export class NewRequest extends Component
             render = {props => (
               <Form>
                 <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
-                <Field name="first_name" component={RowRequestField} label="Ime:" labelFor="firstName"/>
-                <Field name="last_name:" component={RowRequestField} label="Prezime:" labelFor="lastName"/>
-                <Field name="institution" component={RowRequestField} label="Ustanova:" labelFor="institution"/>
-                <Field name="role" component={RowRequestField} label="Funkcija:" labelFor="role"/>
-                <Field name="email" component={RowRequestField} label="Email:" labelFor="email"/>
+                <Field name="first_name" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text"/>
+                <Field name="last_name:" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text"/>
+                <Field name="institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text"/>
+                <Field name="role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text"/>
+                <Field name="email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text"/>
 
                 <RequestHorizontalRule/>
                 <h5 className="mb-3 mt-4">Zahtijevani resursi</h5>
                 <Field name="vm_purpose" component={RowRequestField} label="Namjena:" labelFor="vmPurpose" fieldType="textarea"/>
-                <Field name="vm_fqdn" component={RowRequestField} label="Puno ime poslužitelja (FQDN):" labelFor="fqdn"/>
+                <Field name="vm_fqdn" component={RowRequestField} label="Puno ime poslužitelja (FQDN):" labelFor="fqdn" fieldType="text"/>
                 <Field name="vm_remark" component={RowRequestField} label="Napomena:" labelFor="vmRemark" fieldType="textarea"/>
               </Form>
             )}
