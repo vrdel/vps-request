@@ -31,6 +31,13 @@ const RowRequestField = ({label='', labelFor='', refValue=''}) =>
   </Row>
 )
 
+const RequestHorizontalRule = () =>
+(
+  <div className="m-5">
+    <hr/>
+  </div>
+)
+
 export class NewRequest extends Component
 {
   constructor(props) {
@@ -74,7 +81,8 @@ export class NewRequest extends Component
               last_name: undefined,
               institution: undefined,
               role: undefined,
-              email: undefined
+              email: undefined,
+              fqdn: undefined,
             }}
             onSubmit={(values) => alert(JSON.stringify(values, null, 2))}
             render = {props => (
@@ -85,6 +93,11 @@ export class NewRequest extends Component
                 <RowRequestField label="Ustanova:" labelFor="institution" refValue="institution"/>
                 <RowRequestField label="Funkcija:" labelFor="role" refValue="role"/>
                 <RowRequestField label="Email:" labelFor="email" refValue="email"/>
+
+                <RequestHorizontalRule/>
+
+                <h5 className="mb-3 mt-4">Zahtijevani resursi</h5>
+                <RowRequestField label="Puno ime poslužitelja (FQDN):" labelFor="fqdn" refValue="fqdn"/>
               </Form>
             )}
           />
