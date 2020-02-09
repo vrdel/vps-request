@@ -9,6 +9,28 @@ import {
 import { LoadingAnim, BaseView } from './UIElements.js';
 import { Formik, Form, Field } from 'formik';
 
+
+const RowRequestField = ({label='', labelFor='', refValue=''}) =>
+(
+  <Row className="form-group align-items-center">
+    <Col md={{size:2, offset: 1}} className="d-flex justify-content-end">
+      <Label
+        for={labelFor}
+        className="mr-2">
+        {label}
+      </Label>
+    </Col>
+    <Col md={{size: 7}}>
+      <Field
+        type="text"
+        name={refValue}
+        className="form-control"
+        id={labelFor}
+      />
+    </Col>
+  </Row>
+)
+
 export class NewRequest extends Component
 {
   constructor(props) {
@@ -58,91 +80,11 @@ export class NewRequest extends Component
             render = {props => (
               <Form>
                 <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
-                <Row className="form-group align-items-center">
-                  <Col md={{size:2, offset: 1}} className="d-flex justify-content-end">
-                    <Label
-                      for="firstName"
-                      className="mr-2">
-                      Ime:
-                    </Label>
-                  </Col>
-                  <Col md={{size: 7}}>
-                    <Field
-                      type="text"
-                      name="first_name"
-                      className="form-control"
-                      id="firstName"
-                    />
-                  </Col>
-                </Row>
-                <Row className="form-group align-items-center">
-                  <Col md={{size:2, offset: 1}} className="d-flex justify-content-end">
-                    <Label
-                      for="lastName"
-                      className="mr-2">
-                      Prezime:
-                    </Label>
-                  </Col>
-                  <Col md={{size: 7}}>
-                    <Field
-                      type="text"
-                      name="last_name"
-                      className="form-control"
-                      id="lastName"
-                    />
-                  </Col>
-                </Row>
-                <Row className="form-group align-items-center">
-                  <Col md={{size:2, offset: 1}} className="d-flex justify-content-end">
-                    <Label
-                      for="institution"
-                      className="mr-2">
-                      Ustanova:
-                    </Label>
-                  </Col>
-                  <Col md={{size: 7}}>
-                    <Field
-                      type="text"
-                      name="institution"
-                      className="form-control"
-                      id="institution"
-                    />
-                  </Col>
-                </Row>
-                <Row className="form-group align-items-center">
-                  <Col md={{size:2, offset: 1}} className="d-flex justify-content-end">
-                    <Label
-                      for="role"
-                      className="mr-2">
-                      Funkcija:
-                    </Label>
-                  </Col>
-                  <Col md={{size: 7}}>
-                    <Field
-                      type="text"
-                      name="role"
-                      className="form-control"
-                      id="role"
-                    />
-                  </Col>
-                </Row>
-                <Row className="form-group align-items-center">
-                  <Col md={{size:2, offset: 1}} className="d-flex justify-content-end">
-                    <Label
-                      for="email"
-                      className="mr-2">
-                      Email:
-                    </Label>
-                  </Col>
-                  <Col md={{size: 7}}>
-                    <Field
-                      type="text"
-                      name="email"
-                      className="form-control"
-                      id="email"
-                    />
-                  </Col>
-                </Row>
+                <RowRequestField label="Ime:" labelFor="firstName" refValue="first_name"/>
+                <RowRequestField label="Prezime:" labelFor="lastName" refValue="last_name"/>
+                <RowRequestField label="Ustanova:" labelFor="institution" refValue="institution"/>
+                <RowRequestField label="Funkcija:" labelFor="role" refValue="role"/>
+                <RowRequestField label="Email:" labelFor="email" refValue="email"/>
               </Form>
             )}
           />
