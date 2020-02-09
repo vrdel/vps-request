@@ -10,42 +10,35 @@ import { LoadingAnim, BaseView } from './UIElements.js';
 import { Formik, Form, Field } from 'formik';
 
 
-const RowRequestField = ({label='', labelFor='', refValue='', fieldType="input"}) =>
-{
-  const RequestInputField = (props) => (
-    <Col md={{size: 7}}>
-      <Field
-        className="form-control"
-        {...props}
-      />
+const RowRequestField = ({field, ...propsRest}) =>
+(
+  <Row className="form-group align-items-center">
+    <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
+      <Label
+        for={propsRest.labelFor}
+        className="mr-2">
+        {propsRest.label}
+      </Label>
     </Col>
-  )
-
-  return (
-    <Row className="form-group align-items-center">
-      <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
-        <Label
-          for={labelFor}
-          className="mr-2">
-          {label}
-        </Label>
-      </Col>
-      {
-        fieldType === 'textarea' ?
-          <RequestInputField
-            id={labelFor}
-            name={refValue}
-            component={fieldType}
-            rows="5"/>
-          :
-          <RequestInputField
-            id={labelFor}
-            name={refValue}
-            component={fieldType}/>
-      }
-    </Row>
-  )
-}
+    {
+      propsRest.fieldType === 'textarea' ?
+        <Col md={{size: 7}}>
+          <textarea
+            id={propsRest.labelFor}
+            className="form-control"
+            rows="5"
+            {...field}/>
+        </Col>
+        :
+        <Col md={{size: 7}}>
+          <input
+            id={propsRest.labelFor}
+            className="form-control"
+            {...field}/>
+        </Col>
+    }
+  </Row>
+)
 
 
 const RequestHorizontalRule = () =>
@@ -108,18 +101,17 @@ export class NewRequest extends Component
             render = {props => (
               <Form>
                 <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
-                <RowRequestField label="Ime:" labelFor="firstName" refValue="first_name"/>
-                <RowRequestField label="Prezime:" labelFor="lastName" refValue="last_name"/>
-                <RowRequestField label="Ustanova:" labelFor="institution" refValue="institution"/>
-                <RowRequestField label="Funkcija:" labelFor="role" refValue="role"/>
-                <RowRequestField label="Email:" labelFor="email" refValue="email"/>
+                <Field name="first_name" component={RowRequestField} label="Ime:" labelFor="firstName"/>
+                <Field name="last_name:" component={RowRequestField} label="Prezime:" labelFor="lastName"/>
+                <Field name="institution" component={RowRequestField} label="Ustanova:" labelFor="institution"/>
+                <Field name="role" component={RowRequestField} label="Funkcija:" labelFor="role"/>
+                <Field name="email" component={RowRequestField} label="Email:" labelFor="email"/>
 
                 <RequestHorizontalRule/>
-
                 <h5 className="mb-3 mt-4">Zahtijevani resursi</h5>
-                <RowRequestField label="Namjena:" labelFor="vmPurpose" refValue="vm_purpose" fieldType="textarea"/>
-                <RowRequestField label="Puno ime poslužitelja (FQDN):" labelFor="fqdn" refValue="vm_fqdn"/>
-                <RowRequestField label="Napomena:" labelFor="vmRemark" refValue="vm_remark" fieldType="textarea"/>
+                <Field name="vm_purpose" component={RowRequestField} label="Namjena:" labelFor="vmPurpose" fieldType="textarea"/>
+                <Field name="vm_fqdn" component={RowRequestField} label="Puno ime poslužitelja (FQDN):" labelFor="fqdn"/>
+                <Field name="vm_remark" component={RowRequestField} label="Napomena:" labelFor="vmRemark" fieldType="textarea"/>
               </Form>
             )}
           />
