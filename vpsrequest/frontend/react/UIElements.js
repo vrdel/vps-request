@@ -58,11 +58,11 @@ export const Icon = props => {
 }
 
 
-export const DropDown = ({field, data=[], prefix="", class_name="", isnew=false}) =>
+export const DropDown = ({field, data=[]}) =>
   <Field component="select"
-    name={prefix ? `${prefix}.${field.name}` : field.name}
+    name={field.name}
     required={true}
-    className={`form-control ${class_name} ${isnew ? 'border-success' : ''}`}
+    className="form-control custom-select"
   >
     {
       data.map((name, i) =>
