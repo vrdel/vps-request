@@ -1,10 +1,7 @@
 import React from 'react';
 import Cookies from 'universal-cookie';
 import {
-  Alert,
   Button,
-  Breadcrumb,
-  BreadcrumbItem,
   Card,
   CardHeader,
   CardBody,
@@ -13,18 +10,16 @@ import {
   NavItem,
   NavbarBrand,
   Navbar,
-  NavbarToggler,
+  Spinner,
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
-  Collapse} from 'reactstrap';
+  ModalFooter} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSignOutAlt,
   faSearch,
-  faWrench,
   faFileAlt,
   faFileSignature,
   faHandshake,
@@ -33,20 +28,19 @@ import {
 import { NotificationManager } from 'react-notifications';
 import { Field } from 'formik';
 import Autocomplete from 'react-autocomplete';
-import { Backend } from './DataManager';
 import SrceLogo from './logos/pravisrce.png';
 import SrceLogoTiny from './logos/srce-logo-e-mail-sig.png';
 import CloudLogo from './logos/logo_cloud.png';
 
 import './UIElements.css';
 
-var list_pages = ['novi-zahtjevi', 'odobreni-zahtjevi', 'odbijeni-zahtjevi', 'zahtjevi-novi-vm', 'stanje-zahtjeva'];
+var list_pages = ['novi-zahtjevi', 'odobreni-zahtjevi', 'odbijeni-zahtjevi', 'novi-zahtjev', 'stanje-zahtjeva'];
 
 var link_title = new Map();
 link_title.set('novi-zahtjevi', 'Novi zahtjevi');
 link_title.set('odobreni-zahtjevi', 'Odobreni zahtjevi');
 link_title.set('odbijeni-zahtjevi', 'Odbijeni zahtjevi');
-link_title.set('zahtjevi-novi-vm', 'Zahtjev za novim VM-om');
+link_title.set('novi-zahtjev', 'Zahtjev za novim VM-om');
 link_title.set('stanje-zahtjeva', 'Stanje zahtjeva');
 
 
@@ -55,7 +49,7 @@ export const Icon = props => {
   link_icon.set('novi-zahtjevi', faFileAlt);
   link_icon.set('odobreni-zahtjevi', faHandshake);
   link_icon.set('odbijeni-zahtjevi', faThumbsDown);
-  link_icon.set('zahtjevi-novi-vm', faFileSignature);
+  link_icon.set('novi-zahtjev', faFileSignature);
   link_icon.set('stanje-zahtjeva', faBatteryHalf);
 
   return <FontAwesomeIcon
@@ -238,10 +232,7 @@ export const NotifyOk = ({msg='', title='', callback=undefined}) => {
 }
 
 
-export const BaseView = ({resourcename='', location=undefined,
-    infoview=false, addview=false, listview=false, modal=false,
-    state=undefined, toggle=undefined, submitperm=true, history=true,
-    addnew=true, clone=false, cloneview=false, tenantview=false, children}) =>
+export const BaseView = ({title='', modal=false, toggle=undefined, state=undefined, children}) =>
 (
   <React.Fragment>
     {
@@ -253,42 +244,11 @@ export const BaseView = ({resourcename='', location=undefined,
         msg={state.modalMsg}
         onYes={state.modalFunc} />
     }
-    <div className="d-flex align-items-center justify-content-between">
+    <div id="vpsreq-contentwrap" className="pl-4 pb-4 pr-4 pt-3 border rounded">
       {
-        infoview ?
-          <h2 className="ml-3 mt-1 mb-4">{resourcename}</h2>
-        :
-          addview ?
-            <h2 className="ml-3 mt-1 mb-4">{`Add ${resourcename}`}</h2>
-          :
-            listview ?
-              <React.Fragment>
-                {
-                  addnew ?
-                    <h2 className="ml-3 mt-1 mb-4">{`Select ${resourcename} to change`}</h2>
-                  :
-                    <h2 className='ml-3 mt-1 mb-4'>{`Select ${resourcename} for details`}</h2>
-                }
-                {
-                  addnew &&
-                    <Link className="btn btn-secondary" to={location.pathname + "/add"} role="button">Add</Link>
-                }
-              </React.Fragment>
-            :
-              <React.Fragment>
-                <h2 className="ml-3 mt-1 mb-4">{`Change ${resourcename}`}</h2>
-              </React.Fragment>
-      }
-    </div>
-    <div id="vpsreq-contentwrap" className="ml-2 mb-2 mt-2 p-3 border rounded">
-      {
-        !submitperm && !infoview && !listview &&
-          <Alert color='danger'>
-            <center>
-              This is a read-only instance, please request the corresponding
-              permissions to perform any changes in this form.
-            </center>
-          </Alert>
+        <div className="shadow-sm p-2 mb-2 bg-light rounded">
+          <h3>{title}</h3>
+        </div>
       }
       {children}
     </div>
@@ -347,7 +307,7 @@ export const AutocompleteField = ({lists, onselect_handler, field, val, icon, se
       }
     />
   );
-};
+}
 
 
 export const DropdownFilterComponent = ({value, onChange, data}) => (

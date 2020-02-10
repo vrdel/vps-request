@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Login from './Login';
+import NewRequest from './NewRequest';
 import Home from './Home';
 import NotFound from './NotFound';
 import { Route, Switch, BrowserRouter, Redirect, withRouter } from 'react-router-dom';
@@ -142,6 +143,7 @@ class App extends Component {
               <Col>
                 <NavigationLinksWithRouter />
                 <Switch>
+                  <Route exact path="/ui/novi-zahtjev" component={NewRequest}/>
                 </Switch>
               </Col>
             </Row>
