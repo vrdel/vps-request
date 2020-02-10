@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
+
 class User(AbstractUser):
     aaieduhr = models.CharField(
         'hrEduPersonUniqueID',
@@ -22,6 +23,7 @@ class User(AbstractUser):
         blank=True,
         null=True
     )
+
 
 class Request(models.Model):
     class Meta:
@@ -137,6 +139,15 @@ class Request(models.Model):
     sys_aaieduhr = models.CharField(
         'Sys AAIEduHR',
         max_length=30,
+        blank=False,
+        null=False
+    )
+
+
+class VMOS(models.Model):
+    vm_os = models.CharField(
+        'VM OS',
+        max_length=50,
         blank=False,
         null=False
     )

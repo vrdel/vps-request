@@ -1,0 +1,93 @@
+[
+  {
+    "model": "backend.VMOS",
+    "pk": 1,
+    "fields": {
+      "vm_os": "CentOS 6.x (64-bit)"
+     }
+  },
+  {
+    "model": "backend.VMOS",
+    "pk": 2,
+    "fields": {
+      "vm_os": "CentOS 7.x (64-bit) - preporučeno"
+     }
+  },
+  {
+    "model": "backend.VMOS",
+    "pk": 3,
+    "fields": {
+      "vm_os": "Debian Buster 10.x (64-bit) - preporučeno"
+     }
+  },
+  {
+    "model": "backend.VMOS",
+    "pk": 4,
+    "fields": {
+      "vm_os": "Debian Jessie 8.x (64-bit)"
+     }
+  },
+  {
+    "model": "backend.VMOS",
+    "pk": 5,
+    "fields": {
+      "vm_os": "Debian Stretch 9.x (64-bit)"
+     }
+  },
+  {
+    "model": "backend.VMOS",
+    "pk": 6,
+    "fields": {
+      "vm_os": "Debian Wheezy 7.x (64-bit)"
+     }
+  },
+  {
+    "model": "backend.VMOS",
+    "pk": 7,
+    "fields": {
+      "vm_os": "Ubuntu 14.04 LTS (64-bit)"
+     }
+  },
+  {
+    "model": "backend.VMOS",
+    "pk": 8,
+    "fields": {
+      "vm_os": "Ubuntu 16.04 LTS (64-bit)"
+     }
+  },
+  {
+    "model": "backend.VMOS",
+    "pk": 9,
+    "fields": {
+      "vm_os": "Ubuntu 18.04 LTS (64-bit) - preporučeno"
+     }
+  },
+  {
+    "model": "backend.VMOS",
+    "pk": 10,
+    "fields": {
+      "vm_os": "Windows Server 2008 R2 (64-bit)"
+     }
+  },
+  {
+    "model": "backend.VMOS",
+    "pk": 11,
+    "fields": {
+      "vm_os": "Windows Server 2012 R2 (64-bit)"
+     }
+  },
+  {
+    "model": "backend.VMOS",
+    "pk": 12,
+    "fields": {
+      "vm_os": "Windows Server 2016 (64-bit) - preporučeno"
+     }
+  },
+  {
+    "model": "backend.VMOS",
+    "pk": 13,
+    "fields": {
+      "vm_os": "Windows Server 2019 (64-bit)"
+     }
+  }
+]

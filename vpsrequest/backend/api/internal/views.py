@@ -1,4 +1,5 @@
 from backend import serializers
+from backend import models
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -144,3 +145,11 @@ class Saml2Login(BaseProtectedAPIView):
         cache.delete_many(self._prefix(self.keys))
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class VMOS(BaseProtectedAPIView):
+    def get(self, request):
+        oses = models.VMOS.objects.all()
+        serializer = serializers.VMOSSerializer(oses, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
