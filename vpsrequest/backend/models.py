@@ -31,7 +31,7 @@ class Request(models.Model):
             ("approve_request", "Can approve request"),
         )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField('Request update')
+    timestamp = models.DateTimeField('Request update', blank=True, null=True)
     location = models.CharField(
         'Location',
         max_length=200,
@@ -77,6 +77,7 @@ class Request(models.Model):
         null=False
     )
     vm_remark = models.TextField(blank=False, null=False)
+    vm_admin_remark = models.TextField(blank=False, null=False)
     vm_fqdn = models.CharField(
         'VM FQDN',
         max_length=50,
@@ -97,7 +98,7 @@ class Request(models.Model):
         null=False
     )
     vm_ready = models.IntegerField('VM Ready', blank=False, null=False)
-    vm_dismissed = models.DateTimeField('VM Dismissed')
+    vm_dismissed = models.DateTimeField('VM Dismissed', blank=True, null=True)
     sys_firstname = models.CharField(
         'Sys Firstname',
         max_length=50,
@@ -135,7 +136,7 @@ class Request(models.Model):
         blank=False,
         null=False
     )
-    approved_date = models.DateTimeField('VM Approved Date', blank=False, null=False)
+    approved_date = models.DateTimeField('VM Approved Date', blank=True, null=True)
     sys_aaieduhr = models.CharField(
         'Sys AAIEduHR',
         max_length=30,
