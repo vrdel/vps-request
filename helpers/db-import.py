@@ -2,12 +2,12 @@
 
 import argparse
 import json
-import pprint
 
 
 def main():
     parser = argparse.ArgumentParser(description="DB import from MySQL DB JSON dump")
     parser.add_argument('-f', required=True, help='MySQL DB JSON dump', dest='dump')
+    parser.add_argument('-o', required=True, help='reformatted DB JSON dump', dest='out')
     args = parser.parse_args()
 
     user_map = {
@@ -39,7 +39,20 @@ def main():
         users.append(user)
         requests.append(request)
 
-    pprint.pprint(request)
+    for user in users:
+        tmp = dict()
+        tmp['model'] = 'backend.user'
+        tmp['fields'] = user
+        entries.append(tmp)
+
+    for request in requests:
+        tmp = dict()
+        tmp['model'] = 'backend.requests'
+        tmp['fields'] = request
+        entries.append(tmp)
+
+    with open(args.out, 'w') as fo:
+        json.dump(entries, fo, indent=4)
 
 
 if __name__ == '__main__':
