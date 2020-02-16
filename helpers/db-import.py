@@ -34,9 +34,11 @@ def main():
                     user[val] = request[k]
             else:
                 user[v] = request[k]
+            request.pop(k)
         users.append(user)
+        requests.append(request)
 
-    pprint.pprint(users)
+    pprint.pprint(request)
 
 
 if __name__ == '__main__':
