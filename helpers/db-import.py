@@ -7,7 +7,10 @@ import json
 def main():
     parser = argparse.ArgumentParser(description="DB import from MySQL DB JSON dump")
     parser.add_argument('-f', required=True, help='MySQL DB JSON dump', dest='dump')
-    parser.add_argument('-o', required=True, help='reformatted DB JSON dump', dest='out')
+    parser.add_argument('-o', required=True, help='Reformatted DB JSON dump', dest='out')
+    parser.add_argument('--skip-user', type=int, required=True,
+                        help='Skip number of users already in DB',
+                        dest='numskipusers')
     args = parser.parse_args()
 
     user_map = {
@@ -23,7 +26,7 @@ def main():
     users = list()
     requests = list()
     num_request = 1
-    num_user = 1
+    num_user = args.numskipusers + 1
     looked_users = set()
 
     with open(args.dump) as fp:
@@ -38,11 +41,14 @@ def main():
             else:
                 user[v] = request[k]
             request.pop(k)
-        request[u'user'] = [user['username']]
 
+        request[u'user'] = [user['username']]
         ts = request.pop('ts')
         request['timestamp'] = ts
         request['id'] = num_request
+        for (k, v) in request.items():
+            if type(v) is str or type(v) is unicode:
+                request[k] = v.replace('\r\n', '\n')
         num_request += 1
         requests.append(request)
 
@@ -53,7 +59,6 @@ def main():
         user['id'] = num_user
         num_user += 1
         users.append(user)
-
 
     for user in users:
         tmp = dict()
