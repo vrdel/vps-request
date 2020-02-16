@@ -14,6 +14,7 @@ usage()
 	printf "       [-l]                                  - list migrations\n" >&2
 	printf "       [-u]                                  - create superuser\n" >&2
 	printf "       [-m]                                  - create new migrations\n" >&2
+	printf "       [-d]                                  - load data from file\n" >&2
 	exit 2
 }
 
@@ -22,7 +23,7 @@ then
     usage
 fi
 
-while getopts 'clhum' OPTION
+while getopts 'clhumd:' OPTION
 do
     case $OPTION in
         c)
@@ -45,6 +46,12 @@ do
             "$DJANGO_SETTINGS && \
             $PYTHON $MANAGEPY makemigrations backend"
              ;;
+        d)
+            su -m -s /bin/sh $RUNASUSER -c \
+            "$DJANGO_SETTINGS && \
+            $PYTHON $MANAGEPY loaddata $OPTARG"
+             ;;
+
         h)
             usage
             ;;

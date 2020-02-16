@@ -47,7 +47,7 @@ def main():
 
     for request in requests:
         tmp = dict()
-        tmp['model'] = 'backend.requests'
+        tmp['model'] = 'backend.request'
         tmp['fields'] = request
         entries.append(tmp)
 
