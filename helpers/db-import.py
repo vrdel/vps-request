@@ -4,6 +4,7 @@ import argparse
 import json
 import pprint
 
+
 def main():
     parser = argparse.ArgumentParser(description="DB import from MySQL DB JSON dump")
     parser.add_argument('-f', required=True, help='MySQL DB JSON dump', dest='dump')
@@ -24,9 +25,18 @@ def main():
 
     with open(args.dump) as fp:
         js = json.load(fp)
-        pprint.pprint(js)
 
-    import ipdb; ipdb.set_trace()
+    for request in js['request']:
+        user = dict()
+        for (k, v) in user_map.items():
+            if type(v) is list:
+                for val in v:
+                    user[val] = request[k]
+            else:
+                user[v] = request[k]
+        users.append(user)
+
+    pprint.pprint(users)
 
 
 if __name__ == '__main__':
