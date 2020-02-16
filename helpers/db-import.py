@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import argparse
 import json
@@ -22,6 +22,9 @@ def main():
     entries = list()
     users = list()
     requests = list()
+    num_request = 1
+    num_user = 1
+    looked_users = set()
 
     with open(args.dump) as fp:
         js = json.load(fp)
@@ -36,8 +39,21 @@ def main():
                 user[v] = request[k]
             request.pop(k)
         request[u'user'] = [user['username']]
-        users.append(user)
+
+        ts = request.pop('ts')
+        request['timestamp'] = ts
+        request['id'] = num_request
+        num_request += 1
         requests.append(request)
+
+        if user['username'] in looked_users:
+            continue
+
+        looked_users.add(user['username'])
+        user['id'] = num_user
+        num_user += 1
+        users.append(user)
+
 
     for user in users:
         tmp = dict()
