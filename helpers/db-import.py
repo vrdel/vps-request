@@ -35,6 +35,7 @@ def main():
             else:
                 user[v] = request[k]
             request.pop(k)
+        request[u'user'] = [user['username']]
         users.append(user)
         requests.append(request)
 
