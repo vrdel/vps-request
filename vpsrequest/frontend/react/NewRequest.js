@@ -134,7 +134,7 @@ export class NewRequest extends Component
               location: '',
               first_name: userDetail.first_name,
               last_name: userDetail.last_name,
-              institution: '',
+              institution: userDetail.institution,
               role: '',
               email: userDetail.email,
               vm_fqdn: '',
