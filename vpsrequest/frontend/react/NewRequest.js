@@ -78,12 +78,15 @@ export class NewRequest extends Component
       areYouSureModal: false,
       loading: false,
       listVMOSes: [],
+      userDetail: undefined,
       modalFunc: undefined,
       modalTitle: undefined,
       modalMsg: undefined
     }
 
     this.urlListVMOSes = '/api/v1/internal/listvmos'
+    this.urlListUsers = '/api/v1/internal/users'
+    this.username = localStorage.getItem('authUsername')
 
     this.backend = new Backend();
     this.toggleAreYouSure = this.toggleAreYouSure.bind(this);
@@ -105,31 +108,35 @@ export class NewRequest extends Component
   componentDidMount() {
     this.setState({loading: true})
 
-    this.backend.fetchData(this.urlListVMOSes)
-      .then(response => this.setState({
-        listVMOSes: this.flattenListVMOses(response),
+    Promise.all([
+      this.backend.fetchData(this.urlListVMOSes),
+      this.backend.fetchData(`${this.urlListUsers}/${this.username}`)
+    ])
+      .then(([vmOSes, userDetail]) => this.setState({
+        listVMOSes: this.flattenListVMOses(vmOSes),
+        userDetail: userDetail,
         loading: false
       }))
   }
 
   render() {
-    const {loading, listVMOSes} = this.state
+    const {loading, listVMOSes, userDetail} = this.state
 
     if (loading)
       return (<LoadingAnim />)
 
-    else if (!loading && listVMOSes) {
+    else if (!loading && listVMOSes && userDetail) {
       return (
         <BaseView
           title='Novi zahtjev'>
           <Formik
             initialValues={{
               location: '',
-              first_name: '',
-              last_name: '',
+              first_name: userDetail.first_name,
+              last_name: userDetail.last_name,
               institution: '',
               role: '',
-              email: '',
+              email: userDetail.email,
               vm_fqdn: '',
               vm_purpose: '',
               vm_remark: '',
