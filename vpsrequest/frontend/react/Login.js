@@ -63,6 +63,7 @@ class Login extends Component {
         'X-CSRFToken': cookies.get('csrftoken'),
         'Referer': 'same-origin'
       }});
+
   }
 
   componentDidMount() {

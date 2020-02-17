@@ -9,6 +9,7 @@ import {
 import { LoadingAnim, BaseView, DropDown } from './UIElements.js';
 import { Formik, Form, Field } from 'formik';
 
+import './NewRequest.css';
 
 const RowRequestDropDown = ({field, ...propsRest}) =>
 (
@@ -25,7 +26,14 @@ const RowRequestDropDown = ({field, ...propsRest}) =>
         field={field}
         data={propsRest.data}
         id={propsRest.labelFor}
-        />
+      />
+      {
+        propsRest.infoMsg ?
+          <div id="vpsreq-field-infomsg">
+            {propsRest.infoMsg}
+          </div>
+          : null
+      }
     </Col>
   </Row>
 )
@@ -44,17 +52,35 @@ const RowRequestField = ({field, ...propsRest}) =>
     <Col md={{size: 7}}>
     {
       propsRest.fieldType === 'textarea' ?
-        <textarea
-          id={propsRest.labelFor}
-          className="form-control"
-          rows="5"
-          {...field}/>
+        <div>
+          <textarea
+            id={propsRest.labelFor}
+            className="form-control"
+            rows="5"
+            {...field}/>
+          {
+            propsRest.infoMsg ?
+              <div id="vpsreq-field-infomsg">
+                {propsRest.infoMsg}
+              </div>
+              : null
+          }
+        </div>
         :
-        <input
-          id={propsRest.labelFor}
-          type={propsRest.fieldType}
-          className="form-control"
-          {...field}/>
+        <div>
+          <input
+            id={propsRest.labelFor}
+            type={propsRest.fieldType}
+            className="form-control"
+            {...field}/>
+          {
+            propsRest.infoMsg ?
+              <div id="vpsreq-field-infomsg">
+                {propsRest.infoMsg}
+              </div>
+              : null
+          }
+        </div>
     }
     </Col>
   </Row>
@@ -87,6 +113,10 @@ export class NewRequest extends Component
     this.urlListVMOSes = '/api/v1/internal/listvmos'
     this.urlListUsers = '/api/v1/internal/users'
     this.username = localStorage.getItem('authUsername')
+
+    this.infoPurpose = "* Potrebno je detaljno obrazložiti namjenu virtualnog poslužitelja. Zahtjev može biti odbijen ukoliko Srce procijeni da navedena namjena virtualnog poslužitelja nije primjerena namjeni usluge, ili ne predstavlja trajne potrebe ustanove za poslužiteljskim kapacitetima.";
+    this.infoVMOS = "* Čelnik ustanove odgovara za posjedovanje i aktiviranje valjane licence za gore odabrani operacijski sustav."
+    this.infoAAI = "* Sistem-inženjer jedini ima pravo pristupa na XenOrchestra sučelje dostupno na adresi https://vps.srce.hr."
 
     this.backend = new Backend();
     this.toggleAreYouSure = this.toggleAreYouSure.bind(this);
@@ -135,7 +165,7 @@ export class NewRequest extends Component
               first_name: userDetail.first_name,
               last_name: userDetail.last_name,
               institution: userDetail.institution,
-              role: '',
+              role: userDetail.role,
               email: userDetail.email,
               aaieduhr: userDetail.aaieduhr,
               vm_fqdn: '',
@@ -149,7 +179,7 @@ export class NewRequest extends Component
               sys_email: '',
               head_firstname: '',
               head_lastname: '',
-              head_institution: '',
+              head_institution: userDetail.institution,
               head_role: '',
               head_email: ''
             }}
@@ -165,9 +195,9 @@ export class NewRequest extends Component
 
                 <RequestHorizontalRule/>
                 <h5 className="mb-3 mt-4">Zahtijevani resursi</h5>
-                <Field name="vm_purpose" component={RowRequestField} label="Namjena:" labelFor="vmPurpose" fieldType="textarea"/>
+                <Field name="vm_purpose" component={RowRequestField} label="Namjena:" labelFor="vmPurpose" fieldType="textarea" infoMsg={this.infoPurpose}/>
                 <Field name="vm_fqdn" component={RowRequestField} label="Puno ime poslužitelja (FQDN):" labelFor="fqdn" fieldType="text"/>
-                <Field name="list_oses" component={RowRequestDropDown} label="Operacijski sustav:" labelFor="vm_oses" data={listVMOSes} />
+                <Field name="list_oses" component={RowRequestDropDown} label="Operacijski sustav:" labelFor="vm_oses" data={listVMOSes} infoMsg={this.infoVMOS}/>
                 <Field name="vm_remark" component={RowRequestField} label="Napomena:" labelFor="vmRemark" fieldType="textarea"/>
 
                 <RequestHorizontalRule/>
@@ -177,7 +207,7 @@ export class NewRequest extends Component
                 <Field name="sys_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text"/>
                 <Field name="sys_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text"/>
                 <Field name="sys_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text"/>
-                <Field name="sys_aaieduhr" component={RowRequestField} label="AAI@EduHr korisnička oznaka:" labelFor="aaieduhr" fieldType="text"/>
+                <Field name="sys_aaieduhr" component={RowRequestField} label="AAI@EduHr korisnička oznaka:" labelFor="aaieduhr" fieldType="text" infoMsg={this.infoAAI}/>
 
                 <RequestHorizontalRule/>
                 <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
