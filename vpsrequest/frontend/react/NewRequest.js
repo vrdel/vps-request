@@ -137,17 +137,28 @@ export class NewRequest extends Component
               institution: userDetail.institution,
               role: '',
               email: userDetail.email,
+              aaieduhr: userDetail.aaieduhr,
               vm_fqdn: '',
               vm_purpose: '',
               vm_remark: '',
               list_oses: '',
+              sys_firstname: '',
+              sys_lastname: '',
+              sys_institution: '',
+              sys_role: '',
+              sys_email: '',
+              head_firstname: '',
+              head_lastname: '',
+              head_institution: '',
+              head_role: '',
+              head_email: ''
             }}
             onSubmit={(values) => alert(JSON.stringify(values, null, 2))}
             render = {props => (
               <Form>
                 <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
                 <Field name="first_name" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text"/>
-                <Field name="last_name:" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text"/>
+                <Field name="last_name" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text"/>
                 <Field name="institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text"/>
                 <Field name="role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text"/>
                 <Field name="email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text"/>
@@ -158,6 +169,23 @@ export class NewRequest extends Component
                 <Field name="vm_fqdn" component={RowRequestField} label="Puno ime poslužitelja (FQDN):" labelFor="fqdn" fieldType="text"/>
                 <Field name="list_oses" component={RowRequestDropDown} label="Operacijski sustav:" labelFor="vm_oses" data={listVMOSes} />
                 <Field name="vm_remark" component={RowRequestField} label="Napomena:" labelFor="vmRemark" fieldType="textarea"/>
+
+                <RequestHorizontalRule/>
+                <h5 className="mb-3 mt-4">Sistem-inženjer virtualnog poslužitelja</h5>
+                <Field name="sys_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text"/>
+                <Field name="sys_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text"/>
+                <Field name="sys_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text"/>
+                <Field name="sys_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text"/>
+                <Field name="sys_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text"/>
+                <Field name="sys_aaieduhr" component={RowRequestField} label="AAI@EduHr korisnička oznaka:" labelFor="aaieduhr" fieldType="text"/>
+
+                <RequestHorizontalRule/>
+                <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
+                <Field name="head_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text"/>
+                <Field name="head_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text"/>
+                <Field name="head_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text"/>
+                <Field name="head_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text"/>
+                <Field name="head_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text"/>
               </Form>
             )}
           />
