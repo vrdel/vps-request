@@ -72,14 +72,17 @@ const RowRequestField = ({field, ...propsRest}) =>
             id={propsRest.labelFor}
             type={propsRest.fieldType}
             className="form-control"
-            disabled={propsRest.disabled ? propsRest.disabled : false}
+            disabled={propsRest.disabled ? true : false}
             {...field}/>
           {
             propsRest.infoMsg ?
               <div id="vpsreq-field-infomsg">
                 {propsRest.infoMsg}
               </div>
-              : null
+              :
+              propsRest.infoMsgComponent ?
+                propsRest.infoMsgComponent
+                : null
           }
         </div>
     }
@@ -92,6 +95,14 @@ const RequestHorizontalRule = () =>
 (
   <div className="m-5">
     <hr/>
+  </div>
+)
+
+const VpsRequestURL = ({infoMsg}) =>
+(
+  <div id="vpsreq-field-infomsg">
+    {infoMsg}
+    <a href="https://vps.srce.hr">https://vps.srce.hr</a>
   </div>
 )
 
@@ -117,7 +128,7 @@ export class NewRequest extends Component
 
     this.infoPurpose = "* Potrebno je detaljno obrazložiti namjenu virtualnog poslužitelja. Zahtjev može biti odbijen ukoliko Srce procijeni da navedena namjena virtualnog poslužitelja nije primjerena namjeni usluge, ili ne predstavlja trajne potrebe ustanove za poslužiteljskim kapacitetima.";
     this.infoVMOS = "* Čelnik ustanove odgovara za posjedovanje i aktiviranje valjane licence za gore odabrani operacijski sustav."
-    this.infoAAI = "* Sistem-inženjer jedini ima pravo pristupa na XenOrchestra sučelje dostupno na adresi https://vps.srce.hr."
+    this.infoAAI = "* Sistem-inženjer jedini ima pravo pristupa na XenOrchestra sučelje dostupno na adresi "
 
     this.backend = new Backend();
     this.toggleAreYouSure = this.toggleAreYouSure.bind(this);
@@ -208,7 +219,7 @@ export class NewRequest extends Component
                 <Field name="sys_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text"/>
                 <Field name="sys_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text"/>
                 <Field name="sys_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text"/>
-                <Field name="sys_aaieduhr" component={RowRequestField} label="AAI@EduHr korisnička oznaka:" labelFor="aaieduhr" fieldType="text" infoMsg={this.infoAAI}/>
+                <Field name="sys_aaieduhr" component={RowRequestField} label="AAI@EduHr korisnička oznaka:" labelFor="aaieduhr" fieldType="text" infoMsgComponent={<VpsRequestURL infoMsg={this.infoAAI}/>}/>
 
                 <RequestHorizontalRule/>
                 <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
