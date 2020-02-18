@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Backend } from './DataManager';
 import {
   Col,
-  FormGroup,
+  CustomInput,
   Label,
   Row,
 } from 'reactstrap';
@@ -10,6 +10,7 @@ import { LoadingAnim, BaseView, DropDown } from './UIElements.js';
 import { Formik, Form, Field } from 'formik';
 
 import './NewRequest.css';
+
 
 const RowRequestDropDown = ({field, ...propsRest}) =>
 (
@@ -116,10 +117,11 @@ export class NewRequest extends Component
       areYouSureModal: false,
       loading: false,
       listVMOSes: [],
+      acceptConditions: undefined,
       userDetail: undefined,
       modalFunc: undefined,
       modalTitle: undefined,
-      modalMsg: undefined
+      modalMsg: undefined,
     }
 
     this.urlListVMOSes = '/api/v1/internal/listvmos'
@@ -132,6 +134,7 @@ export class NewRequest extends Component
 
     this.backend = new Backend();
     this.toggleAreYouSure = this.toggleAreYouSure.bind(this);
+    this.handleAcceptConditions = this.handleAcceptConditions.bind(this);
   }
 
   flattenListVMOses(data) {
@@ -156,18 +159,23 @@ export class NewRequest extends Component
     ])
       .then(([vmOSes, userDetail]) => this.setState({
         listVMOSes: this.flattenListVMOses(vmOSes),
+        acceptConditions: false,
         userDetail: userDetail,
         loading: false
       }))
   }
 
+  handleAcceptConditions() {
+    this.setState(prevState => ({acceptConditions: !prevState.acceptConditions}))
+  }
+
   render() {
-    const {loading, listVMOSes, userDetail} = this.state
+    const {loading, listVMOSes, userDetail, acceptConditions} = this.state
 
     if (loading)
       return (<LoadingAnim />)
 
-    else if (!loading && listVMOSes && userDetail) {
+    else if (!loading && listVMOSes && userDetail && acceptConditions !== undefined) {
       return (
         <BaseView
           title='Novi zahtjev'>
@@ -219,7 +227,9 @@ export class NewRequest extends Component
                 <Field name="sys_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text"/>
                 <Field name="sys_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text"/>
                 <Field name="sys_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text"/>
-                <Field name="sys_aaieduhr" component={RowRequestField} label="AAI@EduHr korisnička oznaka:" labelFor="aaieduhr" fieldType="text" infoMsgComponent={<VpsRequestURL infoMsg={this.infoAAI}/>}/>
+                <Field name="sys_aaieduhr"
+                  component={RowRequestField} label="AAI@EduHr korisnička oznaka:" labelFor="aaieduhr"
+                  fieldType="text" infoMsgComponent={<VpsRequestURL infoMsg={this.infoAAI}/>}/>
 
                 <RequestHorizontalRule/>
                 <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
@@ -228,6 +238,11 @@ export class NewRequest extends Component
                 <Field name="head_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" disabled={true}/>
                 <Field name="head_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text"/>
                 <Field name="head_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text"/>
+
+                <RequestHorizontalRule/>
+                <div className="text-center">
+                  <CustomInput type="checkbox" id="reportEnabled" checked={acceptConditions} onChange={this.handleAcceptConditions}/>
+                </div>
               </Form>
             )}
           />
