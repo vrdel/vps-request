@@ -72,6 +72,7 @@ const RowRequestField = ({field, ...propsRest}) =>
             id={propsRest.labelFor}
             type={propsRest.fieldType}
             className="form-control"
+            disabled={propsRest.disabled ? propsRest.disabled : false}
             {...field}/>
           {
             propsRest.infoMsg ?
@@ -180,18 +181,18 @@ export class NewRequest extends Component
               head_firstname: '',
               head_lastname: '',
               head_institution: userDetail.institution,
-              head_role: '',
+              head_role: 'Čelnik ustanove',
               head_email: ''
             }}
             onSubmit={(values) => alert(JSON.stringify(values, null, 2))}
             render = {props => (
               <Form>
                 <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
-                <Field name="first_name" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text"/>
-                <Field name="last_name" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text"/>
-                <Field name="institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text"/>
-                <Field name="role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text"/>
-                <Field name="email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text"/>
+                <Field name="first_name" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" disabled={true}/>
+                <Field name="last_name" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" disabled={true}/>
+                <Field name="institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" disabled={true}/>
+                <Field name="role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" disabled={true}/>
+                <Field name="email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" disabled={true}/>
 
                 <RequestHorizontalRule/>
                 <h5 className="mb-3 mt-4">Zahtijevani resursi</h5>
@@ -213,7 +214,7 @@ export class NewRequest extends Component
                 <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
                 <Field name="head_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text"/>
                 <Field name="head_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text"/>
-                <Field name="head_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text"/>
+                <Field name="head_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" disabled={true}/>
                 <Field name="head_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text"/>
                 <Field name="head_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text"/>
               </Form>
