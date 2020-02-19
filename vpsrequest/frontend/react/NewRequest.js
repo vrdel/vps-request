@@ -6,11 +6,16 @@ import {
   Label,
   Row,
 } from 'reactstrap';
-import { LoadingAnim, BaseView, DropDown } from './UIElements.js';
+import {
+  LoadingAnim,
+  BaseView,
+  DropDown,
+  InfoLink } from './UIElements.js';
 import { Formik, Form, Field } from 'formik';
 
 import './NewRequest.css';
 
+// http://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps_05102018.pdf
 
 const RowRequestDropDown = ({field, ...propsRest}) =>
 (
@@ -82,7 +87,9 @@ const RowRequestField = ({field, ...propsRest}) =>
               </div>
               :
               propsRest.infoMsgComponent ?
-                propsRest.infoMsgComponent
+                <div id="vpsreq-field-infomsg">
+                  {propsRest.infoMsgComponent}
+                </div>
                 : null
           }
         </div>
@@ -96,14 +103,6 @@ const RequestHorizontalRule = () =>
 (
   <div className="m-5">
     <hr/>
-  </div>
-)
-
-const VpsRequestURL = ({infoMsg}) =>
-(
-  <div id="vpsreq-field-infomsg">
-    {infoMsg}
-    <a href="https://vps.srce.hr">https://vps.srce.hr</a>
   </div>
 )
 
@@ -228,8 +227,10 @@ export class NewRequest extends Component
                 <Field name="sys_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text"/>
                 <Field name="sys_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text"/>
                 <Field name="sys_aaieduhr"
-                  component={RowRequestField} label="AAI@EduHr korisnička oznaka:" labelFor="aaieduhr"
-                  fieldType="text" infoMsgComponent={<VpsRequestURL infoMsg={this.infoAAI}/>}/>
+                  component={RowRequestField}
+                  label="AAI@EduHr korisnička oznaka:" labelFor="aaieduhr"
+                  fieldType="text"
+                  infoMsgComponent={<InfoLink prefix={`${this.infoAAI} `} linkHref="https://vps.srce.hr"/>}/>
 
                 <RequestHorizontalRule/>
                 <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
