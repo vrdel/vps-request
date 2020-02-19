@@ -4,6 +4,9 @@ import {
   Col,
   CustomInput,
   Label,
+  Toast,
+  ToastBody,
+  ToastHeader,
   Row,
 } from 'reactstrap';
 import {
@@ -252,6 +255,24 @@ export class NewRequest extends Component
                     />
                   </Col>
                 </Row>
+                <Row>
+                  <Col md={{size: 10, offset: 1}}>
+                    <p className="text-muted text-center">
+                      Prihvaćanjem Pravilnika usluge od strane kontaktne osobe Ustanove smatra se da Ustanova i čelnik Ustanove potvrđuju i odgovaraju za istinitost podataka iz zahtjeva, da su upoznati s odredbama Pravilnika usluge, te da pristaju na korištenje usluge sukladno Pravilniku usluge.
+                    </p>
+
+                    <p className="text-muted text-center">
+                      <InfoLink prefix="Srce gore navedene osobne podatke obrađuje isključivo radi pružanja zatražene usluge, sukladno svojoj politici privatnosti ("
+                        linkHref="https://www.srce.hr/politika-privatnosti"
+                        suffix=")"/>
+                      <InfoLink prefix=" i " linkHref="http://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps_05102018.pdf"
+                        linkTitle="Pravilniku usluge"/>
+                    </p>
+                  </Col>
+                </Row>
+                {
+
+                }
               </Form>
             )}
           />
