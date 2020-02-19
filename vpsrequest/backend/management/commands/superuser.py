@@ -21,6 +21,8 @@ class Command(BaseCommand):
         user_data = dict()
 
         user_data[self.UserModel.USERNAME_FIELD] = settings.SUPERUSER_NAME
+        user_data['first_name'] = settings.SUPERUSER_NAME
+        user_data['last_name'] = settings.SUPERUSER_NAME
         user_data['password'] = settings.SUPERUSER_PASS
         user_data['email'] = settings.SUPERUSER_EMAIL
 

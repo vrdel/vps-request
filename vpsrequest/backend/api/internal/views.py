@@ -28,6 +28,14 @@ class NotFound(APIException):
         self.code = code if code else detail
 
 
+class ListRequests(BaseProtectedAPIView):
+    def get(self, request, id=None):
+        if not id:
+            requests = models.Request.objects.all()
+            serializer = serializers.RequestsSerializer(requests, many=True)
+            return Response(serializer.data)
+
+
 class ListUsers(BaseProtectedAPIView):
     def get(self, request, username=None):
         if username:

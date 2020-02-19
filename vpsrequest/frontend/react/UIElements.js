@@ -104,6 +104,15 @@ const doLogout = (history, onLogout) => {
 }
 
 
+export const InfoLink = ({prefix='', suffix='', linkTitle='', linkHref}) => (
+  <React.Fragment>
+    {prefix}
+    <a href={linkHref}>{!linkTitle ? linkHref : linkTitle}</a>
+    {suffix}
+  </React.Fragment>
+)
+
+
 export const ModalAreYouSure = ({isOpen, toggle, title, msg, onYes}) => (
   <Modal isOpen={isOpen} toggle={toggle}>
     <ModalHeader toggle={toggle}>{title}</ModalHeader>
@@ -114,8 +123,8 @@ export const ModalAreYouSure = ({isOpen, toggle, title, msg, onYes}) => (
       <Button color="primary" onClick={() => {
         onYes();
         toggle();
-      }}>Yes</Button>{' '}
-      <Button color="secondary" onClick={toggle}>No</Button>
+      }}>Da</Button>{' '}
+      <Button color="secondary" onClick={toggle}>Ne</Button>
     </ModalFooter>
   </Modal>
 )
