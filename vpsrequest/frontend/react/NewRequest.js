@@ -213,6 +213,7 @@ export class NewRequest extends Component
               vm_remark: '',
               list_oses: '',
               sys_firstname: '',
+              sys_aaieduhr: '',
               sys_lastname: '',
               sys_institution: '',
               sys_role: '',
@@ -284,7 +285,7 @@ export class NewRequest extends Component
                 <Row>
                   <Col md={{size: 4, offset: 4}}>
                     <Alert className="mt-2" color="danger" isOpen={this.state.acceptConditionsAlert} toggle={this.dismissAlert} fade={false}>
-                      <p className="text-center">
+                      <p className="text-center mt-3 ml-3">
                         Morate prihvatiti pravilnik Usluge!
                       </p>
                     </Alert>
