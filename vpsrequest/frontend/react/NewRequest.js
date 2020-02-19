@@ -15,7 +15,7 @@ import { Formik, Form, Field } from 'formik';
 
 import './NewRequest.css';
 
-// http://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps_05102018.pdf
+//
 
 const RowRequestDropDown = ({field, ...propsRest}) =>
 (
@@ -241,9 +241,17 @@ export class NewRequest extends Component
                 <Field name="head_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text"/>
 
                 <RequestHorizontalRule/>
-                <div className="text-center">
-                  <CustomInput type="checkbox" id="reportEnabled" checked={acceptConditions} onChange={this.handleAcceptConditions}/>
-                </div>
+                <Row>
+                  <Col className="text-center">
+                    <CustomInput type="checkbox" id="acceptedConditions" checked={acceptConditions} onChange={this.handleAcceptConditions}
+                      label={
+                        <InfoLink prefix="Prihvaćam "
+                          linkHref="http://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps_05102018.pdf"
+                          linkTitle="Pravilnik usluge Virtual Private Server"/>
+                      }
+                    />
+                  </Col>
+                </Row>
               </Form>
             )}
           />
