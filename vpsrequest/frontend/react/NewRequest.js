@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { Backend } from './DataManager';
 import {
+  Button,
   Col,
   CustomInput,
   Label,
-  Toast,
-  ToastBody,
-  ToastHeader,
   Row,
 } from 'reactstrap';
 import {
@@ -65,6 +63,7 @@ const RowRequestField = ({field, ...propsRest}) =>
           <textarea
             id={propsRest.labelFor}
             className="form-control"
+            required={propsRest.required ? true : false}
             rows="5"
             {...field}/>
           {
@@ -81,6 +80,7 @@ const RowRequestField = ({field, ...propsRest}) =>
             id={propsRest.labelFor}
             type={propsRest.fieldType}
             className="form-control"
+            required={propsRest.required ? true : false}
             disabled={propsRest.disabled ? true : false}
             {...field}/>
           {
@@ -217,31 +217,32 @@ export class NewRequest extends Component
 
                 <RequestHorizontalRule/>
                 <h5 className="mb-3 mt-4">Zahtijevani resursi</h5>
-                <Field name="vm_purpose" component={RowRequestField} label="Namjena:" labelFor="vmPurpose" fieldType="textarea" infoMsg={this.infoPurpose}/>
-                <Field name="vm_fqdn" component={RowRequestField} label="Puno ime poslužitelja (FQDN):" labelFor="fqdn" fieldType="text"/>
-                <Field name="list_oses" component={RowRequestDropDown} label="Operacijski sustav:" labelFor="vm_oses" data={listVMOSes} infoMsg={this.infoVMOS}/>
-                <Field name="vm_remark" component={RowRequestField} label="Napomena:" labelFor="vmRemark" fieldType="textarea"/>
+                <Field name="vm_purpose" component={RowRequestField} label="Namjena:" labelFor="vmPurpose" fieldType="textarea" infoMsg={this.infoPurpose} required={true}/>
+                <Field name="vm_fqdn" component={RowRequestField} label="Puno ime poslužitelja (FQDN):" labelFor="fqdn" fieldType="text" required={true}/>
+                <Field name="list_oses" component={RowRequestDropDown} label="Operacijski sustav:" labelFor="vm_oses" data={listVMOSes} infoMsg={this.infoVMOS} required={true}/>
+                <Field name="vm_remark" component={RowRequestField} label="Napomena:" labelFor="vmRemark" fieldType="textarea" required={true}/>
 
                 <RequestHorizontalRule/>
                 <h5 className="mb-3 mt-4">Sistem-inženjer virtualnog poslužitelja</h5>
-                <Field name="sys_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text"/>
-                <Field name="sys_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text"/>
-                <Field name="sys_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text"/>
-                <Field name="sys_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text"/>
-                <Field name="sys_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text"/>
+                <Field name="sys_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" required={true}/>
+                <Field name="sys_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" required={true}/>
+                <Field name="sys_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" required={true}/>
+                <Field name="sys_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" required={true}/>
+                <Field name="sys_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" required={true}/>
                 <Field name="sys_aaieduhr"
                   component={RowRequestField}
                   label="AAI@EduHr korisnička oznaka:" labelFor="aaieduhr"
                   fieldType="text"
-                  infoMsgComponent={<InfoLink prefix={`${this.infoAAI} `} linkHref="https://vps.srce.hr"/>}/>
+                  infoMsgComponent={<InfoLink prefix={`${this.infoAAI} `} linkHref="https://vps.srce.hr"/>}
+                  required={true}/>
 
                 <RequestHorizontalRule/>
                 <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
-                <Field name="head_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text"/>
-                <Field name="head_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text"/>
-                <Field name="head_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" disabled={true}/>
-                <Field name="head_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text"/>
-                <Field name="head_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text"/>
+                <Field name="head_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" required={true}/>
+                <Field name="head_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" required={true}/>
+                <Field name="head_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" disabled={true} required={true}/>
+                <Field name="head_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" required={true}/>
+                <Field name="head_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" required={true}/>
 
                 <RequestHorizontalRule/>
                 <Row>
@@ -255,24 +256,39 @@ export class NewRequest extends Component
                     />
                   </Col>
                 </Row>
-                <Row>
+                <Row className="mt-2">
                   <Col md={{size: 10, offset: 1}}>
                     <p className="text-muted text-center">
-                      Prihvaćanjem Pravilnika usluge od strane kontaktne osobe Ustanove smatra se da Ustanova i čelnik Ustanove potvrđuju i odgovaraju za istinitost podataka iz zahtjeva, da su upoznati s odredbama Pravilnika usluge, te da pristaju na korištenje usluge sukladno Pravilniku usluge.
+                      <small>
+                        Prihvaćanjem Pravilnika usluge od strane kontaktne osobe Ustanove smatra se da Ustanova i čelnik Ustanove potvrđuju i odgovaraju za istinitost podataka iz zahtjeva, da su upoznati s odredbama Pravilnika usluge, te da pristaju na korištenje usluge sukladno Pravilniku usluge.
+                      </small>
                     </p>
 
                     <p className="text-muted text-center">
-                      <InfoLink prefix="Srce gore navedene osobne podatke obrađuje isključivo radi pružanja zatražene usluge, sukladno svojoj politici privatnosti ("
-                        linkHref="https://www.srce.hr/politika-privatnosti"
-                        suffix=")"/>
-                      <InfoLink prefix=" i " linkHref="http://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps_05102018.pdf"
-                        linkTitle="Pravilniku usluge"/>
+                      <small>
+                        <InfoLink prefix="Srce gore navedene osobne podatke obrađuje isključivo radi pružanja zatražene usluge, sukladno svojoj politici privatnosti ("
+                          linkHref="https://www.srce.hr/politika-privatnosti"
+                          suffix=")"/>
+                        <InfoLink prefix=" i " linkHref="http://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps_05102018.pdf"
+                          linkTitle="Pravilniku usluge"/>
+                      </small>
                     </p>
                   </Col>
                 </Row>
-                {
-
-                }
+                <Row className="mt-2 mb-2 text-center">
+                  <Col>
+                    <Button className="btn-lg" color="success" id="submit-button" type="submit">Podnesi zahtjev</Button>
+                  </Col>
+                </Row>
+                <Row className="mt-3 mb-2">
+                  <Col md={{size: 10, offset: 1}}>
+                    <p className="text-muted text-center">
+                      <small>
+                        Kopija zahtjeva šalje se automatski putem e-maila kontaktnoj osobi i čelniku Ustanove.
+                      </small>
+                    </p>
+                  </Col>
+                </Row>
               </Form>
             )}
           />
