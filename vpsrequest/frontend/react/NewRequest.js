@@ -126,7 +126,7 @@ export class NewRequest extends Component
       modalMsg: undefined,
     }
 
-    this.urlListVMOSes = '/api/v1/internal/listvmos'
+    this.urlListVMOSes = '/api/v1/internal/vmos'
     this.urlListUsers = '/api/v1/internal/users'
     this.username = localStorage.getItem('authUsername')
 
