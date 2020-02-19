@@ -123,8 +123,8 @@ export const ModalAreYouSure = ({isOpen, toggle, title, msg, onYes}) => (
       <Button color="primary" onClick={() => {
         onYes();
         toggle();
-      }}>Yes</Button>{' '}
-      <Button color="secondary" onClick={toggle}>No</Button>
+      }}>Da</Button>{' '}
+      <Button color="secondary" onClick={toggle}>Ne</Button>
     </ModalFooter>
   </Modal>
 )

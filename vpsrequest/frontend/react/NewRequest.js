@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Backend } from './DataManager';
 import {
+  Alert,
   Button,
   Col,
   CustomInput,
@@ -13,10 +14,8 @@ import {
   DropDown,
   InfoLink } from './UIElements.js';
 import { Formik, Form, Field } from 'formik';
-
 import './NewRequest.css';
 
-//
 
 const RowRequestDropDown = ({field, ...propsRest}) =>
 (
@@ -113,13 +112,14 @@ const RequestHorizontalRule = () =>
 export class NewRequest extends Component
 {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       areYouSureModal: false,
       loading: false,
       listVMOSes: [],
       acceptConditions: undefined,
+      acceptConditionsAlert: false,
       userDetail: undefined,
       modalFunc: undefined,
       modalTitle: undefined,
@@ -134,9 +134,11 @@ export class NewRequest extends Component
     this.infoVMOS = "* Čelnik ustanove odgovara za posjedovanje i aktiviranje valjane licence za gore odabrani operacijski sustav."
     this.infoAAI = "* Sistem-inženjer jedini ima pravo pristupa na XenOrchestra sučelje dostupno na adresi "
 
-    this.backend = new Backend();
-    this.toggleAreYouSure = this.toggleAreYouSure.bind(this);
-    this.handleAcceptConditions = this.handleAcceptConditions.bind(this);
+    this.backend = new Backend()
+    this.toggleAreYouSure = this.toggleAreYouSure.bind(this)
+    this.toggleAreYouSureSetModal = this.toggleAreYouSureSetModal.bind(this)
+    this.handleAcceptConditions = this.handleAcceptConditions.bind(this)
+    this.dismissAlert = this.dismissAlert.bind(this)
   }
 
   flattenListVMOses(data) {
@@ -145,6 +147,15 @@ export class NewRequest extends Component
       listOSes.push(os.vm_os)
     })
     return listOSes
+  }
+
+  toggleAreYouSureSetModal(msg, title, onyes) {
+    this.setState(prevState =>
+      ({areYouSureModal: !prevState.areYouSureModal,
+        modalFunc: onyes,
+        modalMsg: msg,
+        modalTitle: title,
+      }));
   }
 
   toggleAreYouSure() {
@@ -167,6 +178,10 @@ export class NewRequest extends Component
       }))
   }
 
+  dismissAlert() {
+    this.setState({acceptConditionsAlert: false})
+  }
+
   handleAcceptConditions() {
     this.setState(prevState => ({acceptConditions: !prevState.acceptConditions}))
   }
@@ -180,7 +195,10 @@ export class NewRequest extends Component
     else if (!loading && listVMOSes && userDetail && acceptConditions !== undefined) {
       return (
         <BaseView
-          title='Novi zahtjev'>
+          title='Novi zahtjev'
+          modal={true}
+          state={this.state}
+          toggle={this.toggleAreYouSure}>
           <Formik
             initialValues={{
               location: '',
@@ -205,7 +223,14 @@ export class NewRequest extends Component
               head_role: 'Čelnik ustanove',
               head_email: ''
             }}
-            onSubmit={(values) => alert(JSON.stringify(values, null, 2))}
+          onSubmit={(values) => {
+            if (!acceptConditions) {
+              this.setState({acceptConditionsAlert: true});
+            }
+            else {
+              alert(JSON.stringify(values, null, 2))
+            }
+          }}
             render = {props => (
               <Form>
                 <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
@@ -246,7 +271,7 @@ export class NewRequest extends Component
 
                 <RequestHorizontalRule/>
                 <Row>
-                  <Col className="text-center">
+                  <Col md={{size: 8, offset: 2}} className="text-center">
                     <CustomInput type="checkbox" id="acceptedConditions" checked={acceptConditions} onChange={this.handleAcceptConditions}
                       label={
                         <InfoLink prefix="Prihvaćam "
@@ -254,6 +279,15 @@ export class NewRequest extends Component
                           linkTitle="Pravilnik usluge Virtual Private Server"/>
                       }
                     />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={{size: 4, offset: 4}}>
+                    <Alert className="mt-2" color="danger" isOpen={this.state.acceptConditionsAlert} toggle={this.dismissAlert} fade={false}>
+                      <p className="text-center">
+                        Morate prihvatiti pravilnik Usluge!
+                      </p>
+                    </Alert>
                   </Col>
                 </Row>
                 <Row className="mt-2">
