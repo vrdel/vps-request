@@ -100,7 +100,7 @@ const doLogout = (history, onLogout) => {
       'Content-Type': 'application/json',
       'X-CSRFToken': cookies.get('csrftoken'),
       'Referer': 'same-origin'
-    }}).then((response) => history.push('/ui/login'));
+    }}).then((response) => history.push('/ui/prijava'));
 }
 
 
