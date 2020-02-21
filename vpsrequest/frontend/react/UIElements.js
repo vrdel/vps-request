@@ -220,6 +220,12 @@ export const Footer = ({loginPage=false}) => {
   }
 }
 
+export const RequestHorizontalRule = () =>
+(
+  <div className="m-5">
+    <hr/>
+  </div>
+)
 
 export const LoadingAnim = () => (
   <Card className="text-center">

@@ -9,10 +9,13 @@ import {
   Row,
 } from 'reactstrap';
 import {
-  LoadingAnim,
   BaseView,
   DropDown,
-  InfoLink } from './UIElements.js';
+  InfoLink,
+  LoadingAnim,
+  NotifyOk,
+  RequestHorizontalRule,
+} from './UIElements.js';
 import { Formik, Form, Field } from 'formik';
 import './NewRequest.css';
 
@@ -101,14 +104,6 @@ const RowRequestField = ({field, ...propsRest}) =>
 )
 
 
-const RequestHorizontalRule = () =>
-(
-  <div className="m-5">
-    <hr/>
-  </div>
-)
-
-
 export class NewRequest extends Component
 {
   constructor(props) {
@@ -126,8 +121,9 @@ export class NewRequest extends Component
       modalMsg: undefined,
     }
 
-    this.urlListVMOSes = '/api/v1/internal/vmos'
-    this.urlListUsers = '/api/v1/internal/users'
+    this.apiListVMOSes = '/api/v1/internal/vmos/'
+    this.apiListUsers = '/api/v1/internal/users/'
+    this.apiListRequests = '/api/v1/internal/requests/'
     this.username = localStorage.getItem('authUsername')
 
     this.infoPurpose = "* Potrebno je detaljno obrazložiti namjenu virtualnog poslužitelja. Zahtjev može biti odbijen ukoliko Srce procijeni da navedena namjena virtualnog poslužitelja nije primjerena namjeni usluge, ili ne predstavlja trajne potrebe ustanove za poslužiteljskim kapacitetima.";
@@ -138,6 +134,7 @@ export class NewRequest extends Component
     this.toggleAreYouSure = this.toggleAreYouSure.bind(this)
     this.toggleAreYouSureSetModal = this.toggleAreYouSureSetModal.bind(this)
     this.handleAcceptConditions = this.handleAcceptConditions.bind(this)
+    this.handleOnSubmit = this.handleOnSubmit.bind(this)
     this.dismissAlert = this.dismissAlert.bind(this)
   }
 
@@ -167,8 +164,8 @@ export class NewRequest extends Component
     this.setState({loading: true})
 
     Promise.all([
-      this.backend.fetchData(this.urlListVMOSes),
-      this.backend.fetchData(`${this.urlListUsers}/${this.username}`)
+      this.backend.fetchData(this.apiListVMOSes),
+      this.backend.fetchData(`${this.apiListUsers}/${this.username}`)
     ])
       .then(([vmOSes, userDetail]) => this.setState({
         listVMOSes: this.flattenListVMOses(vmOSes),
@@ -184,6 +181,16 @@ export class NewRequest extends Component
 
   handleAcceptConditions() {
     this.setState(prevState => ({acceptConditions: !prevState.acceptConditions}))
+  }
+
+  handleOnSubmit(data) {
+    this.backend.addObject(this.apiListRequests, data)
+      .then(() => NotifyOk({
+        msg: 'Zahtjev uspješno podnesen',
+        title: 'Poruka',
+        callback: () => {}}
+      ).catch(err => alert('Something went wrong: ' + err))
+    )
   }
 
   render() {
@@ -229,7 +236,7 @@ export class NewRequest extends Component
               this.setState({acceptConditionsAlert: true});
             }
             else {
-              alert(JSON.stringify(values, null, 2))
+              this.handleOnSubmit(values)
             }
           }}
             render = {props => (
