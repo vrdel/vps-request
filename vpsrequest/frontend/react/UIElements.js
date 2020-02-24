@@ -130,7 +130,8 @@ export const ModalAreYouSure = ({isOpen, toggle, title, msg, onYes}) => (
 )
 
 
-export const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal, msgModal}) => (
+export const NavigationBar = ({history, onLogout, isOpenModal, toggle,
+  titleModal, msgModal, userDetails}) => (
   <React.Fragment>
     <ModalAreYouSure
       isOpen={isOpenModal}
@@ -154,7 +155,7 @@ export const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModa
           <React.Fragment>
             Dobrodošli,
             <br/>
-            <strong>{localStorage.getItem('authUsername')}</strong>
+            <strong>{userDetails.first_name}</strong>
           </React.Fragment>
         </NavItem>
         <NavItem className='m-2 text-light'>

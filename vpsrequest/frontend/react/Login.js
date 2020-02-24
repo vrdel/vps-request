@@ -19,7 +19,6 @@ import CloudLogoSmall from './logos/logo_cloud-smaller.png';
 
 
 class Login extends Component {
-
   constructor(props) {
     super(props);
 
@@ -107,6 +106,8 @@ class Login extends Component {
 
   doUserPassLogin(username, password)
   {
+    let cookies = new Cookies();
+
     return fetch('/rest-auth/login/', {
       method: 'POST',
       mode: 'cors',
@@ -115,6 +116,7 @@ class Login extends Component {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        'X-CSRFToken': cookies.get('csrftoken'),
         'Referer': 'same-origin'
       },
       body: JSON.stringify({
@@ -129,7 +131,6 @@ class Login extends Component {
   }
 
   render() {
-
     return (
       <Container>
         <Row className="login-first-row">

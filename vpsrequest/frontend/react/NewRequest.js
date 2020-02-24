@@ -124,7 +124,6 @@ export class NewRequest extends Component
     this.apiListVMOSes = '/api/v1/internal/vmos/'
     this.apiListUsers = '/api/v1/internal/users/'
     this.apiListRequests = '/api/v1/internal/requests/'
-    this.username = localStorage.getItem('authUsername')
 
     this.infoPurpose = "* Potrebno je detaljno obrazložiti namjenu virtualnog poslužitelja. Zahtjev može biti odbijen ukoliko Srce procijeni da navedena namjena virtualnog poslužitelja nije primjerena namjeni usluge, ili ne predstavlja trajne potrebe ustanove za poslužiteljskim kapacitetima.";
     this.infoVMOS = "* Čelnik ustanove odgovara za posjedovanje i aktiviranje valjane licence za gore odabrani operacijski sustav."
@@ -163,16 +162,19 @@ export class NewRequest extends Component
   componentDidMount() {
     this.setState({loading: true})
 
-    Promise.all([
-      this.backend.fetchData(this.apiListVMOSes),
-      this.backend.fetchData(`${this.apiListUsers}/${this.username}`)
-    ])
-      .then(([vmOSes, userDetail]) => this.setState({
-        listVMOSes: this.flattenListVMOses(vmOSes),
-        acceptConditions: false,
-        userDetail: userDetail,
-        loading: false
-      }))
+    this.backend.isActiveSession().then(sessionActive =>
+      sessionActive.active &&
+        Promise.all([
+          this.backend.fetchData(this.apiListVMOSes),
+        ])
+          .then(([vmOSes]) => this.setState({
+            listVMOSes: this.flattenListVMOses(vmOSes),
+            acceptConditions: false,
+            userDetails: sessionActive.userdetails,
+            loading: false
+          }))
+    )
+
   }
 
   dismissAlert() {
@@ -194,12 +196,13 @@ export class NewRequest extends Component
   }
 
   render() {
-    const {loading, listVMOSes, userDetail, acceptConditions} = this.state
+    const {loading, listVMOSes, userDetails, acceptConditions} = this.state
 
     if (loading)
       return (<LoadingAnim />)
 
-    else if (!loading && listVMOSes && userDetail && acceptConditions !== undefined) {
+    else if (!loading && listVMOSes &&
+      userDetails && acceptConditions !== undefined) {
       return (
         <BaseView
           title='Novi zahtjev'
@@ -209,12 +212,12 @@ export class NewRequest extends Component
           <Formik
             initialValues={{
               location: '',
-              first_name: userDetail.first_name,
-              last_name: userDetail.last_name,
-              institution: userDetail.institution,
-              role: userDetail.role,
-              email: userDetail.email,
-              aaieduhr: userDetail.aaieduhr,
+              first_name: userDetails.first_name,
+              last_name: userDetails.last_name,
+              institution: userDetails.institution,
+              role: userDetails.role,
+              email: userDetails.email,
+              aaieduhr: userDetails.aaieduhr,
               vm_fqdn: '',
               vm_purpose: '',
               vm_remark: '',
@@ -227,7 +230,7 @@ export class NewRequest extends Component
               sys_email: '',
               head_firstname: '',
               head_lastname: '',
-              head_institution: userDetail.institution,
+              head_institution: userDetails.institution,
               head_role: 'Čelnik ustanove',
               head_email: ''
             }}

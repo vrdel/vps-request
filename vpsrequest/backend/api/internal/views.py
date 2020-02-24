@@ -137,7 +137,13 @@ class GetConfigOptions(APIView):
 
 class IsSessionActive(BaseProtectedAPIView):
     def get(self, request):
-        return Response({'active': True})
+        user = dict()
+
+        for key in ['username', 'first_name', 'last_name', 'email', 'is_staff',
+                    'is_active', 'aaieduhr', 'institution', 'role']:
+            user[key] = eval('request.user.{}'.format(key))
+
+        return Response({'active': True, 'userdetails': user})
 
 
 class Saml2Login(BaseProtectedAPIView):
