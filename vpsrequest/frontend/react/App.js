@@ -5,7 +5,7 @@ import Home from './Home';
 import NotFound from './NotFound';
 import { Route, Switch, BrowserRouter, Redirect, withRouter } from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
-import { NavigationBar, NavigationLinks, Footer } from './UIElements';
+import { NavigationBar, NavigationLinks, Footer, PrivateRoute } from './UIElements';
 import { NotificationContainer } from 'react-notifications';
 import { Backend } from './DataManager';
 import Cookies from 'universal-cookie';
@@ -91,21 +91,11 @@ class App extends Component {
         <BrowserRouter>
           <Switch>
             <Route
-              exact
-              path="/ui/prijava"
+              path="/ui/"
               render={props =>
                   <Login onLogin={this.onLogin} {...props} />
               }
             />
-            <Route
-              exact
-              path="/ui/(prijava|novi-zahtjevi|odobreni-zahtjevi|odbijeni-zahtjevi|stanje-zahtjeva|novi-zahtjev)"
-              render={props => (
-                <Redirect to={{
-                  pathname: '/ui/prijava',
-                  state: {from: props.location}
-                }}/>
-              )}/>
             <Route component={NotFound} />
           </Switch>
         </BrowserRouter>
@@ -132,7 +122,7 @@ class App extends Component {
                 <NavigationLinksWithRouter />
                 <Switch>
                   <Route exact path="/ui/novi-zahtjev"
-                    render={() => <NewRequest/>}/>
+                    render={(props) => <NewRequest {...props}/>}/>
                 </Switch>
               </Col>
             </Row>
