@@ -28,7 +28,7 @@ import {
   faHandshake,
   faThumbsDown,
   faBatteryHalf} from '@fortawesome/free-solid-svg-icons';
-import { NotificationManager, NotificationContainer } from 'react-notifications';
+import { NotificationManager } from 'react-notifications';
 import { Field } from 'formik';
 import Autocomplete from 'react-autocomplete';
 import SrceLogo from './logos/pravisrce.png';
@@ -205,7 +205,6 @@ const NavigationLinksWithRouter = withRouter(NavigationLinks);
 export const VPSPage = ({toggleAreYouSure, onLogout, areYouSureModal, userDetails, children}) => (
   <Container>
     <Row>
-      <NotificationContainer />
       <Col>
         <NavigationBarWithRouter
           onLogout={onLogout}
@@ -277,10 +276,14 @@ export const LoadingAnim = () => (
 
 
 export const NotifyOk = ({msg='', title='', callback=undefined}) => {
-  NotificationManager.success(msg,
-    title,
-    2000);
-  setTimeout(callback, 2000);
+  NotificationManager.success(msg, title, 2000)
+  setTimeout(callback, 2000)
+}
+
+
+export const NotifyError = ({msg='', title='', callback=undefined}) => {
+  NotificationManager.error(msg, title, 2000)
+  setTimeout(callback, 2000)
 }
 
 

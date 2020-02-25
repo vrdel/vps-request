@@ -14,6 +14,7 @@ import {
   InfoLink,
   LoadingAnim,
   NotifyOk,
+  NotifyError,
   RequestHorizontalRule,
 } from './UIElements.js';
 import { Formik, Form, Field } from 'formik';
@@ -186,12 +187,15 @@ export class NewRequest extends Component
 
   handleOnSubmit(data) {
     this.backend.addObject(this.apiListRequests, data)
-      .then(() => NotifyOk({
-        msg: 'Zahtjev uspješno podnesen',
-        title: 'Poruka',
-        callback: () => {}}
-      ).catch(err => alert('Something went wrong: ' + err))
-    )
+      .then(response => {
+        response.ok
+          ? NotifyOk({
+              msg: 'Zahtjev uspješno podnesen',
+              title: `Uspješno - HTTP ${response.status}`})
+          : NotifyError({
+              msg: response.statusText,
+              title: `Greška - HTTP ${response.status}`})
+      })
   }
 
   render() {

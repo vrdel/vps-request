@@ -3,12 +3,14 @@ import Login from './Login';
 import NewRequest from './NewRequest';
 import Home from './Home';
 import NotFound from './NotFound';
+import { NotificationContainer } from 'react-notifications';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import { VPSPage } from './UIElements';
 import { Backend } from './DataManager';
 import Cookies from 'universal-cookie';
 
 import './App.css';
+import 'react-notifications/lib/notifications.css';
 
 
 class App extends Component {
@@ -105,6 +107,7 @@ class App extends Component {
 
       return (
         <BrowserRouter>
+          <NotificationContainer/>
           <Switch>
             <Route exact path="/ui/novi-zahtjev"
               render={(props) =>
