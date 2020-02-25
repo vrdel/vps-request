@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Login from './Login';
 import NewRequest from './NewRequest';
+import StateRequest from './StateRequest';
 import Home from './Home';
 import NotFound from './NotFound';
 import { NotificationContainer } from 'react-notifications';
@@ -139,6 +140,7 @@ class App extends Component {
                   <VPSPage
                     {...propsPage}
                     {...props}>
+                      <StateRequest/>
                   </VPSPage>}/>
           </Switch>
         </BrowserRouter>
