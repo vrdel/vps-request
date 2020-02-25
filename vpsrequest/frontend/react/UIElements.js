@@ -3,19 +3,22 @@ import Cookies from 'universal-cookie';
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
-  Nav,
-  NavLink,
-  NavItem,
-  NavbarBrand,
-  Navbar,
-  Spinner,
+  CardHeader,
+  Col,
+  Container,
   Modal,
-  ModalHeader,
   ModalBody,
-  ModalFooter} from 'reactstrap';
-import {Link} from 'react-router-dom';
+  ModalFooter,
+  ModalHeader,
+  Nav,
+  NavItem,
+  NavLink,
+  Navbar,
+  NavbarBrand,
+  Row,
+} from 'reactstrap';
+import { Link, withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSignOutAlt,
@@ -32,7 +35,9 @@ import SrceLogo from './logos/pravisrce.png';
 import SrceLogoTiny from './logos/srce-logo-e-mail-sig.png';
 import CloudLogo from './logos/logo_cloud.png';
 
+
 import './UIElements.css';
+
 
 var list_pages = ['novi-zahtjevi', 'odobreni-zahtjevi', 'odbijeni-zahtjevi', 'novi-zahtjev', 'stanje-zahtjeva'];
 
@@ -100,7 +105,7 @@ const doLogout = (history, onLogout) => {
       'Content-Type': 'application/json',
       'X-CSRFToken': cookies.get('csrftoken'),
       'Referer': 'same-origin'
-    }}).then((response) => history.push('/ui/login'));
+    }}).then((response) => history.push('/ui/prijava'));
 }
 
 
@@ -130,7 +135,8 @@ export const ModalAreYouSure = ({isOpen, toggle, title, msg, onYes}) => (
 )
 
 
-export const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal, msgModal}) => (
+const NavigationBar = ({history, onLogout, isOpenModal, toggle,
+  titleModal, msgModal, userDetails}) => (
   <React.Fragment>
     <ModalAreYouSure
       isOpen={isOpenModal}
@@ -154,7 +160,7 @@ export const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModa
           <React.Fragment>
             Dobrodošli,
             <br/>
-            <strong>{localStorage.getItem('authUsername')}</strong>
+            <strong>{userDetails.first_name}</strong>
           </React.Fragment>
         </NavItem>
         <NavItem className='m-2 text-light'>
@@ -171,7 +177,7 @@ export const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModa
 )
 
 
-export const NavigationLinks = ({location}) => {
+const NavigationLinks = ({location}) => {
   var data = undefined;
   data = list_pages
 
@@ -192,6 +198,36 @@ export const NavigationLinks = ({location}) => {
     </Nav>
   )
 }
+
+
+const NavigationBarWithRouter = withRouter(NavigationBar);
+const NavigationLinksWithRouter = withRouter(NavigationLinks);
+export const VPSPage = ({toggleAreYouSure, onLogout, areYouSureModal, userDetails, children}) => (
+  <Container>
+    <Row>
+      <Col>
+        <NavigationBarWithRouter
+          onLogout={onLogout}
+          isOpenModal={areYouSureModal}
+          toggle={toggleAreYouSure}
+          titleModal='Odjava'
+          msgModal='Da li ste sigurni da se želite odjaviti?'
+          userDetails={userDetails}/>
+      </Col>
+    </Row>
+    <Row className="no-gutters">
+      <Col>
+        <NavigationLinksWithRouter />
+        {children}
+      </Col>
+    </Row>
+    <Row>
+      <Col>
+        <Footer loginPage={false}/>
+      </Col>
+    </Row>
+  </Container>
+)
 
 
 export const Footer = ({loginPage=false}) => {
@@ -220,6 +256,12 @@ export const Footer = ({loginPage=false}) => {
   }
 }
 
+export const RequestHorizontalRule = () =>
+(
+  <div className="m-5">
+    <hr/>
+  </div>
+)
 
 export const LoadingAnim = () => (
   <Card className="text-center">
@@ -234,10 +276,14 @@ export const LoadingAnim = () => (
 
 
 export const NotifyOk = ({msg='', title='', callback=undefined}) => {
-  NotificationManager.success(msg,
-    title,
-    2000);
-  setTimeout(callback, 2000);
+  NotificationManager.success(msg, title, 2000)
+  setTimeout(callback, 2000)
+}
+
+
+export const NotifyError = ({msg='', title='', callback=undefined}) => {
+  NotificationManager.error(msg, title, 2000)
+  setTimeout(callback, 2000)
 }
 
 

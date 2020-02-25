@@ -77,27 +77,27 @@ class Request(models.Model):
         null=False
     )
     vm_remark = models.TextField(blank=False, null=False)
-    vm_admin_remark = models.TextField(blank=False, null=False)
+    vm_admin_remark = models.TextField(blank=True, null=True)
     vm_fqdn = models.CharField(
         'VM FQDN',
         max_length=50,
         blank=False,
         null=False
     )
-    vm_reason = models.TextField(blank=False, null=False)
+    vm_reason = models.TextField(blank=True, null=True)
     vm_host = models.CharField(
         'VM Host',
         max_length=50,
-        blank=False,
-        null=False
+        blank=True,
+        null=True
     )
     vm_ip = models.CharField(
         'VM IP address',
         max_length=16,
-        blank=False,
-        null=False
+        blank=True,
+        null=True
     )
-    vm_ready = models.IntegerField('VM Ready', blank=False, null=False)
+    vm_ready = models.IntegerField('VM Ready', blank=True, null=True)
     vm_dismissed = models.DateTimeField('VM Dismissed', blank=True, null=True)
     sys_firstname = models.CharField(
         'Sys Firstname',
@@ -129,12 +129,12 @@ class Request(models.Model):
         blank=False,
         null=False
     )
-    approved = models.IntegerField('Request Approved', blank=False, null=False)
+    approved = models.IntegerField('Request Approved', blank=True, null=True)
     approvedby = models.CharField(
         'Request Approved by',
         max_length=100,
-        blank=False,
-        null=False
+        blank=True,
+        null=True
     )
     approved_date = models.DateTimeField('VM Approved Date', blank=True, null=True)
     sys_aaieduhr = models.CharField(

@@ -3,17 +3,14 @@ import Login from './Login';
 import NewRequest from './NewRequest';
 import Home from './Home';
 import NotFound from './NotFound';
-import { Route, Switch, BrowserRouter, Redirect, withRouter } from 'react-router-dom';
-import { Container, Row, Col } from 'reactstrap';
-import { NavigationBar, NavigationLinks, Footer } from './UIElements';
 import { NotificationContainer } from 'react-notifications';
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import { VPSPage } from './UIElements';
 import { Backend } from './DataManager';
 import Cookies from 'universal-cookie';
 
 import './App.css';
-
-const NavigationBarWithRouter = withRouter(NavigationBar);
-const NavigationLinksWithRouter = withRouter(NavigationLinks);
+import 'react-notifications/lib/notifications.css';
 
 
 class App extends Component {
@@ -24,7 +21,7 @@ class App extends Component {
     this.backend = new Backend();
 
     this.state = {
-      isLogged: localStorage.getItem('authIsLogged') ? true : false,
+      userDetails: undefined,
       isSessionActive: undefined,
       areYouSureModal: false,
     };
@@ -32,34 +29,23 @@ class App extends Component {
     this.onLogin = this.onLogin.bind(this);
     this.onLogout = this.onLogout.bind(this);
     this.toggleAreYouSure = this.toggleAreYouSure.bind(this);
-    this.flushStorage = this.flushStorage.bind(this);
   }
 
   onLogin(json, history) {
-    localStorage.setItem('authUsername', json.username);
-    localStorage.setItem('authIsLogged', true);
-    localStorage.setItem('authFirstName', json.first_name);
-    localStorage.setItem('authLastName', json.last_name);
-    localStorage.setItem('authIsSuperuser', json.is_superuser);
-    this.initalizeState(true, true).then(
+    let response = new Object();
+
+    response.active = true
+    response.userdetails = json
+
+    this.initalizeState(response).then(
       setTimeout(() => {
         history.push('/ui/novi-zahtjevi');
       }, 50
-    )).then(this.cookies.set('activeSession', true))
-  }
-
-  flushStorage() {
-    localStorage.removeItem('authUsername');
-    localStorage.removeItem('authIsLogged');
-    localStorage.removeItem('authFirstName');
-    localStorage.removeItem('authLastName');
-    localStorage.removeItem('authIsSuperuser');
-    this.cookies.remove('activeSession')
+    ))
   }
 
   onLogout() {
-    this.flushStorage()
-    this.setState({isLogged: false, isSessionActive: false});
+    this.setState({isSessionActive: false});
   }
 
   toggleAreYouSure() {
@@ -75,84 +61,86 @@ class App extends Component {
       })
   }
 
-  initalizeState(activeSession, isLogged) {
+  initalizeState(response) {
     return Promise.all([this.fetchConfigOptions()])
       .then(([options]) => {
         this.setState({
-          isSessionActive: activeSession,
-          isLogged: isLogged,
+          isSessionActive: response.active,
+          userDetails: response.userdetails,
           configOptions: options,
         })
       })
   }
 
   componentDidMount() {
-    this.state.isLogged && this.backend.isActiveSession().then(active => {
-      if (active) {
-        this.initalizeState(active, this.state.isLogged)
+    this.backend.isActiveSession().then(response => {
+      if (response) {
+        this.initalizeState(response)
       }
-      else
-        this.flushStorage()
     })
   }
 
   render() {
-    let cookie = this.cookies.get('activeSession')
+    let {isSessionActive, userDetails} = this.state
 
-    if (!cookie || !this.state.isLogged) {
+    if (!isSessionActive) {
       return (
         <BrowserRouter>
           <Switch>
             <Route
-              exact
-              path="/ui/prijava"
+              path="/ui/"
               render={props =>
                   <Login onLogin={this.onLogin} {...props} />
               }
             />
-            <Route
-              exact
-              path="/ui/(prijava|novi-zahtjevi)"
-              render={props => (
-                <Redirect to={{
-                  pathname: '/ui/prijava',
-                  state: {from: props.location}
-                }}/>
-              )}/>
             <Route component={NotFound} />
           </Switch>
         </BrowserRouter>
       )
     }
-    else if (this.state.isLogged && cookie) {
+    else if (isSessionActive && userDetails) {
+      let propsPage = new Object()
+      propsPage.toggleAreYouSure = this.toggleAreYouSure
+      propsPage.onLogout = this.onLogout
+      propsPage.areYouSureModal = this.state.areYouSureModal
+      propsPage.userDetails = userDetails
+
       return (
         <BrowserRouter>
-          <Container>
-            <Row>
-              <NotificationContainer />
-              <Col>
-                <NavigationBarWithRouter
-                  onLogout={this.onLogout}
-                  isOpenModal={this.state.areYouSureModal}
-                  toggle={this.toggleAreYouSure}
-                  titleModal='Odjava'
-                  msgModal='Da li ste sigurni da se želite odjaviti?'/>
-              </Col>
-            </Row>
-            <Row className="no-gutters">
-              <Col>
-                <NavigationLinksWithRouter />
-                <Switch>
-                  <Route exact path="/ui/novi-zahtjev" component={NewRequest}/>
-                </Switch>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Footer loginPage={false}/>
-              </Col>
-            </Row>
-          </Container>
+          <NotificationContainer/>
+          <Switch>
+            <Route exact path="/ui/novi-zahtjev"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}
+                    {...props}>
+                      <NewRequest/>
+                  </VPSPage>}/>
+            <Route exact path="/ui/novi-zahtjevi"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}
+                    {...props}>
+                  </VPSPage>}/>
+            <Route exact path="/ui/odobreni-zahtjevi"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}
+                    {...props}>
+                  </VPSPage>}/>
+            <Route exact path="/ui/odbijeni-zahtjevi"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}
+                    {...props}>
+                  </VPSPage>}/>
+            <Route exact path="/ui/stanje-zahtjeva"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}
+                    {...props}>
+                  </VPSPage>}/>
+          </Switch>
         </BrowserRouter>
       )
     }

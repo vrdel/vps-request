@@ -4,8 +4,10 @@ export class Backend {
   isActiveSession() {
     return fetch('/api/v1/internal/sessionactive')
       .then(response => {
-        let active = response.ok ? true : false
-        return active
+        if (response.ok)
+          return response.json()
+        else
+          return false
       })
       .catch(() => false);
   }

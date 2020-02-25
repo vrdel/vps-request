@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import APIException
 
+from datetime import datetime
 
 class BaseProtectedAPIView(APIView):
     if settings.ALWAYS_LOGGEDIN:
@@ -29,6 +30,19 @@ class NotFound(APIException):
 
 
 class ListRequests(BaseProtectedAPIView):
+    def post(self, request):
+        user = get_user_model().objects.get(username=request.data['username'])
+        request.data['user'] = user.pk
+        request.data['request_date'] = datetime.now()
+
+        serializer = serializers.RequestsSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def get(self, request, id=None):
         if not id:
             requests = models.Request.objects.all()
@@ -127,7 +141,13 @@ class GetConfigOptions(APIView):
 
 class IsSessionActive(BaseProtectedAPIView):
     def get(self, request):
-        return Response({'active': True})
+        user = dict()
+
+        for key in ['username', 'first_name', 'last_name', 'email', 'is_staff',
+                    'is_active', 'aaieduhr', 'institution', 'role']:
+            user[key] = eval('request.user.{}'.format(key))
+
+        return Response({'active': True, 'userdetails': user})
 
 
 class Saml2Login(BaseProtectedAPIView):
