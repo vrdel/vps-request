@@ -138,7 +138,7 @@ export class NewRequest extends Component
   }
 
   flattenListVMOses(data) {
-    let listOSes = new Array(data.length)
+    let listOSes = new Array()
     data.forEach(os => {
       listOSes.push(os.vm_os)
     })
@@ -174,7 +174,6 @@ export class NewRequest extends Component
             loading: false
           }))
     )
-
   }
 
   dismissAlert() {
@@ -221,7 +220,7 @@ export class NewRequest extends Component
               vm_fqdn: '',
               vm_purpose: '',
               vm_remark: '',
-              list_oses: '',
+              vm_os: '',
               sys_firstname: '',
               sys_aaieduhr: '',
               sys_lastname: '',
@@ -254,7 +253,12 @@ export class NewRequest extends Component
                 <h5 className="mb-3 mt-4">Zahtijevani resursi</h5>
                 <Field name="vm_purpose" component={RowRequestField} label="Namjena:" labelFor="vmPurpose" fieldType="textarea" infoMsg={this.infoPurpose} required={true}/>
                 <Field name="vm_fqdn" component={RowRequestField} label="Puno ime poslužitelja (FQDN):" labelFor="fqdn" fieldType="text" required={true}/>
-                <Field name="list_oses" component={RowRequestDropDown} label="Operacijski sustav:" labelFor="vm_oses" data={listVMOSes} infoMsg={this.infoVMOS} required={true}/>
+                <Field name="vm_os" component={RowRequestDropDown}
+                  label="Operacijski sustav:"
+                  labelFor="vm_oses"
+                  data={['', ...listVMOSes]}
+                  infoMsg={this.infoVMOS}
+                  required={true}/>
                 <Field name="vm_remark" component={RowRequestField} label="Napomena:" labelFor="vmRemark" fieldType="textarea" required={true}/>
 
                 <RequestHorizontalRule/>
