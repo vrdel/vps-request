@@ -3,19 +3,22 @@ import Cookies from 'universal-cookie';
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
-  Nav,
-  NavLink,
-  NavItem,
-  NavbarBrand,
-  Navbar,
-  Spinner,
+  CardHeader,
+  Col,
+  Container,
   Modal,
-  ModalHeader,
   ModalBody,
-  ModalFooter} from 'reactstrap';
-import {Link} from 'react-router-dom';
+  ModalFooter,
+  ModalHeader,
+  Nav,
+  NavItem,
+  NavLink,
+  Navbar,
+  NavbarBrand,
+  Row,
+} from 'reactstrap';
+import { Link, withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSignOutAlt,
@@ -25,14 +28,16 @@ import {
   faHandshake,
   faThumbsDown,
   faBatteryHalf} from '@fortawesome/free-solid-svg-icons';
-import { NotificationManager } from 'react-notifications';
+import { NotificationManager, NotificationContainer } from 'react-notifications';
 import { Field } from 'formik';
 import Autocomplete from 'react-autocomplete';
 import SrceLogo from './logos/pravisrce.png';
 import SrceLogoTiny from './logos/srce-logo-e-mail-sig.png';
 import CloudLogo from './logos/logo_cloud.png';
 
+
 import './UIElements.css';
+
 
 var list_pages = ['novi-zahtjevi', 'odobreni-zahtjevi', 'odbijeni-zahtjevi', 'novi-zahtjev', 'stanje-zahtjeva'];
 
@@ -130,7 +135,7 @@ export const ModalAreYouSure = ({isOpen, toggle, title, msg, onYes}) => (
 )
 
 
-export const NavigationBar = ({history, onLogout, isOpenModal, toggle,
+const NavigationBar = ({history, onLogout, isOpenModal, toggle,
   titleModal, msgModal, userDetails}) => (
   <React.Fragment>
     <ModalAreYouSure
@@ -172,7 +177,7 @@ export const NavigationBar = ({history, onLogout, isOpenModal, toggle,
 )
 
 
-export const NavigationLinks = ({location}) => {
+const NavigationLinks = ({location}) => {
   var data = undefined;
   data = list_pages
 
@@ -193,6 +198,37 @@ export const NavigationLinks = ({location}) => {
     </Nav>
   )
 }
+
+
+const NavigationBarWithRouter = withRouter(NavigationBar);
+const NavigationLinksWithRouter = withRouter(NavigationLinks);
+export const VPSPage = ({toggleAreYouSure, onLogout, areYouSureModal, userDetails, children}) => (
+  <Container>
+    <Row>
+      <NotificationContainer />
+      <Col>
+        <NavigationBarWithRouter
+          onLogout={onLogout}
+          isOpenModal={areYouSureModal}
+          toggle={toggleAreYouSure}
+          titleModal='Odjava'
+          msgModal='Da li ste sigurni da se želite odjaviti?'
+          userDetails={userDetails}/>
+      </Col>
+    </Row>
+    <Row className="no-gutters">
+      <Col>
+        <NavigationLinksWithRouter />
+        {children}
+      </Col>
+    </Row>
+    <Row>
+      <Col>
+        <Footer loginPage={false}/>
+      </Col>
+    </Row>
+  </Container>
+)
 
 
 export const Footer = ({loginPage=false}) => {

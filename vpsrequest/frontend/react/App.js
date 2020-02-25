@@ -5,15 +5,12 @@ import Home from './Home';
 import NotFound from './NotFound';
 import { Route, Switch, BrowserRouter, Redirect, withRouter } from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
-import { NavigationBar, NavigationLinks, Footer, PrivateRoute } from './UIElements';
+import { NavigationBar, NavigationLinks, Footer, PrivateRoute, VPSPage } from './UIElements';
 import { NotificationContainer } from 'react-notifications';
 import { Backend } from './DataManager';
 import Cookies from 'universal-cookie';
 
 import './App.css';
-
-const NavigationBarWithRouter = withRouter(NavigationBar);
-const NavigationLinksWithRouter = withRouter(NavigationLinks);
 
 
 class App extends Component {
@@ -102,36 +99,47 @@ class App extends Component {
       )
     }
     else if (isSessionActive && userDetails) {
+      let propsPage = new Object()
+      propsPage.toggleAreYouSure = this.toggleAreYouSure
+      propsPage.onLogout = this.onLogout
+      propsPage.areYouSureModal = this.state.areYouSureModal
+      propsPage.userDetails = userDetails
+
       return (
         <BrowserRouter>
-          <Container>
-            <Row>
-              <NotificationContainer />
-              <Col>
-                <NavigationBarWithRouter
-                  onLogout={this.onLogout}
-                  isOpenModal={this.state.areYouSureModal}
-                  toggle={this.toggleAreYouSure}
-                  titleModal='Odjava'
-                  msgModal='Da li ste sigurni da se želite odjaviti?'
-                  userDetails={userDetails}/>
-              </Col>
-            </Row>
-            <Row className="no-gutters">
-              <Col>
-                <NavigationLinksWithRouter />
-                <Switch>
-                  <Route exact path="/ui/novi-zahtjev"
-                    render={(props) => <NewRequest {...props}/>}/>
-                </Switch>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Footer loginPage={false}/>
-              </Col>
-            </Row>
-          </Container>
+          <Switch>
+            <Route exact path="/ui/novi-zahtjev"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}
+                    {...props}>
+                      <NewRequest/>
+                  </VPSPage>}/>
+            <Route exact path="/ui/novi-zahtjevi"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}
+                    {...props}>
+                  </VPSPage>}/>
+            <Route exact path="/ui/odobreni-zahtjevi"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}
+                    {...props}>
+                  </VPSPage>}/>
+            <Route exact path="/ui/odbijeni-zahtjevi"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}
+                    {...props}>
+                  </VPSPage>}/>
+            <Route exact path="/ui/stanje-zahtjeva"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}
+                    {...props}>
+                  </VPSPage>}/>
+          </Switch>
         </BrowserRouter>
       )
     }
