@@ -29,6 +29,16 @@ class NotFound(APIException):
 
 
 class ListRequests(BaseProtectedAPIView):
+    def post(self, request):
+        serializer = serializers.RequestsSerializer(data=request.data)
+
+        if serializer.is_valid():
+            print(serializer.data)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def get(self, request, id=None):
         if not id:
             requests = models.Request.objects.all()
@@ -127,7 +137,13 @@ class GetConfigOptions(APIView):
 
 class IsSessionActive(BaseProtectedAPIView):
     def get(self, request):
-        return Response({'active': True})
+        user = dict()
+
+        for key in ['username', 'first_name', 'last_name', 'email', 'is_staff',
+                    'is_active', 'aaieduhr', 'institution', 'role']:
+            user[key] = eval('request.user.{}'.format(key))
+
+        return Response({'active': True, 'userdetails': user})
 
 
 class Saml2Login(BaseProtectedAPIView):
