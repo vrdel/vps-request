@@ -3,10 +3,8 @@ import Login from './Login';
 import NewRequest from './NewRequest';
 import Home from './Home';
 import NotFound from './NotFound';
-import { Route, Switch, BrowserRouter, Redirect, withRouter } from 'react-router-dom';
-import { Container, Row, Col } from 'reactstrap';
-import { NavigationBar, NavigationLinks, Footer, PrivateRoute, VPSPage } from './UIElements';
-import { NotificationContainer } from 'react-notifications';
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import { VPSPage } from './UIElements';
 import { Backend } from './DataManager';
 import Cookies from 'universal-cookie';
 

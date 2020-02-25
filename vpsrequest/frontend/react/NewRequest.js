@@ -235,12 +235,11 @@ export class NewRequest extends Component
               head_email: ''
             }}
           onSubmit={(values) => {
-            if (!acceptConditions) {
-              this.setState({acceptConditionsAlert: true});
-            }
-            else {
-              this.handleOnSubmit(values)
-            }
+            values.username = userDetails.username
+
+            !acceptConditions
+              ? this.setState({acceptConditionsAlert: true})
+              : this.handleOnSubmit(values)
           }}
             render = {props => (
               <Form>
