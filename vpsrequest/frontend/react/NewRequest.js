@@ -185,13 +185,14 @@ export class NewRequest extends Component
     this.setState(prevState => ({acceptConditions: !prevState.acceptConditions}))
   }
 
-  handleOnSubmit(data) {
+  handleOnSubmit(data, formikBag) {
     this.backend.addObject(this.apiListRequests, data)
       .then(response => {
         response.ok
           ? NotifyOk({
               msg: 'Zahtjev uspješno podnesen',
-              title: `Uspješno - HTTP ${response.status}`})
+              title: `Uspješno - HTTP ${response.status}`,
+              callback: () => formikBag.resetForm()})
           : NotifyError({
               msg: response.statusText,
               title: `Greška - HTTP ${response.status}`})
@@ -237,13 +238,13 @@ export class NewRequest extends Component
               head_role: 'Čelnik ustanove',
               head_email: ''
             }}
-          onSubmit={(values) => {
+          onSubmit={(values, formikBag) => {
             values.username = userDetails.username
             values.approved = -1
 
             !acceptConditions
               ? this.setState({acceptConditionsAlert: true})
-              : this.handleOnSubmit(values)
+              : this.handleOnSubmit(values, formikBag)
           }}
             render = {props => (
               <Form>
