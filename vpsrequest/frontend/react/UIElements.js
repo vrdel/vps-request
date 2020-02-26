@@ -16,6 +16,7 @@ import {
   NavLink,
   Navbar,
   NavbarBrand,
+  Spinner,
   Row,
 } from 'reactstrap';
 import { Link, withRouter } from 'react-router-dom';
@@ -28,7 +29,7 @@ import {
   faHandshake,
   faThumbsDown,
   faBatteryHalf} from '@fortawesome/free-solid-svg-icons';
-import { NotificationManager } from 'react-notifications';
+import { store } from 'react-notifications-component';
 import { Field } from 'formik';
 import Autocomplete from 'react-autocomplete';
 import SrceLogo from './logos/pravisrce.png';
@@ -39,26 +40,25 @@ import CloudLogo from './logos/logo_cloud.png';
 import './UIElements.css';
 
 
-var list_pages = ['novi-zahtjevi', 'odobreni-zahtjevi', 'odbijeni-zahtjevi', 'novi-zahtjev', 'stanje-zahtjeva'];
+var listPages = ['novi-zahtjevi', 'odobreni-zahtjevi', 'odbijeni-zahtjevi', 'novi-zahtjev', 'stanje-zahtjeva'];
 
-var link_title = new Map();
-link_title.set('novi-zahtjevi', 'Novi zahtjevi');
-link_title.set('odobreni-zahtjevi', 'Odobreni zahtjevi');
-link_title.set('odbijeni-zahtjevi', 'Odbijeni zahtjevi');
-link_title.set('novi-zahtjev', 'Zahtjev za novim VM-om');
-link_title.set('stanje-zahtjeva', 'Stanje zahtjeva');
-
+var linkTitle = new Map();
+linkTitle.set('novi-zahtjevi', 'Novi zahtjevi');
+linkTitle.set('odobreni-zahtjevi', 'Odobreni zahtjevi');
+linkTitle.set('odbijeni-zahtjevi', 'Odbijeni zahtjevi');
+linkTitle.set('novi-zahtjev', 'Zahtjev za novim VM-om');
+linkTitle.set('stanje-zahtjeva', 'Stanje zahtjeva');
 
 export const Icon = props => {
-  let link_icon = new Map();
-  link_icon.set('novi-zahtjevi', faFileAlt);
-  link_icon.set('odobreni-zahtjevi', faHandshake);
-  link_icon.set('odbijeni-zahtjevi', faThumbsDown);
-  link_icon.set('novi-zahtjev', faFileSignature);
-  link_icon.set('stanje-zahtjeva', faBatteryHalf);
+  let linkIcon = new Map();
+  linkIcon.set('novi-zahtjevi', faFileAlt);
+  linkIcon.set('odobreni-zahtjevi', faHandshake);
+  linkIcon.set('odbijeni-zahtjevi', faThumbsDown);
+  linkIcon.set('novi-zahtjev', faFileSignature);
+  linkIcon.set('stanje-zahtjeva', faBatteryHalf);
 
   return <FontAwesomeIcon
-            icon={link_icon.get(props.i)}
+            icon={linkIcon.get(props.i)}
             size='1x' fixedWidth/>
 }
 
@@ -179,7 +179,7 @@ const NavigationBar = ({history, onLogout, isOpenModal, toggle,
 
 const NavigationLinks = ({location}) => {
   var data = undefined;
-  data = list_pages
+  data = listPages
 
   return (
     <Nav tabs id="vpsreq-navlinks" className="d-flex justify-content-center border-left border-right border-top rounded-top sticky-top pl-3 pr-3">
@@ -190,7 +190,7 @@ const NavigationLinks = ({location}) => {
               tag={Link}
               active={location.pathname.split('/')[2] === item ? true : false}
               className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
-              to={'/ui/' + item}><Icon i={item}/> {link_title.get(item)}
+              to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
             </NavLink>
           </NavItem>
         )
@@ -266,28 +266,55 @@ export const RequestHorizontalRule = () =>
 export const LoadingAnim = () => (
   <Card className="text-center">
     <CardHeader className="bg-light">
-      <h4 className="text-dark">Loading data...</h4>
+      <h4 className="text-dark">Učitavanje podataka...</h4>
     </CardHeader>
     <CardBody>
-      No anim
+      <Spinner style={{ width: '45rem', height: '45rem' }} type="grow" color="info" />
     </CardBody>
   </Card>
 )
 
 
 export const NotifyOk = ({msg='', title='', callback=undefined}) => {
-  NotificationManager.success(msg, title, 2000)
+
+  store.addNotification({
+  title: title,
+  message: msg,
+  type: "success",
+  insert: "top",
+  container: "top-right",
+  animationIn: ["animated", "fadeIn"],
+  animationOut: ["animated", "fadeOut"],
+  dismiss: {
+    click: true,
+    duration: 60000,
+    onScreen: true,
+    showIcon: true
+  }})
   setTimeout(callback, 2000)
 }
 
 
 export const NotifyError = ({msg='', title='', callback=undefined}) => {
-  NotificationManager.error(msg, title, 2000)
+  store.addNotification({
+  title: title,
+  message: msg,
+  type: "error",
+  insert: "top",
+  container: "top-right",
+  animationIn: ["animated", "fadeIn"],
+  animationOut: ["animated", "fadeOut"],
+  dismiss: {
+    click: true,
+    duration: 60000,
+    onScreen: true,
+    showIcon: true
+  }})
   setTimeout(callback, 2000)
 }
 
 
-export const BaseView = ({title='', modal=false, toggle=undefined, state=undefined, children}) =>
+export const BaseView = ({title='', isChangeView=false, modal=false, toggle=undefined, state=undefined, children}) =>
 (
   <React.Fragment>
     {
@@ -301,7 +328,7 @@ export const BaseView = ({title='', modal=false, toggle=undefined, state=undefin
     }
     <div id="vpsreq-contentwrap" className="pl-4 pb-4 pr-4 pt-3 border rounded">
       {
-        <div className="shadow-sm p-2 mb-2 bg-light rounded">
+        <div className={`"shadow-sm p-2 mb-2 rounded " ${isChangeView ? "bg-danger text-white" : "bg-light"}`}>
           <h3>{title}</h3>
         </div>
       }

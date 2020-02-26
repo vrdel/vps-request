@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import Login from './Login';
 import NewRequest from './NewRequest';
+import StateRequest from './StateRequest';
 import Home from './Home';
 import NotFound from './NotFound';
-import { NotificationContainer } from 'react-notifications';
+import ReactNotification from 'react-notifications-component'
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import { VPSPage } from './UIElements';
 import { Backend } from './DataManager';
 import Cookies from 'universal-cookie';
 
 import './App.css';
-import 'react-notifications/lib/notifications.css';
+import 'react-notifications-component/dist/theme.css'
 
 
 class App extends Component {
@@ -107,38 +108,40 @@ class App extends Component {
 
       return (
         <BrowserRouter>
-          <NotificationContainer/>
+          <ReactNotification />
           <Switch>
             <Route exact path="/ui/novi-zahtjev"
               render={(props) =>
                   <VPSPage
-                    {...propsPage}
-                    {...props}>
-                      <NewRequest/>
+                    {...propsPage}>
+                      <NewRequest addView={true} {...props}/>
+                  </VPSPage>}/>
+            <Route exact path="/ui/novi-zahtjev/:id"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}>
+                      <NewRequest changeView={true} {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/novi-zahtjevi"
               render={(props) =>
                   <VPSPage
-                    {...propsPage}
-                    {...props}>
+                    {...propsPage}>
                   </VPSPage>}/>
             <Route exact path="/ui/odobreni-zahtjevi"
               render={(props) =>
                   <VPSPage
-                    {...propsPage}
-                    {...props}>
+                    {...propsPage}>
                   </VPSPage>}/>
             <Route exact path="/ui/odbijeni-zahtjevi"
               render={(props) =>
                   <VPSPage
-                    {...propsPage}
-                    {...props}>
+                    {...propsPage}>
                   </VPSPage>}/>
             <Route exact path="/ui/stanje-zahtjeva"
               render={(props) =>
                   <VPSPage
-                    {...propsPage}
-                    {...props}>
+                    {...propsPage}>
+                      <StateRequest {...props}/>
                   </VPSPage>}/>
           </Switch>
         </BrowserRouter>
