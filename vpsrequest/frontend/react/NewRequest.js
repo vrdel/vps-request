@@ -105,6 +105,132 @@ const RowRequestField = ({field, ...propsRest}) =>
 )
 
 
+const ContactUserFields = () =>
+  <React.Fragment>
+    <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
+    <Field name="first_name" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" disabled={true}/>
+    <Field name="last_name" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" disabled={true}/>
+    <Field name="institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" disabled={true}/>
+    <Field name="role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" disabled={true}/>
+    <Field name="email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" disabled={true}/>
+  </React.Fragment>
+
+
+const VMFields = ({listVMOSes}) => {
+  let infoVMOS = "* Čelnik ustanove odgovara za posjedovanje i aktiviranje valjane licence za gore odabrani operacijski sustav."
+  let infoPurpose = "* Potrebno je detaljno obrazložiti namjenu virtualnog poslužitelja. Zahtjev može biti odbijen ukoliko Srce procijeni da navedena namjena virtualnog poslužitelja nije primjerena namjeni usluge, ili ne predstavlja trajne potrebe ustanove za poslužiteljskim kapacitetima.";
+
+  return (
+    <React.Fragment>
+      <RequestHorizontalRule/>
+      <h5 className="mb-3 mt-4">Zahtijevani resursi</h5>
+      <Field name="vm_purpose" component={RowRequestField} label="Namjena:" labelFor="vmPurpose" fieldType="textarea" infoMsg={infoPurpose} required={true}/>
+      <Field name="vm_fqdn" component={RowRequestField} label="Puno ime poslužitelja (FQDN):" labelFor="fqdn" fieldType="text" required={true}/>
+      <Field name="vm_os" component={RowRequestDropDown}
+        label="Operacijski sustav:"
+        labelFor="vm_oses"
+        data={['', ...listVMOSes]}
+        infoMsg={infoVMOS}
+        required={true}/>
+      <Field name="vm_remark" component={RowRequestField} label="Napomena:" labelFor="vmRemark" fieldType="textarea" required={true}/>
+    </React.Fragment>
+  )
+}
+
+
+const SysAdminFields = () => {
+  let infoAAI = "* Sistem-inženjer jedini ima pravo pristupa na XenOrchestra sučelje dostupno na adresi "
+  return (
+    <React.Fragment>
+      <RequestHorizontalRule/>
+      <h5 className="mb-3 mt-4">Sistem-inženjer virtualnog poslužitelja</h5>
+      <Field name="sys_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" required={true}/>
+      <Field name="sys_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" required={true}/>
+      <Field name="sys_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" required={true}/>
+      <Field name="sys_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" required={true}/>
+      <Field name="sys_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" required={true}/>
+      <Field name="sys_aaieduhr"
+        component={RowRequestField}
+        label="AAI@EduHr korisnička oznaka:" labelFor="aaieduhr"
+        fieldType="text"
+        infoMsgComponent={<InfoLink prefix={infoAAI} linkHref="https://vps.srce.hr"/>}
+        required={true}/>
+    </React.Fragment>
+  )
+}
+
+
+const HeadFields = () =>
+  <React.Fragment>
+    <RequestHorizontalRule/>
+    <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
+    <Field name="head_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" required={true}/>
+    <Field name="head_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" required={true}/>
+    <Field name="head_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" disabled={true} required={true}/>
+    <Field name="head_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" required={true}/>
+    <Field name="head_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" required={true}/>
+  </React.Fragment>
+
+
+const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dismissAlert, stateAcceptConditionsAlert}) =>
+  <React.Fragment>
+    <RequestHorizontalRule/>
+    <Row>
+      <Col md={{size: 8, offset: 2}} className="text-center">
+        <CustomInput type="checkbox" id="acceptedConditions" checked={acceptConditions} onChange={handleAcceptConditions}
+          label={
+            <InfoLink prefix="Prihvaćam "
+              linkHref="http://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps_05102018.pdf"
+              linkTitle="Pravilnik usluge Virtual Private Server"/>
+          }
+        />
+      </Col>
+    </Row>
+    <Row>
+      <Col md={{size: 4, offset: 4}}>
+        <Alert className="mt-2" color="danger" isOpen={stateAcceptConditionsAlert} toggle={dismissAlert} fade={false}>
+          <p className="text-center mt-3 ml-3">
+            Morate prihvatiti pravilnik Usluge!
+          </p>
+        </Alert>
+      </Col>
+    </Row>
+    <Row className="mt-2">
+      <Col md={{size: 10, offset: 1}}>
+        <p className="text-muted text-center">
+          <small>
+            Prihvaćanjem Pravilnika usluge od strane kontaktne osobe Ustanove smatra se da Ustanova i čelnik Ustanove potvrđuju i odgovaraju za istinitost podataka iz zahtjeva, da su upoznati s odredbama Pravilnika usluge, te da pristaju na korištenje usluge sukladno Pravilniku usluge.
+          </small>
+        </p>
+
+        <p className="text-muted text-center">
+          <small>
+            <InfoLink prefix="Srce gore navedene osobne podatke obrađuje isključivo radi pružanja zatražene usluge, sukladno svojoj politici privatnosti ("
+              linkHref="https://www.srce.hr/politika-privatnosti"
+              suffix=")"/>
+            <InfoLink prefix=" i " linkHref="http://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps_05102018.pdf"
+              linkTitle="Pravilniku usluge"/>
+          </small>
+        </p>
+      </Col>
+    </Row>
+    <Row className="mt-2 mb-2 text-center">
+      <Col>
+        <Button className="btn-lg" color="success" id="submit-button" type="submit">Podnesi zahtjev</Button>
+      </Col>
+    </Row>
+    <Row className="mt-3 mb-2">
+      <Col md={{size: 10, offset: 1}}>
+        <p className="text-muted text-center">
+          <small>
+            Kopija zahtjeva šalje se automatski putem e-maila kontaktnoj osobi i čelniku Ustanove.
+          </small>
+        </p>
+      </Col>
+    </Row>
+  </React.Fragment>
+
+
 export class NewRequest extends Component
 {
   constructor(props) {
@@ -132,9 +258,6 @@ export class NewRequest extends Component
     this.apiListUsers = '/api/v1/internal/users/'
     this.apiListRequests = '/api/v1/internal/requests/'
 
-    this.infoPurpose = "* Potrebno je detaljno obrazložiti namjenu virtualnog poslužitelja. Zahtjev može biti odbijen ukoliko Srce procijeni da navedena namjena virtualnog poslužitelja nije primjerena namjeni usluge, ili ne predstavlja trajne potrebe ustanove za poslužiteljskim kapacitetima.";
-    this.infoVMOS = "* Čelnik ustanove odgovara za posjedovanje i aktiviranje valjane licence za gore odabrani operacijski sustav."
-    this.infoAAI = "* Sistem-inženjer jedini ima pravo pristupa na XenOrchestra sučelje dostupno na adresi "
 
     this.backend = new Backend()
     this.toggleAreYouSure = this.toggleAreYouSure.bind(this)
@@ -302,101 +425,15 @@ export class NewRequest extends Component
             }}
             render = {props => (
               <Form>
-                <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
-                <Field name="first_name" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" disabled={true}/>
-                <Field name="last_name" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" disabled={true}/>
-                <Field name="institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" disabled={true}/>
-                <Field name="role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" disabled={true}/>
-                <Field name="email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" disabled={true}/>
-
-                <RequestHorizontalRule/>
-                <h5 className="mb-3 mt-4">Zahtijevani resursi</h5>
-                <Field name="vm_purpose" component={RowRequestField} label="Namjena:" labelFor="vmPurpose" fieldType="textarea" infoMsg={this.infoPurpose} required={true}/>
-                <Field name="vm_fqdn" component={RowRequestField} label="Puno ime poslužitelja (FQDN):" labelFor="fqdn" fieldType="text" required={true}/>
-                <Field name="vm_os" component={RowRequestDropDown}
-                  label="Operacijski sustav:"
-                  labelFor="vm_oses"
-                  data={['', ...listVMOSes]}
-                  infoMsg={this.infoVMOS}
-                  required={true}/>
-                <Field name="vm_remark" component={RowRequestField} label="Napomena:" labelFor="vmRemark" fieldType="textarea" required={true}/>
-
-                <RequestHorizontalRule/>
-                <h5 className="mb-3 mt-4">Sistem-inženjer virtualnog poslužitelja</h5>
-                <Field name="sys_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" required={true}/>
-                <Field name="sys_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" required={true}/>
-                <Field name="sys_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" required={true}/>
-                <Field name="sys_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" required={true}/>
-                <Field name="sys_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" required={true}/>
-                <Field name="sys_aaieduhr"
-                  component={RowRequestField}
-                  label="AAI@EduHr korisnička oznaka:" labelFor="aaieduhr"
-                  fieldType="text"
-                  infoMsgComponent={<InfoLink prefix={`${this.infoAAI} `} linkHref="https://vps.srce.hr"/>}
-                  required={true}/>
-
-                <RequestHorizontalRule/>
-                <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
-                <Field name="head_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" required={true}/>
-                <Field name="head_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" required={true}/>
-                <Field name="head_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" disabled={true} required={true}/>
-                <Field name="head_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" required={true}/>
-                <Field name="head_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" required={true}/>
-
-                <RequestHorizontalRule/>
-                <Row>
-                  <Col md={{size: 8, offset: 2}} className="text-center">
-                    <CustomInput type="checkbox" id="acceptedConditions" checked={acceptConditions} onChange={this.handleAcceptConditions}
-                      label={
-                        <InfoLink prefix="Prihvaćam "
-                          linkHref="http://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps_05102018.pdf"
-                          linkTitle="Pravilnik usluge Virtual Private Server"/>
-                      }
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md={{size: 4, offset: 4}}>
-                    <Alert className="mt-2" color="danger" isOpen={this.state.acceptConditionsAlert} toggle={this.dismissAlert} fade={false}>
-                      <p className="text-center mt-3 ml-3">
-                        Morate prihvatiti pravilnik Usluge!
-                      </p>
-                    </Alert>
-                  </Col>
-                </Row>
-                <Row className="mt-2">
-                  <Col md={{size: 10, offset: 1}}>
-                    <p className="text-muted text-center">
-                      <small>
-                        Prihvaćanjem Pravilnika usluge od strane kontaktne osobe Ustanove smatra se da Ustanova i čelnik Ustanove potvrđuju i odgovaraju za istinitost podataka iz zahtjeva, da su upoznati s odredbama Pravilnika usluge, te da pristaju na korištenje usluge sukladno Pravilniku usluge.
-                      </small>
-                    </p>
-
-                    <p className="text-muted text-center">
-                      <small>
-                        <InfoLink prefix="Srce gore navedene osobne podatke obrađuje isključivo radi pružanja zatražene usluge, sukladno svojoj politici privatnosti ("
-                          linkHref="https://www.srce.hr/politika-privatnosti"
-                          suffix=")"/>
-                        <InfoLink prefix=" i " linkHref="http://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps_05102018.pdf"
-                          linkTitle="Pravilniku usluge"/>
-                      </small>
-                    </p>
-                  </Col>
-                </Row>
-                <Row className="mt-2 mb-2 text-center">
-                  <Col>
-                    <Button className="btn-lg" color="success" id="submit-button" type="submit">Podnesi zahtjev</Button>
-                  </Col>
-                </Row>
-                <Row className="mt-3 mb-2">
-                  <Col md={{size: 10, offset: 1}}>
-                    <p className="text-muted text-center">
-                      <small>
-                        Kopija zahtjeva šalje se automatski putem e-maila kontaktnoj osobi i čelniku Ustanove.
-                      </small>
-                    </p>
-                  </Col>
-                </Row>
+                <ContactUserFields />
+                <VMFields listVMOSes={listVMOSes}/>
+                <SysAdminFields/>
+                <HeadFields/>
+                <SubmitNewRequest
+                  acceptConditions={acceptConditions}
+                  handleAcceptConditions={this.handleAcceptConditions}
+                  dismissAlert={this.dismissAlert}
+                  stateAcceptConditionsAlert={this.state.acceptConditionsAlert}/>
               </Form>
             )}
           />

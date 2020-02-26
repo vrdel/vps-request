@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Login from './Login';
 import NewRequest from './NewRequest';
-import ChangeRequest from './ChangeRequest';
 import StateRequest from './StateRequest';
 import Home from './Home';
 import NotFound from './NotFound';
