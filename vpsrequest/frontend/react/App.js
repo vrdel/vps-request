@@ -113,34 +113,29 @@ class App extends Component {
             <Route exact path="/ui/novi-zahtjev"
               render={(props) =>
                   <VPSPage
-                    {...propsPage}
-                    {...props}>
-                      <NewRequest/>
+                    {...propsPage}>
+                      <NewRequest {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/novi-zahtjevi"
               render={(props) =>
                   <VPSPage
-                    {...propsPage}
-                    {...props}>
+                    {...propsPage}>
                   </VPSPage>}/>
             <Route exact path="/ui/odobreni-zahtjevi"
               render={(props) =>
                   <VPSPage
-                    {...propsPage}
-                    {...props}>
+                    {...propsPage}>
                   </VPSPage>}/>
             <Route exact path="/ui/odbijeni-zahtjevi"
               render={(props) =>
                   <VPSPage
-                    {...propsPage}
-                    {...props}>
+                    {...propsPage}>
                   </VPSPage>}/>
             <Route exact path="/ui/stanje-zahtjeva"
               render={(props) =>
                   <VPSPage
-                    {...propsPage}
-                    {...props}>
-                      <StateRequest/>
+                    {...propsPage}>
+                      <StateRequest {...props}/>
                   </VPSPage>}/>
           </Switch>
         </BrowserRouter>
