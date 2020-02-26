@@ -6,7 +6,9 @@ import {Link} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCog,
-  faPencilAlt
+  faPencilAlt,
+  faTimes,
+  faCheck
   } from '@fortawesome/free-solid-svg-icons';
 
 import 'react-table/react-table.css';
@@ -62,6 +64,10 @@ export class StateRequest extends Component
           accessor: r => {
             if (r.approved === -1)
               return (<FontAwesomeIcon className="text-warning" size="2x" icon={faCog}/>)
+            else if (r.approved === 0)
+              return (<FontAwesomeIcon className="text-danger" size="2x" icon={faTimes}/>)
+            else if (r.approved === 1)
+              return (<FontAwesomeIcon className="text-success" size="2x" icon={faCheck}/>)
           },
           maxWidth: 100,
         },
