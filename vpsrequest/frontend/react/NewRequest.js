@@ -116,11 +116,17 @@ export class NewRequest extends Component
       listVMOSes: [],
       acceptConditions: undefined,
       acceptConditionsAlert: false,
+      requestDetails: undefined,
       userDetail: undefined,
       modalFunc: undefined,
       modalTitle: undefined,
       modalMsg: undefined,
     }
+
+    let {params} = this.props.match
+    this.requestID = params.id
+    this.addView = props.addView
+    this.changeView = props.changeView
 
     this.apiListVMOSes = '/api/v1/internal/vmos/'
     this.apiListUsers = '/api/v1/internal/users/'
@@ -163,8 +169,8 @@ export class NewRequest extends Component
   componentDidMount() {
     this.setState({loading: true})
 
-    this.backend.isActiveSession().then(sessionActive =>
-      sessionActive.active &&
+    this.backend.isActiveSession().then(sessionActive => {
+      if (sessionActive.active && this.addView) {
         Promise.all([
           this.backend.fetchData(this.apiListVMOSes),
         ])
@@ -174,7 +180,22 @@ export class NewRequest extends Component
             userDetails: sessionActive.userdetails,
             loading: false
           }))
-    )
+      }
+      else if (sessionActive.active && this.changeView) {
+        Promise.all([
+          this.backend.fetchData(this.apiListVMOSes),
+          this.backend.fetchData(`${this.apiListRequests}/${this.requestID}`),
+        ])
+          .then(([vmOSes, requestData]) => this.setState({
+            listVMOSes: this.flattenListVMOses(vmOSes),
+            acceptConditions: false,
+            userDetails: sessionActive.userdetails,
+            requestDetails: requestData,
+            loading: false
+          }))
+      }
+    })
+
   }
 
   dismissAlert() {
@@ -199,13 +220,65 @@ export class NewRequest extends Component
   }
 
   render() {
-    const {loading, listVMOSes, userDetails, acceptConditions} = this.state
+    const {loading, listVMOSes, userDetails, acceptConditions, requestDetails} = this.state
+    var initValues = undefined
+
+    if (this.changeView && requestDetails && userDetails)
+      initValues = {
+        location: '',
+        first_name: userDetails.first_name,
+        last_name: userDetails.last_name,
+        institution: userDetails.institution,
+        role: userDetails.role,
+        email: userDetails.email,
+        aaieduhr: userDetails.aaieduhr,
+        vm_fqdn: requestDetails.vm_fqdn,
+        vm_purpose: requestDetails.vm_purpose,
+        vm_remark: requestDetails.vm_remark,
+        vm_os: requestDetails.vm_os,
+        sys_firstname: requestDetails.sys_firstname,
+        sys_aaieduhr: requestDetails.sys_aaieduhr,
+        sys_lastname: requestDetails.sys_lastname,
+        sys_institution: requestDetails.sys_institution,
+        sys_role: requestDetails.sys_role,
+        sys_email: requestDetails.sys_email,
+        head_firstname: requestDetails.head_firstname,
+        head_lastname: requestDetails.head_lastname,
+        head_institution: requestDetails.head_institution,
+        head_role: requestDetails.head_role,
+        head_email: requestDetails.head_email
+      }
+    else if (this.addView && userDetails)
+      initValues = {
+        location: '',
+        first_name: userDetails.first_name,
+        last_name: userDetails.last_name,
+        institution: userDetails.institution,
+        role: userDetails.role,
+        email: userDetails.email,
+        aaieduhr: userDetails.aaieduhr,
+        vm_fqdn: '',
+        vm_purpose: '',
+        vm_remark: '',
+        vm_os: '',
+        sys_firstname: '',
+        sys_aaieduhr: '',
+        sys_lastname: '',
+        sys_institution: '',
+        sys_role: '',
+        sys_email: '',
+        head_firstname: '',
+        head_lastname: '',
+        head_institution: userDetails.institution,
+        head_role: 'Čelnik ustanove',
+        head_email: ''
+      }
 
     if (loading)
       return (<LoadingAnim />)
 
     else if (!loading && listVMOSes &&
-      userDetails && acceptConditions !== undefined) {
+      initValues && acceptConditions !== undefined) {
       return (
         <BaseView
           title='Novi zahtjev'
@@ -213,30 +286,7 @@ export class NewRequest extends Component
           state={this.state}
           toggle={this.toggleAreYouSure}>
           <Formik
-            initialValues={{
-              location: '',
-              first_name: userDetails.first_name,
-              last_name: userDetails.last_name,
-              institution: userDetails.institution,
-              role: userDetails.role,
-              email: userDetails.email,
-              aaieduhr: userDetails.aaieduhr,
-              vm_fqdn: '',
-              vm_purpose: '',
-              vm_remark: '',
-              vm_os: '',
-              sys_firstname: '',
-              sys_aaieduhr: '',
-              sys_lastname: '',
-              sys_institution: '',
-              sys_role: '',
-              sys_email: '',
-              head_firstname: '',
-              head_lastname: '',
-              head_institution: userDetails.institution,
-              head_role: 'Čelnik ustanove',
-              head_email: ''
-            }}
+            initialValues={initValues}
             isInitialValid={true}
             validateOnBlur={false}
             validateOnChange={false}
@@ -248,7 +298,6 @@ export class NewRequest extends Component
                 this.setState({acceptConditionsAlert: true})
               else {
                 this.handleOnSubmit(values)
-                actions.resetForm()
               }
             }}
             render = {props => (

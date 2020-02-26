@@ -5,7 +5,7 @@ from backend import models
 
 class RequestsSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('user', 'timestamp', 'location', 'request_date',
+        fields = ('id', 'user', 'timestamp', 'location', 'request_date',
                   'head_firstname', 'head_lastname', 'head_institution',
                   'head_role', 'head_email', 'vm_purpose', 'vm_os',
                   'vm_remark', 'vm_admin_remark', 'vm_fqdn', 'vm_reason',
@@ -23,6 +23,7 @@ class UsersSerializer(serializers.ModelSerializer):
                   'username', 'is_active', 'is_superuser', 'is_staff', 'email',
                   'date_joined', 'requests', 'pk')
         model = get_user_model()
+
 
 class VMOSSerializer(serializers.ModelSerializer):
     class Meta:

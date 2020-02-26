@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Login from './Login';
 import NewRequest from './NewRequest';
+import ChangeRequest from './ChangeRequest';
 import StateRequest from './StateRequest';
 import Home from './Home';
 import NotFound from './NotFound';
@@ -114,7 +115,13 @@ class App extends Component {
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
-                      <NewRequest {...props}/>
+                      <NewRequest addView={true} {...props}/>
+                  </VPSPage>}/>
+            <Route exact path="/ui/novi-zahtjev/:id"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}>
+                      <NewRequest changeView={true} {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/novi-zahtjevi"
               render={(props) =>

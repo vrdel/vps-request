@@ -287,7 +287,7 @@ export const NotifyOk = ({msg='', title='', callback=undefined}) => {
   animationOut: ["animated", "fadeOut"],
   dismiss: {
     click: true,
-    duration: 30000,
+    duration: 60000,
     onScreen: true,
     showIcon: true
   }})
@@ -306,7 +306,7 @@ export const NotifyError = ({msg='', title='', callback=undefined}) => {
   animationOut: ["animated", "fadeOut"],
   dismiss: {
     click: true,
-    duration: 30000,
+    duration: 60000,
     onScreen: true,
     showIcon: true
   }})

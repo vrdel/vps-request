@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Backend } from './DataManager';
 import { BaseView, LoadingAnim } from './UIElements';
 import ReactTable from 'react-table';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCog,
@@ -92,7 +92,11 @@ export class StateRequest extends Component
           id: 'edit',
           Header: 'Uredi',
           accessor: r => {
-            return (<FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>)
+            return (
+              <Link to={`/ui/novi-zahtjev/${r.id}`}>
+                <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>
+              </Link>
+            )
           },
           maxWidth: 70
         }
