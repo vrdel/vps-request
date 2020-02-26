@@ -314,7 +314,7 @@ export const NotifyError = ({msg='', title='', callback=undefined}) => {
 }
 
 
-export const BaseView = ({title='', modal=false, toggle=undefined, state=undefined, children}) =>
+export const BaseView = ({title='', isChangeView=false, modal=false, toggle=undefined, state=undefined, children}) =>
 (
   <React.Fragment>
     {
@@ -328,7 +328,7 @@ export const BaseView = ({title='', modal=false, toggle=undefined, state=undefin
     }
     <div id="vpsreq-contentwrap" className="pl-4 pb-4 pr-4 pt-3 border rounded">
       {
-        <div className="shadow-sm p-2 mb-2 bg-light rounded">
+        <div className={`"shadow-sm p-2 mb-2 rounded " ${isChangeView ? "bg-danger text-white" : "bg-light"}`}>
           <h3>{title}</h3>
         </div>
       }

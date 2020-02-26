@@ -404,7 +404,8 @@ export class NewRequest extends Component
       initValues && acceptConditions !== undefined) {
       return (
         <BaseView
-          title='Novi zahtjev'
+          title={this.addView ? 'Novi Zahtjev' : 'Promjeni Zahtjev'}
+          isChangeView={this.changeView}
           modal={true}
           state={this.state}
           toggle={this.toggleAreYouSure}>
