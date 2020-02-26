@@ -29,7 +29,7 @@ import {
   faHandshake,
   faThumbsDown,
   faBatteryHalf} from '@fortawesome/free-solid-svg-icons';
-import { NotificationManager } from 'react-notifications';
+import { store } from 'react-notifications-component';
 import { Field } from 'formik';
 import Autocomplete from 'react-autocomplete';
 import SrceLogo from './logos/pravisrce.png';
@@ -276,13 +276,40 @@ export const LoadingAnim = () => (
 
 
 export const NotifyOk = ({msg='', title='', callback=undefined}) => {
-  NotificationManager.success(msg, title, 2000)
+
+  store.addNotification({
+  title: title,
+  message: msg,
+  type: "success",
+  insert: "top",
+  container: "top-right",
+  animationIn: ["animated", "fadeIn"],
+  animationOut: ["animated", "fadeOut"],
+  dismiss: {
+    click: true,
+    duration: 30000,
+    onScreen: true,
+    showIcon: true
+  }})
   setTimeout(callback, 2000)
 }
 
 
 export const NotifyError = ({msg='', title='', callback=undefined}) => {
-  NotificationManager.error(msg, title, 2000)
+  store.addNotification({
+  title: title,
+  message: msg,
+  type: "error",
+  insert: "top",
+  container: "top-right",
+  animationIn: ["animated", "fadeIn"],
+  animationOut: ["animated", "fadeOut"],
+  dismiss: {
+    click: true,
+    duration: 30000,
+    onScreen: true,
+    showIcon: true
+  }})
   setTimeout(callback, 2000)
 }
 

@@ -40,7 +40,7 @@
     "postcss-loader": "^3.0.0",
     "react-diff-viewer": "^2.0.5",
     "react-filtered-multiselect": "^0.5.1",
-    "react-notifications": "^1.4.3",
+    "react-notifications-component": "^2.3.0",
     "style-loader": "^0.23.1",
     "universal-cookie": "^3.1.0",
     "url-loader": "^1.1.2"
