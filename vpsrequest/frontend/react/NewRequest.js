@@ -239,6 +239,7 @@ export class NewRequest extends Component
             }}
           onSubmit={(values) => {
             values.username = userDetails.username
+            values.approved = -1
 
             !acceptConditions
               ? this.setState({acceptConditionsAlert: true})

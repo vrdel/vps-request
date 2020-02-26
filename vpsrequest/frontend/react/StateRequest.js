@@ -3,9 +3,14 @@ import { Backend } from './DataManager';
 import { BaseView, LoadingAnim } from './UIElements';
 import ReactTable from 'react-table';
 import {Link} from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCog,
+  faPencilAlt
+  } from '@fortawesome/free-solid-svg-icons';
 
 import 'react-table/react-table.css';
-
+import './StateRequest.css'
 
 export class StateRequest extends Component
 {
@@ -48,11 +53,17 @@ export class StateRequest extends Component
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => listMyRequests.indexOf(r) + 1
+          accessor: r => `${listMyRequests.indexOf(r) + 1}.`,
+          maxWidth: 50,
         },
         {
+          id: 'isApproved',
           Header: 'Odobreno',
-          accessor: 'approved'
+          accessor: r => {
+            if (r.approved === -1)
+              return (<FontAwesomeIcon className="text-warning" size="2x" icon={faCog}/>)
+          },
+          maxWidth: 100,
         },
         {
           Header: 'Datum podnošenja',
@@ -70,6 +81,14 @@ export class StateRequest extends Component
         {
           Header: 'Poslužitelj',
           accessor: 'vm_fqdn'
+        },
+        {
+          id: 'edit',
+          Header: 'Uredi',
+          accessor: r => {
+            return (<FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>)
+          },
+          maxWidth: 70
         }
       ]
       return (
@@ -79,8 +98,16 @@ export class StateRequest extends Component
           <ReactTable
             data={listMyRequests}
             columns={columns}
-            className="-striped -highlight"
-            defaultPageSize={20}
+            className="-highlight mt-4 text-center align-middle"
+            defaultPageSize={10}
+            previousText='Prethodni'
+            nextText='Sljedeći'
+            noDataText='Nema zahtjeva'
+            pageText='Stranica'
+            ofText='od'
+            rowsText='zahtjeva'
+            getTheadThProps={(state, rowInfo, column) => ({className: 'table-active p-2'})}
+            getTdProps={(state, rowInfo, column) => ({className: 'pt-2 pb-2 align-self-center'})}
           />
         </BaseView>
       )
