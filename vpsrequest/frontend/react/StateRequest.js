@@ -93,7 +93,7 @@ export class StateRequest extends Component
           Header: 'Uredi',
           accessor: r => {
             return (
-              <Link to={`/ui/novi-zahtjev/${r.id}`}>
+              <Link to={`/ui/stanje-zahtjeva/${r.id}`}>
                 <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>
               </Link>
             )
