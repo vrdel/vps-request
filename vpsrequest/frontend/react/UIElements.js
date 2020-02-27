@@ -278,38 +278,40 @@ export const LoadingAnim = () => (
 export const NotifyOk = ({msg='', title='', callback=undefined}) => {
 
   store.addNotification({
-  title: title,
-  message: msg,
-  type: "success",
-  insert: "top",
-  container: "top-right",
-  animationIn: ["animated", "fadeIn"],
-  animationOut: ["animated", "fadeOut"],
-  dismiss: {
-    click: true,
-    duration: 60000,
-    onScreen: true,
-    showIcon: true
-  }})
+    title: title,
+    message: msg,
+    type: "success",
+    insert: "top",
+    container: "top-right",
+    animationIn: ["animated", "fadeIn"],
+    animationOut: ["animated", "fadeOut"],
+    dismiss: {
+      click: true,
+      duration: 60000,
+      onScreen: true,
+      showIcon: true
+    }
+  })
   setTimeout(callback, 2000)
 }
 
 
 export const NotifyError = ({msg='', title='', callback=undefined}) => {
   store.addNotification({
-  title: title,
-  message: msg,
-  type: "error",
-  insert: "top",
-  container: "top-right",
-  animationIn: ["animated", "fadeIn"],
-  animationOut: ["animated", "fadeOut"],
-  dismiss: {
-    click: true,
-    duration: 60000,
-    onScreen: true,
-    showIcon: true
-  }})
+    title: title,
+    message: msg,
+    type: "danger",
+    insert: "top",
+    container: "top-right",
+    animationIn: ["animated", "fadeIn"],
+    animationOut: ["animated", "fadeOut"],
+    dismiss: {
+      click: true,
+      duration: 60000,
+      onScreen: true,
+      showIcon: true
+    }
+  })
   setTimeout(callback, 2000)
 }
 

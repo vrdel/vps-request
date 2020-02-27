@@ -106,6 +106,7 @@ const RowRequestField = ({field, ...propsRest}) =>
 
 
 const ContactUserFields = () =>
+(
   <React.Fragment>
     <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
     <Field name="first_name" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" disabled={true}/>
@@ -114,7 +115,7 @@ const ContactUserFields = () =>
     <Field name="role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" disabled={true}/>
     <Field name="email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" disabled={true}/>
   </React.Fragment>
-
+)
 
 const VMFields = ({listVMOSes}) => {
   let infoVMOS = "* Čelnik ustanove odgovara za posjedovanje i aktiviranje valjane licence za gore odabrani operacijski sustav."
@@ -161,6 +162,7 @@ const SysAdminFields = () => {
 
 
 const HeadFields = () =>
+(
   <React.Fragment>
     <RequestHorizontalRule/>
     <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
@@ -170,9 +172,10 @@ const HeadFields = () =>
     <Field name="head_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" required={true}/>
     <Field name="head_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" required={true}/>
   </React.Fragment>
-
+)
 
 const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dismissAlert, stateAcceptConditionsAlert}) =>
+(
   <React.Fragment>
     <RequestHorizontalRule/>
     <Row>
@@ -229,7 +232,19 @@ const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dismissAler
       </Col>
     </Row>
   </React.Fragment>
+)
 
+const SubmitChangeRequest = () =>
+(
+  <React.Fragment>
+    <RequestHorizontalRule/>
+    <Row className="mt-2 mb-4 text-center">
+      <Col>
+        <Button className="btn-lg" color="success" id="submit-button" type="submit">Promijeni zahtjev</Button>
+      </Col>
+    </Row>
+  </React.Fragment>
+)
 
 export class ChangeRequest extends Component
 {
@@ -254,7 +269,7 @@ export class ChangeRequest extends Component
 
     this.apiListVMOSes = '/api/v1/internal/vmos/'
     this.apiListUsers = '/api/v1/internal/users/'
-    this.apiListRequests = '/api/v1/internal/requests/'
+    this.apiListRequests = '/api/v1/internal/requests'
 
     this.backend = new Backend()
     this.toggleAreYouSure = this.toggleAreYouSure.bind(this)
@@ -314,7 +329,7 @@ export class ChangeRequest extends Component
   }
 
   handleOnSubmit(data) {
-    this.backend.addObject(this.apiListRequests, data)
+    this.backend.changeObject(`${this.apiListRequests}/${this.requestID}`, data)
       .then(response => {
         response.ok
           ? NotifyOk({
@@ -369,18 +384,8 @@ export class ChangeRequest extends Component
           toggle={this.toggleAreYouSure}>
           <Formik
             initialValues={initValues}
-            isInitialValid={true}
-            validateOnBlur={false}
-            validateOnChange={false}
             onSubmit={(values, actions) => {
-              values.username = userDetails.username
-              values.approved = -1
-
-              if (!acceptConditions)
-                this.setState({acceptConditionsAlert: true})
-              else {
-                this.handleOnSubmit(values)
-              }
+              this.handleOnSubmit(values)
             }}
             render = {props => (
               <Form>
@@ -388,11 +393,7 @@ export class ChangeRequest extends Component
                 <VMFields listVMOSes={listVMOSes}/>
                 <SysAdminFields/>
                 <HeadFields/>
-                <SubmitNewRequest
-                  acceptConditions={acceptConditions}
-                  handleAcceptConditions={this.handleAcceptConditions}
-                  dismissAlert={this.dismissAlert}
-                  stateAcceptConditionsAlert={this.state.acceptConditionsAlert}/>
+                <SubmitChangeRequest/>
               </Form>
             )}
           />
@@ -507,21 +508,21 @@ export class NewRequest extends Component
         role: userDetails.role,
         email: userDetails.email,
         aaieduhr: userDetails.aaieduhr,
-        vm_fqdn: requestDetails.vm_fqdn,
-        vm_purpose: requestDetails.vm_purpose,
-        vm_remark: requestDetails.vm_remark,
-        vm_os: requestDetails.vm_os,
-        sys_firstname: requestDetails.sys_firstname,
-        sys_aaieduhr: requestDetails.sys_aaieduhr,
-        sys_lastname: requestDetails.sys_lastname,
-        sys_institution: requestDetails.sys_institution,
-        sys_role: requestDetails.sys_role,
-        sys_email: requestDetails.sys_email,
-        head_firstname: requestDetails.head_firstname,
-        head_lastname: requestDetails.head_lastname,
-        head_institution: requestDetails.head_institution,
-        head_role: requestDetails.head_role,
-        head_email: requestDetails.head_email
+        vm_fqdn: '',
+        vm_purpose: '',
+        vm_remark:  '',
+        vm_os: '',
+        sys_firstname: '',
+        sys_aaieduhr: '',
+        sys_lastname: '',
+        sys_institution: '',
+        sys_role: '',
+        sys_email: '',
+        head_firstname: '',
+        head_lastname: '',
+        head_institution: userDetails.institution,
+        head_role: '',
+        head_email: ''
       }
 
     if (loading)
@@ -538,9 +539,6 @@ export class NewRequest extends Component
           toggle={this.toggleAreYouSure}>
           <Formik
             initialValues={initValues}
-            isInitialValid={true}
-            validateOnBlur={false}
-            validateOnChange={false}
             onSubmit={(values, actions) => {
               values.username = userDetails.username
               values.approved = -1
