@@ -252,16 +252,10 @@ export class ChangeRequest extends Component
     super(props)
 
     this.state = {
-      areYouSureModal: false,
       loading: false,
       listVMOSes: [],
-      acceptConditions: undefined,
-      acceptConditionsAlert: false,
       requestDetails: undefined,
       userDetail: undefined,
-      modalFunc: undefined,
-      modalTitle: undefined,
-      modalMsg: undefined,
     }
 
     let {params} = this.props.match
@@ -272,11 +266,7 @@ export class ChangeRequest extends Component
     this.apiListRequests = '/api/v1/internal/requests'
 
     this.backend = new Backend()
-    this.toggleAreYouSure = this.toggleAreYouSure.bind(this)
-    this.toggleAreYouSureSetModal = this.toggleAreYouSureSetModal.bind(this)
-    this.handleAcceptConditions = this.handleAcceptConditions.bind(this)
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
-    this.dismissAlert = this.dismissAlert.bind(this)
   }
 
   flattenListVMOses(data) {
@@ -285,20 +275,6 @@ export class ChangeRequest extends Component
       listOSes.push(os.vm_os)
     })
     return listOSes
-  }
-
-  toggleAreYouSureSetModal(msg, title, onyes) {
-    this.setState(prevState =>
-      ({areYouSureModal: !prevState.areYouSureModal,
-        modalFunc: onyes,
-        modalMsg: msg,
-        modalTitle: title,
-      }));
-  }
-
-  toggleAreYouSure() {
-    this.setState(prevState =>
-      ({areYouSureModal: !prevState.areYouSureModal}));
   }
 
   componentDidMount() {
@@ -312,20 +288,11 @@ export class ChangeRequest extends Component
         ])
           .then(([vmOSes, requestData]) => this.setState({
             listVMOSes: this.flattenListVMOses(vmOSes),
-            acceptConditions: false,
             userDetails: sessionActive.userdetails,
             requestDetails: requestData,
             loading: false
           }))
     })
-  }
-
-  dismissAlert() {
-    this.setState({acceptConditionsAlert: false})
-  }
-
-  handleAcceptConditions() {
-    this.setState(prevState => ({acceptConditions: !prevState.acceptConditions}))
   }
 
   handleOnSubmit(data) {
@@ -342,7 +309,7 @@ export class ChangeRequest extends Component
   }
 
   render() {
-    const {loading, listVMOSes, userDetails, acceptConditions, requestDetails} = this.state
+    const {loading, listVMOSes, userDetails, requestDetails} = this.state
 
     if (userDetails && requestDetails)
       var initValues = {
@@ -373,15 +340,11 @@ export class ChangeRequest extends Component
     if (loading)
       return (<LoadingAnim />)
 
-    else if (!loading && listVMOSes &&
-      initValues && acceptConditions !== undefined) {
+    else if (!loading && listVMOSes && initValues) {
       return (
         <BaseView
           title='Promjeni Zahtjev'
-          isChangeView={true}
-          modal={true}
-          state={this.state}
-          toggle={this.toggleAreYouSure}>
+          isChangeView={true}>
           <Formik
             initialValues={initValues}
             onSubmit={(values, actions) => {
@@ -413,15 +376,11 @@ export class NewRequest extends Component
     super(props)
 
     this.state = {
-      areYouSureModal: false,
       loading: false,
       listVMOSes: [],
       acceptConditions: undefined,
       acceptConditionsAlert: false,
       userDetail: undefined,
-      modalFunc: undefined,
-      modalTitle: undefined,
-      modalMsg: undefined,
     }
 
     this.apiListVMOSes = '/api/v1/internal/vmos/'
@@ -429,8 +388,6 @@ export class NewRequest extends Component
     this.apiListRequests = '/api/v1/internal/requests/'
 
     this.backend = new Backend()
-    this.toggleAreYouSure = this.toggleAreYouSure.bind(this)
-    this.toggleAreYouSureSetModal = this.toggleAreYouSureSetModal.bind(this)
     this.handleAcceptConditions = this.handleAcceptConditions.bind(this)
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
     this.dismissAlert = this.dismissAlert.bind(this)
@@ -442,20 +399,6 @@ export class NewRequest extends Component
       listOSes.push(os.vm_os)
     })
     return listOSes
-  }
-
-  toggleAreYouSureSetModal(msg, title, onyes) {
-    this.setState(prevState =>
-      ({areYouSureModal: !prevState.areYouSureModal,
-        modalFunc: onyes,
-        modalMsg: msg,
-        modalTitle: title,
-      }));
-  }
-
-  toggleAreYouSure() {
-    this.setState(prevState =>
-      ({areYouSureModal: !prevState.areYouSureModal}));
   }
 
   componentDidMount() {
@@ -528,15 +471,12 @@ export class NewRequest extends Component
     if (loading)
       return (<LoadingAnim />)
 
-    else if (!loading && listVMOSes &&
-      initValues && acceptConditions !== undefined) {
+    else if (!loading && listVMOSes && initValues &&
+      acceptConditions !== undefined) {
       return (
         <BaseView
           title='Novi Zahtjev'
-          isChangeView={false}
-          modal={true}
-          state={this.state}
-          toggle={this.toggleAreYouSure}>
+          isChangeView={false}>
           <Formik
             initialValues={initValues}
             onSubmit={(values, actions) => {
