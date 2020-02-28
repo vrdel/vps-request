@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Backend } from './DataManager';
-import { BaseView, LoadingAnim } from './UIElements';
+import { BaseView, LoadingAnim, DateFormatHR } from './UIElements';
 import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -72,8 +72,9 @@ export class StateRequest extends Component
           maxWidth: 100,
         },
         {
+          id: 'requestDate',
           Header: 'Datum podnošenja',
-          accessor: 'request_date'
+          accessor: r => DateFormatHR(r.request_date)
         },
         {
           Header: 'Ustanova',

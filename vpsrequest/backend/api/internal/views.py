@@ -34,6 +34,7 @@ class ListRequests(BaseProtectedAPIView):
         user = get_user_model().objects.get(username=request.data['username'])
         request.data['user'] = user.pk
         request.data['request_date'] = datetime.now()
+        request.data['approved'] = -1
 
         serializer = serializers.RequestsSerializer(data=request.data)
 

@@ -7,8 +7,21 @@ module.exports = {
   entry: "./react/index.js",
   output: {
     path: path.resolve("./bundles/reactbundle/"),
-    filename: "[name]-[hash].js",
-    chunkFilename: "[name]-[hash].js"
+    filename: "[name]-[contenthash].js",
+    chunkFilename: "[name]-[contenthash].js"
+  },
+  optimization: {
+    runtimeChunk: 'single',
+    moduleIds: 'hashed',
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all'
+        }
+      }
+    }
   },
   plugins: [
     new BundleTracker({filename: './webpack-stats.json'}),
