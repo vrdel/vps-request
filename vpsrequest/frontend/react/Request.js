@@ -117,6 +117,7 @@ const ContactUserFields = () =>
   </React.Fragment>
 )
 
+
 const VMFields = ({listVMOSes}) => {
   let infoVMOS = "* Čelnik ustanove odgovara za posjedovanje i aktiviranje valjane licence za gore odabrani operacijski sustav."
   let infoPurpose = "* Potrebno je detaljno obrazložiti namjenu virtualnog poslužitelja. Zahtjev može biti odbijen ukoliko Srce procijeni da navedena namjena virtualnog poslužitelja nije primjerena namjeni usluge, ili ne predstavlja trajne potrebe ustanove za poslužiteljskim kapacitetima.";
@@ -173,6 +174,18 @@ const HeadFields = () =>
     <Field name="head_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" required={true}/>
   </React.Fragment>
 )
+
+
+const RequestDateField = () =>
+(
+  <React.Fragment>
+    <div className="mt-5">
+      <Field name="request_date" component={RowRequestField} label="Datum podnošenja:" labelFor="dateRequest" fieldType="text" disabled={true} required={true}/>
+    </div>
+    <RequestHorizontalRule/>
+  </React.Fragment>
+)
+
 
 const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dismissAlert, stateAcceptConditionsAlert}) =>
 (
@@ -245,6 +258,7 @@ const SubmitChangeRequest = () =>
     </Row>
   </React.Fragment>
 )
+
 
 export class ChangeRequest extends Component
 {
@@ -334,7 +348,8 @@ export class ChangeRequest extends Component
         head_lastname: requestDetails.head_lastname,
         head_institution: requestDetails.head_institution,
         head_role: requestDetails.head_role,
-        head_email: requestDetails.head_email
+        head_email: requestDetails.head_email,
+        request_date: requestDetails.request_date
       }
 
     if (loading)
@@ -352,7 +367,8 @@ export class ChangeRequest extends Component
             }}
             render = {props => (
               <Form>
-                <ContactUserFields />
+                <RequestDateField/>
+                <ContactUserFields/>
                 <VMFields listVMOSes={listVMOSes}/>
                 <SysAdminFields/>
                 <HeadFields/>
