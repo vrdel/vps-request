@@ -11,6 +11,8 @@ module.exports = {
     chunkFilename: "[name]-[contenthash].js"
   },
   optimization: {
+    runtimeChunk: 'single',
+    moduleIds: 'hashed',
     splitChunks: {
       cacheGroups: {
         vendor: {
