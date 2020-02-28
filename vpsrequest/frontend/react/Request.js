@@ -498,7 +498,6 @@ export class NewRequest extends Component
             initialValues={initValues}
             onSubmit={(values, actions) => {
               values.username = userDetails.username
-              values.approved = -1
 
               if (!acceptConditions)
                 this.setState({acceptConditionsAlert: true})
