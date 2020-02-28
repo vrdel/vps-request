@@ -59,6 +59,11 @@ class ListRequests(BaseProtectedAPIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def _get_by_username(self, username):
+        user = get_user_model().objects.get(username=username)
+        requests = models.Request.objects.filter(user=user)
+        return requests
+
     def get(self, request):
         requests = models.Request.objects.all()
         serializer = serializers.RequestsSerializer(requests, many=True)
@@ -68,16 +73,20 @@ class ListRequests(BaseProtectedAPIView):
 
 class ListRequestsId(ListRequests):
     def get(self, request, pk=None):
-        requests = models.Request.objects.get(id=pk)
-        serializer = serializers.RequestsSerializer(requests)
+        try:
+            requests = self._get_by_username(request.user.username)
+            requests = requests.get(id=pk)
+            serializer = serializers.RequestsSerializer(requests)
 
-        return Response(serializer.data)
+            return Response(serializer.data)
+
+        except models.Request.DoesNotExist:
+            raise NotFound(status=404, detail='Request not found')
 
 
 class ListRequestsUsername(ListRequests):
     def get(self, request, username=None):
-        user = get_user_model().objects.get(username=username)
-        requests = models.Request.objects.filter(user=user)
+        requests = self._get_by_username(username)
         serializer = serializers.RequestsSerializer(requests, many=True)
 
         return Response(serializer.data)
