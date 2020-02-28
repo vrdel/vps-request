@@ -16,6 +16,7 @@ import {
   NotifyOk,
   NotifyError,
   RequestHorizontalRule,
+  DateFormatHR
 } from './UIElements.js';
 import { Formik, Form, Field } from 'formik';
 import './Request.css';
@@ -349,7 +350,7 @@ export class ChangeRequest extends Component
         head_institution: requestDetails.head_institution,
         head_role: requestDetails.head_role,
         head_email: requestDetails.head_email,
-        request_date: requestDetails.request_date
+        request_date: DateFormatHR(requestDetails.request_date)
       }
 
     if (loading)
