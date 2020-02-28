@@ -31,4 +31,3 @@ devel-container:
 prod-container:
 	rm -rf bundles/reactbundle/* ; \
 	node_modules/.bin/webpack --config webpack.config.js --progress --mode production
-
