@@ -7,19 +7,13 @@ from django.core.cache import cache
 from django.db import IntegrityError
 
 from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import APIException
 
 from datetime import datetime
-
-class BaseProtectedAPIView(APIView):
-    if settings.ALWAYS_LOGGEDIN:
-        authentication_classes = ()
-        permission_classes = ()
-    else:
-        authentication_classes = (SessionAuthentication,)
 
 
 class NotFound(APIException):
@@ -29,7 +23,7 @@ class NotFound(APIException):
         self.code = code if code else detail
 
 
-class ListRequests(BaseProtectedAPIView):
+class ListRequests(APIView):
     def post(self, request):
         user = get_user_model().objects.get(username=request.data['username'])
         request.data['user'] = user.pk
@@ -71,7 +65,7 @@ class ListRequests(BaseProtectedAPIView):
         return Response(serializer.data)
 
 
-class ListRequestsId(ListRequests):
+class ListRequestsId(APIView):
     def get(self, request, pk=None):
         try:
             requests = self._get_by_username(request.user.username)
@@ -92,7 +86,7 @@ class ListRequestsUsername(ListRequests):
         return Response(serializer.data)
 
 
-class ListUsers(BaseProtectedAPIView):
+class ListUsers(APIView):
     def get(self, request, username=None):
         if username:
             try:
@@ -181,7 +175,7 @@ class GetConfigOptions(APIView):
         return Response({'result': options})
 
 
-class IsSessionActive(BaseProtectedAPIView):
+class IsSessionActive(APIView):
     def get(self, request):
         user = dict()
 
@@ -192,7 +186,7 @@ class IsSessionActive(BaseProtectedAPIView):
         return Response({'active': True, 'userdetails': user})
 
 
-class Saml2Login(BaseProtectedAPIView):
+class Saml2Login(APIView):
     keys = ['username', 'first_name', 'last_name', 'is_superuser']
 
     def _prefix(self, keys):
@@ -217,9 +211,19 @@ class Saml2Login(BaseProtectedAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class VMOS(BaseProtectedAPIView):
+class VMOS(APIView):
     def get(self, request):
         oses = models.VMOS.objects.all()
         serializer = serializers.VMOSSerializer(oses, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class RequestsViewset(viewsets.ModelViewSet):
+    queryset = models.Request.objects.all()
+    serializer_class = serializers.RequestsSerializer
+
+
+class UsersViewset(viewsets.ModelViewSet):
+    queryset = models.User.objects.all()
+    serializer_class = serializers.UsersSerializer

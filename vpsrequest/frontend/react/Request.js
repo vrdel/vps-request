@@ -248,6 +248,7 @@ const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dismissAler
   </React.Fragment>
 )
 
+
 const SubmitChangeRequest = () =>
 (
   <React.Fragment>
