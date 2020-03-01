@@ -16,6 +16,7 @@ import './Login.css';
 import {Footer} from './UIElements.js';
 import Cookies from 'universal-cookie';
 import CloudLogoSmall from './logos/logo_cloud-smaller.png';
+import { Backend } from './DataManager.js';
 
 
 class Login extends Component {
@@ -28,7 +29,8 @@ class Login extends Component {
       loginFailedVisible: false,
     };
 
-    this.dismissLoginAlert = this.dismissLoginAlert.bind(this);
+    this.dismissLoginAlert = this.dismissLoginAlert.bind(this)
+    this.backend = new Backend()
   }
 
   fetchConfigOptions() {
@@ -123,7 +125,7 @@ class Login extends Component {
         'username': username,
         'password': password
       })
-    }).then(response => this.fetchUserDetails());
+    }).then(response => this.backend.isActiveSession());
   }
 
   dismissLoginAlert() {
@@ -149,10 +151,8 @@ class Login extends Component {
                     (values) => this.doUserPassLogin(values.username, values.password)
                       .then(response =>
                         {
-                          if (response.ok) {
-                            response.json().then(
-                              json => this.props.onLogin(json, this.props.history)
-                            )
+                          if (response.active) {
+                            this.props.onLogin(response.userdetails, this.props.history)
                           }
                           else {
                             this.setState({loginFailedVisible: true});

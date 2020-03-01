@@ -1,9 +1,12 @@
 from django.conf import settings
 from django.core.cache import cache
+from django.contrib.auth import get_user_model
 
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from backend import serializers
 
 
 class GetConfigOptions(APIView):
@@ -22,13 +25,10 @@ class GetConfigOptions(APIView):
 
 class IsSessionActive(APIView):
     def get(self, request):
-        user = dict()
+        user = get_user_model().objects.get(id=self.request.user.id)
+        serializer = serializers.UsersSerializer(user)
 
-        for key in ['username', 'first_name', 'last_name', 'email', 'is_staff',
-                    'is_active', 'aaieduhr', 'institution', 'role']:
-            user[key] = eval('request.user.{}'.format(key))
-
-        return Response({'active': True, 'userdetails': user})
+        return Response({'active': True, 'userdetails': serializer.data})
 
 
 class Saml2Login(APIView):
