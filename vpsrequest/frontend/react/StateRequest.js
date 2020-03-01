@@ -24,7 +24,7 @@ export class StateRequest extends Component
       listMyRequests: null
     }
 
-    this.apiListRequests = '/api/v1/internal/requests/'
+    this.apiListRequests = '/api/v1/internal/requests'
 
     this.location = props.location;
     this.backend = new Backend();
