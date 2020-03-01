@@ -55,7 +55,7 @@ class App extends Component {
   }
 
   fetchConfigOptions() {
-    return fetch('/api/v1/internal/config_options')
+    return fetch('/api/v1/configoptions')
       .then(response => {
         if (response.ok)
           return response.json();

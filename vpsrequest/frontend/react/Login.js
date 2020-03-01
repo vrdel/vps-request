@@ -32,7 +32,7 @@ class Login extends Component {
   }
 
   fetchConfigOptions() {
-    return fetch('/api/v1/internal/config_options')
+    return fetch('/api/v1/configoptions')
       .then(response => {
         if (response.ok)
           return response.json()
@@ -40,7 +40,7 @@ class Login extends Component {
   }
 
   isSaml2Logged() {
-    return fetch('/api/v1/internal/saml2login', {
+    return fetch('/api/v1/saml2login', {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ class Login extends Component {
   flushSaml2Cache() {
     let cookies = new Cookies();
 
-    return fetch('/api/v1/internal/saml2login', {
+    return fetch('/api/v1/saml2login', {
       method: 'DELETE',
       mode: 'cors',
       cache: 'no-cache',
@@ -95,8 +95,8 @@ class Login extends Component {
     this._isMounted = false;
   }
 
-  fetchUserDetails(username) {
-    return fetch('/api/v1/internal/users/' + username, {
+  fetchUserDetails() {
+    return fetch('/api/v1/internal/users/mine/', {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ class Login extends Component {
         'username': username,
         'password': password
       })
-    }).then(response => this.fetchUserDetails(username));
+    }).then(response => this.fetchUserDetails());
   }
 
   dismissLoginAlert() {

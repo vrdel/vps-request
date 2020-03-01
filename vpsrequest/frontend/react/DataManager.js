@@ -2,7 +2,7 @@ import Cookies from 'universal-cookie';
 
 export class Backend {
   isActiveSession() {
-    return fetch('/api/v1/internal/sessionactive')
+    return fetch('/api/v1/sessionactive')
       .then(response => {
         if (response.ok)
           return response.json()

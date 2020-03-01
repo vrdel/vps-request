@@ -24,7 +24,7 @@ export class StateRequest extends Component
       listMyRequests: null
     }
 
-    this.apiListRequests = '/api/v1/internal/requests'
+    this.apiListRequests = '/api/v1/internal/requests/'
 
     this.location = props.location;
     this.backend = new Backend();
@@ -35,7 +35,7 @@ export class StateRequest extends Component
 
     this.backend.isActiveSession().then(sessionActive =>
       sessionActive.active &&
-      Promise.all([this.backend.fetchData(`${this.apiListRequests}/${sessionActive.userdetails.username}`)])
+      Promise.all([this.backend.fetchData(`${this.apiListRequests}/mine`)])
         .then(([requests]) => this.setState({
           listMyRequests: requests,
           userDetails: sessionActive.userdetails,
