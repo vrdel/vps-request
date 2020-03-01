@@ -33,7 +33,6 @@ try:
 
     # General
     DEBUG = bool(config.getboolean('GENERAL', 'debug'))
-    ALWAYS_LOGGEDIN = bool(config.getboolean('GENERAL', 'alwaysloggedin'))
 
     ALLOWED_HOSTS = config.get('SECURITY', 'AllowedHosts')
     HOST_CERT = config.get('SECURITY', 'HostCert')
@@ -138,6 +137,7 @@ TEMPLATES = [
 
 
 # Django REST Framework settings
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -146,7 +146,6 @@ REST_FRAMEWORK = {
 
 
 WSGI_APPLICATION = 'vpsrequest.wsgi.application'
-
 
 
 # Database

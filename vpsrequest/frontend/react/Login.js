@@ -16,6 +16,7 @@ import './Login.css';
 import {Footer} from './UIElements.js';
 import Cookies from 'universal-cookie';
 import CloudLogoSmall from './logos/logo_cloud-smaller.png';
+import { Backend } from './DataManager.js';
 
 
 class Login extends Component {
@@ -28,19 +29,13 @@ class Login extends Component {
       loginFailedVisible: false,
     };
 
-    this.dismissLoginAlert = this.dismissLoginAlert.bind(this);
-  }
-
-  fetchConfigOptions() {
-    return fetch('/api/v1/internal/config_options')
-      .then(response => {
-        if (response.ok)
-          return response.json()
-      })
+    this.dismissLoginAlert = this.dismissLoginAlert.bind(this)
+    this.backend = new Backend()
+    this.apiConfigOptions = '/api/v1/configoptions'
   }
 
   isSaml2Logged() {
-    return fetch('/api/v1/internal/saml2login', {
+    return fetch('/api/v1/saml2login', {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -51,7 +46,7 @@ class Login extends Component {
   flushSaml2Cache() {
     let cookies = new Cookies();
 
-    return fetch('/api/v1/internal/saml2login', {
+    return fetch('/api/v1/saml2login', {
       method: 'DELETE',
       mode: 'cors',
       cache: 'no-cache',
@@ -68,62 +63,24 @@ class Login extends Component {
   componentDidMount() {
     this._isMounted = true;
 
-    this.fetchConfigOptions().then(json => {
-      if (json.result.AlwaysLoggedIn) {
-        this.fetchUserDetails(json.result.SuperUser)
-          .then(response => response.json())
-          .then(json => this.props.onLogin(json, this.props.history))
-      }
-      else {
-        this.isSaml2Logged().then(response => {
-          response.ok && response.json().then(
-            json => {
-              if (Object.keys(json).length > 0) {
-                this.flushSaml2Cache().then(
-                  response => response.ok &&
-                    this.props.onLogin(json, this.props.history)
-                )
-              }
+    this.backend.fetchData(this.apiConfigOptions).then(json => {
+      this.isSaml2Logged().then(response => {
+        response.ok && response.json().then(
+          json => {
+            if (Object.keys(json).length > 0) {
+              this.flushSaml2Cache().then(
+                response => response.ok &&
+                  this.props.onLogin(json, this.props.history)
+              )
             }
-          )
-        })
-      }
+          }
+        )
+      })
     })
   }
 
   componentWillUnmount() {
     this._isMounted = false;
-  }
-
-  fetchUserDetails(username) {
-    return fetch('/api/v1/internal/users/' + username, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-  }
-
-  doUserPassLogin(username, password)
-  {
-    let cookies = new Cookies();
-
-    return fetch('/rest-auth/login/', {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'X-CSRFToken': cookies.get('csrftoken'),
-        'Referer': 'same-origin'
-      },
-      body: JSON.stringify({
-        'username': username,
-        'password': password
-      })
-    }).then(response => this.fetchUserDetails(username));
   }
 
   dismissLoginAlert() {
@@ -146,13 +103,11 @@ class Login extends Component {
                 <Formik
                   initialValues = {{username: '', password: ''}}
                   onSubmit = {
-                    (values) => this.doUserPassLogin(values.username, values.password)
+                    (values) => this.backend.doUserPassLogin(values.username, values.password)
                       .then(response =>
                         {
-                          if (response.ok) {
-                            response.json().then(
-                              json => this.props.onLogin(json, this.props.history)
-                            )
+                          if (response.active) {
+                            this.props.onLogin(response.userdetails, this.props.history)
                           }
                           else {
                             this.setState({loginFailedVisible: true});

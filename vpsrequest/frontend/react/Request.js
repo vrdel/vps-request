@@ -248,6 +248,7 @@ const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dismissAler
   </React.Fragment>
 )
 
+
 const SubmitChangeRequest = () =>
 (
   <React.Fragment>
@@ -277,7 +278,6 @@ export class ChangeRequest extends Component
     this.requestID = params.id
 
     this.apiListVMOSes = '/api/v1/internal/vmos/'
-    this.apiListUsers = '/api/v1/internal/users/'
     this.apiListRequests = '/api/v1/internal/requests'
 
     this.backend = new Backend()
@@ -311,7 +311,7 @@ export class ChangeRequest extends Component
   }
 
   handleOnSubmit(data) {
-    this.backend.changeObject(`${this.apiListRequests}/${this.requestID}`, data)
+    this.backend.changeObject(`${this.apiListRequests}/${this.requestID}/change/`, data)
       .then(response => {
         response.ok
           ? NotifyOk({
@@ -401,7 +401,6 @@ export class NewRequest extends Component
     }
 
     this.apiListVMOSes = '/api/v1/internal/vmos/'
-    this.apiListUsers = '/api/v1/internal/users/'
     this.apiListRequests = '/api/v1/internal/requests/'
 
     this.backend = new Backend()
