@@ -59,13 +59,12 @@ class RequestsViewset(viewsets.ModelViewSet):
 
 
 class UsersViewset(viewsets.ModelViewSet):
-    queryset = models.User.objects.all()
     serializer_class = serializers.UsersSerializer
 
-    @action(detail=False)
-    def mine(self, request):
+    def get_queryset(self):
         user = self.request.user
-        me = get_user_model().objects.get(id=user.id)
-        serializer = serializers.UsersSerializer(me)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if user.is_staff or user.is_superuser:
+            return get_user_model().objects.all()
+        else:
+            return get_user_model().objects.filter(id=user.id)

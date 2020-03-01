@@ -31,14 +31,7 @@ class Login extends Component {
 
     this.dismissLoginAlert = this.dismissLoginAlert.bind(this)
     this.backend = new Backend()
-  }
-
-  fetchConfigOptions() {
-    return fetch('/api/v1/configoptions')
-      .then(response => {
-        if (response.ok)
-          return response.json()
-      })
+    this.apiConfigOptions = '/api/v1/configoptions'
   }
 
   isSaml2Logged() {
@@ -70,62 +63,24 @@ class Login extends Component {
   componentDidMount() {
     this._isMounted = true;
 
-    this.fetchConfigOptions().then(json => {
-      if (json.result.AlwaysLoggedIn) {
-        this.fetchUserDetails(json.result.SuperUser)
-          .then(response => response.json())
-          .then(json => this.props.onLogin(json, this.props.history))
-      }
-      else {
-        this.isSaml2Logged().then(response => {
-          response.ok && response.json().then(
-            json => {
-              if (Object.keys(json).length > 0) {
-                this.flushSaml2Cache().then(
-                  response => response.ok &&
-                    this.props.onLogin(json, this.props.history)
-                )
-              }
+    this.backend.fetchData(this.apiConfigOptions).then(json => {
+      this.isSaml2Logged().then(response => {
+        response.ok && response.json().then(
+          json => {
+            if (Object.keys(json).length > 0) {
+              this.flushSaml2Cache().then(
+                response => response.ok &&
+                  this.props.onLogin(json, this.props.history)
+              )
             }
-          )
-        })
-      }
+          }
+        )
+      })
     })
   }
 
   componentWillUnmount() {
     this._isMounted = false;
-  }
-
-  fetchUserDetails() {
-    return fetch('/api/v1/internal/users/mine/', {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-  }
-
-  doUserPassLogin(username, password)
-  {
-    let cookies = new Cookies();
-
-    return fetch('/rest-auth/login/', {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'X-CSRFToken': cookies.get('csrftoken'),
-        'Referer': 'same-origin'
-      },
-      body: JSON.stringify({
-        'username': username,
-        'password': password
-      })
-    }).then(response => this.backend.isActiveSession());
   }
 
   dismissLoginAlert() {
@@ -148,7 +103,7 @@ class Login extends Component {
                 <Formik
                   initialValues = {{username: '', password: ''}}
                   onSubmit = {
-                    (values) => this.doUserPassLogin(values.username, values.password)
+                    (values) => this.backend.doUserPassLogin(values.username, values.password)
                       .then(response =>
                         {
                           if (response.active) {

@@ -12,6 +12,28 @@ export class Backend {
       .catch(() => false);
   }
 
+  doUserPassLogin(username, password)
+  {
+    let cookies = new Cookies();
+
+    return fetch('/rest-auth/login/', {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-CSRFToken': cookies.get('csrftoken'),
+        'Referer': 'same-origin'
+      },
+      body: JSON.stringify({
+        'username': username,
+        'password': password
+      })
+    }).then(() => this.isActiveSession());
+  }
+
   fetchData(url) {
     return fetch(url)
       .then(response => response.json())

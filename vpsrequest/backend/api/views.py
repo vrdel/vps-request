@@ -16,10 +16,6 @@ class GetConfigOptions(APIView):
     def get(self, request):
         options = dict()
 
-        if settings.ALWAYS_LOGGEDIN:
-            options.update(AlwaysLoggedIn=settings.ALWAYS_LOGGEDIN)
-            options.update(SuperUser=settings.SUPERUSER_NAME)
-
         return Response({'result': options})
 
 
