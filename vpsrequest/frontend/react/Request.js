@@ -284,14 +284,6 @@ export class ChangeRequest extends Component
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
   }
 
-  flattenListVMOses(data) {
-    let listOSes = new Array()
-    data.forEach(os => {
-      listOSes.push(os.vm_os)
-    })
-    return listOSes
-  }
-
   componentDidMount() {
     this.setState({loading: true})
 
@@ -302,7 +294,7 @@ export class ChangeRequest extends Component
           this.backend.fetchData(`${this.apiListRequests}/${this.requestID}`),
         ])
           .then(([vmOSes, requestData]) => this.setState({
-            listVMOSes: this.flattenListVMOses(vmOSes),
+            listVMOSes: vmOSes.map(e => e.vm_os),
             userDetails: sessionActive.userdetails,
             requestDetails: requestData,
             loading: false
@@ -409,14 +401,6 @@ export class NewRequest extends Component
     this.dismissAlert = this.dismissAlert.bind(this)
   }
 
-  flattenListVMOses(data) {
-    let listOSes = new Array()
-    data.forEach(os => {
-      listOSes.push(os.vm_os)
-    })
-    return listOSes
-  }
-
   componentDidMount() {
     this.setState({loading: true})
 
@@ -426,7 +410,7 @@ export class NewRequest extends Component
           this.backend.fetchData(this.apiListVMOSes),
         ])
           .then(([vmOSes]) => this.setState({
-            listVMOSes: this.flattenListVMOses(vmOSes),
+            listVMOSes: vmOSes.map(e => e.vm_os),
             acceptConditions: false,
             userDetails: sessionActive.userdetails,
             loading: false
