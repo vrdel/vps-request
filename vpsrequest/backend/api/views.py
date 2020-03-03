@@ -21,10 +21,14 @@ class GetConfigOptions(APIView):
 
 class IsSessionActive(APIView):
     def get(self, request):
+        userdetails = dict()
         user = get_user_model().objects.get(id=self.request.user.id)
         serializer = serializers.UsersSerializer(user)
+        userdetails.update(serializer.data)
+        perms = list(user.user_permissions.all().values_list('codename', flat=True))
+        userdetails['perms'] = perms
 
-        return Response({'active': True, 'userdetails': serializer.data})
+        return Response({'active': True, 'userdetails': userdetails})
 
 
 class Saml2Login(APIView):
