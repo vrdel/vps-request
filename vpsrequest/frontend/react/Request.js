@@ -481,6 +481,8 @@ export class NewRequest extends Component
             initialValues={initValues}
             onSubmit={(values, actions) => {
               values.username = userDetails.username
+              values.user = userDetails.pk
+              values.request_date = new Date().toISOString()
 
               if (!acceptConditions)
                 this.setState({acceptConditionsAlert: true})
