@@ -16,7 +16,6 @@ from rest_framework.exceptions import APIException
 from datetime import datetime
 
 
-
 class VMOSViewset(viewsets.ModelViewSet):
     queryset = models.VMOS.objects.all()
     serializer_class = serializers.VMOSSerializer
