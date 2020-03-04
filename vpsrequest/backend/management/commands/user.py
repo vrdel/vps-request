@@ -17,6 +17,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--create', action='store_true', dest='operation_create', help='Create new user')
         parser.add_argument('--delete', action='store_true', dest='operation_delete', help='Delete user')
+        parser.add_argument('--set', action='store_true', dest='operation_set', help='Set password for user')
         parser.add_argument('--is-staff', action='store_true', default=False, dest='isstaff', help='Make user staff')
         parser.add_argument('--approve-request', action='store_true', default=False, dest='approverequest', help='User can approve request')
         parser.add_argument('--username', type=str, dest='username', help='Username of user', required=True)
@@ -24,27 +25,39 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if options['operation_create']:
-            user = self.user_model.objects.create_user(options['username'],
-                                                       '{0}@email.hr'.format(options['username']),
-                                                       options['password'])
-            user.institution = 'SRCE'
-            user.is_staff = options['isstaff'] or options['approverequest']
-            user.role = 'Outsider'
-            user.aaieduhr = options['username']
-            user.first_name = ''.join(random.sample(ALPHACHARS, 8))
-            user.last_name = ''.join(random.sample(ALPHACHARS, 8))
-            user.save()
+            try:
+                user = self.user_model.objects.create_user(options['username'],
+                                                           '{0}@email.hr'.format(options['username']),
+                                                           options['password'])
+                user.institution = 'SRCE'
+                user.is_staff = options['isstaff'] or options['approverequest']
+                user.role = 'Outsider'
+                user.aaieduhr = options['username']
+                user.first_name = ''.join(random.sample(ALPHACHARS, 8))
+                user.last_name = ''.join(random.sample(ALPHACHARS, 8))
+                user.save()
 
-            if options['approverequest']:
-                pu = Permission.objects.get(codename='approve_request')
-                user.user_permissions.add(pu)
+                if options['approverequest']:
+                    pu = Permission.objects.get(codename='approve_request')
+                    user.user_permissions.add(pu)
 
-            self.stdout.write('User {0} succesfully created'.format(options['username']))
+                self.stdout.write('User {0} succesfully created'.format(options['username']))
+            except Exception as exp:
+                self.stderr.write(repr(exp))
 
         elif options['operation_delete']:
             try:
                 user = self.user_model.objects.get(username=options['username'])
                 user.delete()
                 self.stdout.write('User {0} succesfully deleted'.format(options['username']))
+            except Exception as exp:
+                self.stderr.write(repr(exp))
+
+        elif options['operation_set']:
+            try:
+                user = self.user_model.objects.get(username=options['username'])
+                user.set_password(options['password'])
+                user.save()
+                self.stdout.write('User password set'.format(options['username']))
             except Exception as exp:
                 self.stderr.write(repr(exp))
