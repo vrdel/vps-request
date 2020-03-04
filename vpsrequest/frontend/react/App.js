@@ -34,13 +34,17 @@ class App extends Component {
 
   onLogin(json, history) {
     let response = new Object();
+    let goToURL = '/ui/novi-zahtjevi'
 
     response.active = true
     response.userdetails = json
 
+    if (!response.userdetails.is_staff)
+      goToURL = '/ui/novi-zahtjev'
+
     this.initalizeState(response).then(
       setTimeout(() => {
-        history.push('/ui/novi-zahtjevi');
+        history.push(goToURL);
       }, 50
     ))
   }
@@ -100,11 +104,12 @@ class App extends Component {
       )
     }
     else if (isSessionActive && userDetails) {
-      let propsPage = new Object()
-      propsPage.toggleAreYouSure = this.toggleAreYouSure
-      propsPage.onLogout = this.onLogout
-      propsPage.areYouSureModal = this.state.areYouSureModal
-      propsPage.userDetails = userDetails
+      let propsPage = new Object({
+        toggleAreYouSure: this.toggleAreYouSure,
+        onLogout: this.onLogout,
+        areYouSureModal: this.state.areYouSureModal,
+        userDetails: userDetails
+      })
 
       return (
         <BrowserRouter>

@@ -188,14 +188,17 @@ const NavigationBar = ({history, onLogout, isOpenModal, toggle,
 )
 
 
-const NavigationLinks = ({location}) => {
-  var data = undefined;
-  data = listPages
+const NavigationLinks = ({location, isStaff}) => {
+  var noStaffPages = ['novi-zahtjev', 'stanje-zahtjeva']
+  var pages = listPages
+
+  if (!isStaff)
+    pages = noStaffPages
 
   return (
     <Nav tabs id="vpsreq-navlinks" className="d-flex justify-content-center border-left border-right border-top rounded-top sticky-top pl-3 pr-3">
       {
-        data.map((item, i) =>
+        pages.map((item, i) =>
           <NavItem key={i} className='mt-1 mr-2'>
             <NavLink
               tag={Link}
@@ -228,7 +231,7 @@ export const VPSPage = ({toggleAreYouSure, onLogout, areYouSureModal, userDetail
     </Row>
     <Row className="no-gutters">
       <Col>
-        <NavigationLinksWithRouter />
+        <NavigationLinksWithRouter isStaff={userDetails.is_staff} />
         {children}
       </Col>
     </Row>
