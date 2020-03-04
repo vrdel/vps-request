@@ -59,7 +59,7 @@ export class Backend {
   }
 
   changeObject(url, data) {
-    return this.send(url, 'PUT', data);
+    return this.send(url, 'PATCH', data);
   }
 
   addObject(url, data) {

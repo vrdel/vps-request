@@ -303,7 +303,7 @@ export class ChangeRequest extends Component
   }
 
   handleOnSubmit(data) {
-    this.backend.changeObject(`${this.apiListRequests}/${this.requestID}/change/`, data)
+    this.backend.changeObject(`${this.apiListRequests}/${this.requestID}/`, data)
       .then(response => {
         response.ok
           ? NotifyOk({
@@ -356,6 +356,10 @@ export class ChangeRequest extends Component
           <Formik
             initialValues={initValues}
             onSubmit={(values, actions) => {
+              values.timestamp = new Date().toISOString()
+              values.request_date = requestDetails.request_date
+              values.username = userDetails.username
+              values.user = userDetails.pk
               this.handleOnSubmit(values)
             }}
             render = {props => (

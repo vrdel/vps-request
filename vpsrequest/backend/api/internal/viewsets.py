@@ -40,22 +40,6 @@ class RequestsViewset(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=['put'])
-    def change(self, request, pk=None):
-        reqdb = models.Request.objects.get(id=pk)
-        request.data['user'] = reqdb.user.pk
-        reqdb.timestamp = datetime.now()
-        request.data['request_date'] = reqdb.request_date
-        request.data['approved'] = reqdb.approved
-
-        serializer = serializers.RequestsSerializer(reqdb, data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class UsersViewset(viewsets.ModelViewSet):
     serializer_class = serializers.UsersSerializer
