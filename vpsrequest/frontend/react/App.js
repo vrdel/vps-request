@@ -100,11 +100,12 @@ class App extends Component {
       )
     }
     else if (isSessionActive && userDetails) {
-      let propsPage = new Object()
-      propsPage.toggleAreYouSure = this.toggleAreYouSure
-      propsPage.onLogout = this.onLogout
-      propsPage.areYouSureModal = this.state.areYouSureModal
-      propsPage.userDetails = userDetails
+      let propsPage = new Object({
+        toggleAreYouSure: this.toggleAreYouSure,
+        onLogout: this.onLogout,
+        areYouSureModal: this.state.areYouSureModal,
+        userDetails: userDetails
+      })
 
       return (
         <BrowserRouter>
