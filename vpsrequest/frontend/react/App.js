@@ -34,13 +34,17 @@ class App extends Component {
 
   onLogin(json, history) {
     let response = new Object();
+    let goToURL = '/ui/novi-zahtjevi'
 
     response.active = true
     response.userdetails = json
 
+    if (!response.userdetails.is_staff)
+      goToURL = '/ui/novi-zahtjev'
+
     this.initalizeState(response).then(
       setTimeout(() => {
-        history.push('/ui/novi-zahtjevi');
+        history.push(goToURL);
       }, 50
     ))
   }
