@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Login from './Login';
 import { NewRequest, ChangeRequest } from './Request';
 import StateRequest from './StateRequest';
+import ApprovedRequest from './ApprovedRequest';
 import Home from './Home';
 import NotFound from './NotFound';
 import ReactNotification from 'react-notifications-component'
@@ -130,6 +131,7 @@ class App extends Component {
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
+                    <ApprovedRequest {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/odbijeni-zahtjevi"
               render={(props) =>
@@ -140,13 +142,13 @@ class App extends Component {
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
-                      <StateRequest {...props}/>
+                    <StateRequest {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/stanje-zahtjeva/:id"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
-                      <ChangeRequest {...props}/>
+                    <ChangeRequest {...props}/>
                   </VPSPage>}/>
           </Switch>
         </BrowserRouter>
