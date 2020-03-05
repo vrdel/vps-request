@@ -40,6 +40,13 @@ class RequestsViewset(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @action(detail=False)
+    def approved(self, request):
+        requests = models.Request.objects.filter(approved=1)
+        serializer = serializers.RequestsSerializer(requests, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class UsersViewset(viewsets.ModelViewSet):
     serializer_class = serializers.UsersSerializer
