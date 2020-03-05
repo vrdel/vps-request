@@ -487,6 +487,7 @@ export class NewRequest extends Component
               values.username = userDetails.username
               values.user = userDetails.pk
               values.request_date = new Date().toISOString()
+              values.approved = -1
 
               if (!acceptConditions)
                 this.setState({acceptConditionsAlert: true})
