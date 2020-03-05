@@ -10,7 +10,6 @@ import pwd
 # Removed '$' as it will be used as salt by auth.hashers
 # as part of token creation
 validchars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#%^&*(-_=+)'
-owner = 'www-data'
 
 def main():
     parser = argparse.ArgumentParser(description='Write SECRET_KEY to file')
@@ -24,11 +23,6 @@ def main():
         secret = open(args.outfile, 'w')
         secret.write(SECRET_KEY)
         secret.close()
-
-        entry = pwd.getpwnam(owner)
-
-        os.chmod(args.outfile, stat.S_IRUSR | stat.S_IWUSR)
-        os.chown(args.outfile, entry.pw_uid, entry.pw_gid)
 
     except Exception as e:
         sys.stderr.write(repr(e) + '\n')

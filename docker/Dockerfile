@@ -5,8 +5,8 @@ RUN groupadd user -g 1000 && useradd -u 1000 -g 1000 user -m -d /home/user
 RUN passwd -d root
 RUN apt-get update -y
 RUN apt-get install -y \
-		curl \
     apache2 \
+    curl \
     default-libmysqlclient-dev \
     dialog \
     htop \
@@ -19,6 +19,7 @@ RUN apt-get install -y \
     python3-pip \
     python3-venv \
     rsync \
+    sudo \
     tree \
     vim \
     wget \
@@ -40,6 +41,7 @@ RUN mkdir /home/user/pysitepkg
 RUN . ${virtenvdir}/bin/activate && pip install -U -r /home/user/requirements.txt
 RUN /home/user/mysql_setup.sh
 COPY key.pem cert.pem metadata.xml ${virtenvdir}/etc/vpsrequest/
+RUN echo "user ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers
 USER user
 WORKDIR /home/user
 ENTRYPOINT ["/home/user/entrypoint.sh"]
