@@ -42,7 +42,7 @@ class RequestsViewset(viewsets.ModelViewSet):
 
     @action(detail=False)
     def approved(self, request):
-        requests = models.Request.objects.filter(approved=1)
+        requests = models.Request.objects.filter(approved=1).order_by('-approved_date')
         serializer = serializers.RequestsSerializer(requests, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)

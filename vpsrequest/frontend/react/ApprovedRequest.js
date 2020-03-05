@@ -55,7 +55,7 @@ export class ApprovedRequest extends Component
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => `${listApprovedRequests.indexOf(r) + 1}.`,
+          accessor: r => `${listApprovedRequests.length - listApprovedRequests.indexOf(r)}.`,
           maxWidth: 50,
         },
         {
