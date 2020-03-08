@@ -22,7 +22,7 @@ class VMOSViewset(viewsets.ModelViewSet):
 
 
 class RequestsViewset(viewsets.ModelViewSet):
-    serializer_class = serializers.RequestsSerializer
+    serializer_class = serializers.RequestsChangeSerializer
 
     def get_queryset(self):
         user = self.request.user
@@ -36,15 +36,13 @@ class RequestsViewset(viewsets.ModelViewSet):
     def mine(self, request):
         user = self.request.user
         requests = models.Request.objects.filter(user=user)
-        serializer = serializers.RequestsSerializer(requests, many=True)
-
+        serializer = serializers.RequestsChangeSerializer(requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False)
     def approved(self, request):
         requests = models.Request.objects.filter(approved=1).order_by('-approved_date')
-        serializer = serializers.RequestsSerializer(requests, many=True)
-
+        serializer = serializers.RequestsListSerializer(requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

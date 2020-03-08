@@ -7,12 +7,15 @@ class UsersSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('aaieduhr', 'institution', 'role', 'first_name', 'last_name',
                   'username', 'is_active', 'is_superuser', 'is_staff', 'email',
-                  'date_joined', 'pk')
+                  'date_joined', 'pk', 'id')
         model = get_user_model()
 
 
-class RequestsSerializer(serializers.ModelSerializer):
-    user = UsersSerializer(read_only=True)
+class RequestsChangeSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
     class Meta:
         fields = ('id', 'timestamp', 'location', 'request_date',
                   'head_firstname', 'head_lastname', 'head_institution',
@@ -23,6 +26,11 @@ class RequestsSerializer(serializers.ModelSerializer):
                   'sys_role', 'sys_email', 'approved', 'approvedby',
                   'approved_date', 'sys_aaieduhr', 'user')
         model = models.Request
+
+
+class RequestsListSerializer(RequestsChangeSerializer):
+    user = UsersSerializer(read_only=True)
+
 
 class VMOSSerializer(serializers.ModelSerializer):
     class Meta:
