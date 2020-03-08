@@ -120,7 +120,7 @@ class App extends Component {
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
-                      <NewRequest {...props}/>
+                    <NewRequest {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/novi-zahtjevi"
               render={(props) =>

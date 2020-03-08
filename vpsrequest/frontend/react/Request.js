@@ -358,8 +358,6 @@ export class ChangeRequest extends Component
             onSubmit={(values, actions) => {
               values.timestamp = new Date().toISOString()
               values.request_date = requestDetails.request_date
-              values.username = userDetails.username
-              values.user = userDetails.pk
               this.handleOnSubmit(values)
             }}
             render = {props => (
@@ -484,8 +482,6 @@ export class NewRequest extends Component
           <Formik
             initialValues={initValues}
             onSubmit={(values, actions) => {
-              values.username = userDetails.username
-              values.user = userDetails.pk
               values.request_date = new Date().toISOString()
               values.approved = -1
 
