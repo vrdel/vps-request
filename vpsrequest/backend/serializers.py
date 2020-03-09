@@ -11,11 +11,7 @@ class UsersSerializer(serializers.ModelSerializer):
         model = get_user_model()
 
 
-class RequestsChangeSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
-
+class RequestsCUSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('id', 'timestamp', 'location', 'request_date',
                   'head_firstname', 'head_lastname', 'head_institution',
@@ -28,7 +24,7 @@ class RequestsChangeSerializer(serializers.ModelSerializer):
         model = models.Request
 
 
-class RequestsListSerializer(RequestsChangeSerializer):
+class RequestsListSerializer(RequestsCUSerializer):
     user = UsersSerializer(read_only=True)
 
 

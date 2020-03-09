@@ -483,6 +483,7 @@ export class NewRequest extends Component
             initialValues={initValues}
             onSubmit={(values, actions) => {
               values.request_date = new Date().toISOString()
+              values.user = userDetails.pk
               values.approved = -1
 
               if (!acceptConditions)
