@@ -1,5 +1,6 @@
 from backend import serializers
 from backend import models
+from backend.api.internal.util.reqstatus import RequestStatus
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -14,6 +15,8 @@ from rest_framework.views import APIView
 from rest_framework.exceptions import APIException
 
 from datetime import datetime
+
+
 
 
 class VMOSViewset(viewsets.ModelViewSet):
@@ -51,3 +54,26 @@ class UsersViewset(viewsets.ModelViewSet):
             return get_user_model().objects.all()
         else:
             return get_user_model().objects.filter(id=user.id)
+
+class ListRequestsViewset(viewsets.ModelViewSet):
+    serializer_class = serializers.ListRequestsSerializer
+    def get_queryset(self):
+        #import ipdb 
+        #ipdb.set_trace()
+        requests = models.Request.objects.filter(approved=-1).order_by('-request_date')
+        
+        return requests 
+
+    @action(detail=False)
+    def reject(self, request):
+        requests = models.Request.objects.filter(approved=0).order_by('-approved_date')
+        serializer = serializers.ListRequestsSerializer(requests, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False)
+    def approve(self, request):
+        requests = models.Request.objects.filter(approved=1).order_by('-approved_date')
+        serializer = serializers.ListRequestsSerializer(requests, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Login from './Login';
 import { NewRequest, ChangeRequest } from './Request';
 import StateRequest from './StateRequest';
+import FreshRequests from './FreshRequests';
 import Home from './Home';
 import NotFound from './NotFound';
 import ReactNotification from 'react-notifications-component'
@@ -125,6 +126,7 @@ class App extends Component {
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
+                      <FreshRequests {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/odobreni-zahtjevi"
               render={(props) =>
