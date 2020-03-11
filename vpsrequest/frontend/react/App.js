@@ -3,6 +3,8 @@ import Login from './Login';
 import { NewRequest, ChangeRequest } from './Request';
 import StateRequest from './StateRequest';
 import FreshRequests from './FreshRequests';
+import RejectedRequests from './RejectedRequests';
+import ApprovedRequests from './ApprovedRequests';
 import Home from './Home';
 import NotFound from './NotFound';
 import ReactNotification from 'react-notifications-component'
@@ -132,11 +134,13 @@ class App extends Component {
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
+                      <ApprovedRequests {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/odbijeni-zahtjevi"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
+                      <RejectedRequests {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/stanje-zahtjeva"
               render={(props) =>

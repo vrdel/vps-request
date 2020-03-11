@@ -5,14 +5,14 @@ import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faCog,
+  faTimes,
   faPencilAlt,
   } from '@fortawesome/free-solid-svg-icons';
 
 import 'react-table/react-table.css';
 import './StateRequest.css'
 
-export class FreshRequest extends Component
+export class RejectedRequest extends Component
 {
   constructor(props) {
     super(props);
@@ -22,7 +22,7 @@ export class FreshRequest extends Component
       newRequests: null
     }
 
-    this.apiListRequests = '/api/v1/internal/reqlist'
+    this.apiListRequests = '/api/v1/internal/reqlist/rejected'
 
     this.location = props.location;
     this.backend = new Backend();
@@ -60,14 +60,14 @@ export class FreshRequest extends Component
           id: 'isApproved',
           Header: 'Odobreno',
           accessor: () => {
-                return (<FontAwesomeIcon className="text-warning" size="2x" icon={faCog}/>)
+                return (<FontAwesomeIcon className="text-danger" size="2x" icon={faTimes}/>)
           },
           maxWidth: 100,
         },
         {
           id: 'requestDate',
-          Header: 'Datum podnošenja',
-          accessor: r => DateFormatHR(r.request_date)
+          Header: 'Datum odbijanja',
+          accessor: r => DateFormatHR(r.approved_date)
         },
         {
           Header: 'Ustanova',
@@ -97,7 +97,7 @@ export class FreshRequest extends Component
       ]
       return (
         <BaseView
-          title='Novi zahtjevi'
+          title='Odbijeni zahtjevi'
           location={this.location}>
           <ReactTable
             data={newRequests}
@@ -121,4 +121,4 @@ export class FreshRequest extends Component
   }
 }
 
-export default FreshRequest;
+export default RejectedRequest;

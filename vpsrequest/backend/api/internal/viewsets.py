@@ -1,6 +1,5 @@
 from backend import serializers
 from backend import models
-from backend.api.internal.util.reqstatus import RequestStatus
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -65,14 +64,14 @@ class ListRequestsViewset(viewsets.ModelViewSet):
         return requests 
 
     @action(detail=False)
-    def reject(self, request):
+    def rejected(self, request):
         requests = models.Request.objects.filter(approved=0).order_by('-approved_date')
         serializer = serializers.ListRequestsSerializer(requests, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False)
-    def approve(self, request):
+    def approved(self, request):
         requests = models.Request.objects.filter(approved=1).order_by('-approved_date')
         serializer = serializers.ListRequestsSerializer(requests, many=True)
 
