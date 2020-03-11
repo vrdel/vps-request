@@ -22,7 +22,7 @@ export class FreshRequest extends Component
       newRequests: null
     }
 
-    this.apiListRequests = '/api/v1/internal/reqlist'
+    this.apiListRequests = '/api/v1/internal/requests/new'
 
     this.location = props.location;
     this.backend = new Backend();
@@ -53,7 +53,7 @@ export class FreshRequest extends Component
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => `${newRequests.indexOf(r) + 1}.`,
+          accessor: r => Number(newRequests.indexOf(r) + 1),
           maxWidth: 50,
         },
         {
@@ -67,7 +67,8 @@ export class FreshRequest extends Component
         {
           id: 'requestDate',
           Header: 'Datum podnošenja',
-          accessor: r => DateFormatHR(r.request_date)
+          accessor: r => r.request_date,
+          Cell: r => <span>{DateFormatHR(r.original.request_date)}</span>
         },
         {
           Header: 'Ustanova',

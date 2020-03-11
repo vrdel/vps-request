@@ -42,27 +42,6 @@ class RequestsViewset(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-class UsersViewset(viewsets.ModelViewSet):
-    serializer_class = serializers.UsersSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-
-        if user.is_staff or user.is_superuser:
-            return get_user_model().objects.all()
-        else:
-            return get_user_model().objects.filter(id=user.id)
-
-class ListRequestsViewset(viewsets.ModelViewSet):
-    serializer_class = serializers.ListRequestsSerializer
-    def get_queryset(self):
-        #import ipdb 
-        #ipdb.set_trace()
-        requests = models.Request.objects.filter(approved=-1).order_by('-request_date')
-        
-        return requests 
-
     @action(detail=False)
     def rejected(self, request):
         requests = models.Request.objects.filter(approved=0).order_by('-approved_date')
@@ -76,3 +55,22 @@ class ListRequestsViewset(viewsets.ModelViewSet):
         serializer = serializers.ListRequestsSerializer(requests, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False)
+    def new(self, request):
+        requests = models.Request.objects.filter(approved=-1).order_by('-request_date')
+        serializer = serializers.ListRequestsSerializer(requests, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UsersViewset(viewsets.ModelViewSet):
+    serializer_class = serializers.UsersSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_staff or user.is_superuser:
+            return get_user_model().objects.all()
+        else:
+            return get_user_model().objects.filter(id=user.id)

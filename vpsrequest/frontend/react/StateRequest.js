@@ -55,7 +55,7 @@ export class StateRequest extends Component
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => `${listMyRequests.indexOf(r) + 1}.`,
+          accessor: r => Number(listMyRequests.indexOf(r) + 1),
           maxWidth: 50,
         },
         {
@@ -74,7 +74,8 @@ export class StateRequest extends Component
         {
           id: 'requestDate',
           Header: 'Datum podnošenja',
-          accessor: r => DateFormatHR(r.request_date)
+          accessor: r => r.request_date,
+          Cell: r => <span>{DateFormatHR(r.original.request_date)}</span>
         },
         {
           Header: 'Ustanova',

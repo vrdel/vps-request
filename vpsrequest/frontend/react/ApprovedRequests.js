@@ -22,7 +22,7 @@ export class ApprovedRequest extends Component
       newRequests: null
     }
 
-    this.apiListRequests = '/api/v1/internal/reqlist/approved'
+    this.apiListRequests = '/api/v1/internal/requests/approved'
 
     this.location = props.location;
     this.backend = new Backend();
@@ -53,7 +53,7 @@ export class ApprovedRequest extends Component
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => `${newRequests.indexOf(r) + 1}.`,
+          accessor: r => Number(newRequests.indexOf(r) + 1),
           maxWidth: 50,
         },
         {
@@ -66,8 +66,9 @@ export class ApprovedRequest extends Component
         },
         {
           id: 'requestDate',
-          Header: 'Datum odbijanja',
-          accessor: r => DateFormatHR(r.approved_date)
+          Header: 'Datum odobravanja',
+          accessor: r => r.approved_date,
+          Cell: r => <span>{DateFormatHR(r.original.approved_date)}</span>
         },
         {
           Header: 'Ustanova',
