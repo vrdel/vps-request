@@ -30,30 +30,32 @@ export class RejectedRequest extends Component
 
   componentDidMount() {
     this.setState({loading: true})
+    this.fetchDataFromAPI().then();
+  }
 
-    this.backend.isActiveSession().then(sessionActive =>
-      sessionActive.active &&
-      Promise.all([this.backend.fetchData(`${this.apiListRequests}`)])
-        .then(([requests]) => this.setState({
-          newRequests: requests,
-          userDetails: sessionActive.userdetails,
-          loading: false
-        }))
-    )
+  async fetchDataFromAPI(){
+    const sessionActive = await this.backend.isActiveSession();
+    if(sessionActive.active){
+      const rejectedReq = await this.backend.fetchData(this.apiListRequests);
+      this.setState({
+        rejectedRequests: rejectedReq,
+        loading: false
+      })
+    }
   }
 
   render() {
-    const {loading, newRequests, userDetails} = this.state
+    const {loading, rejectedRequests} = this.state
 
     if (loading)
       return (<LoadingAnim />)
 
-    else if (!loading && newRequests && userDetails) {
+    else if (!loading && rejectedRequests) {
       const columns = [
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => Number(newRequests.indexOf(r) + 1),
+          accessor: r => Number(rejectedRequests.indexOf(r) + 1),
           maxWidth: 50,
         },
         {
@@ -101,7 +103,7 @@ export class RejectedRequest extends Component
           title='Odbijeni zahtjevi'
           location={this.location}>
           <ReactTable
-            data={newRequests}
+            data={rejectedRequests}
             columns={columns}
             className="-highlight mt-4 text-center align-middle"
             defaultPageSize={10}

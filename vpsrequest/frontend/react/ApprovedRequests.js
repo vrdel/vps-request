@@ -10,7 +10,7 @@ import {
   } from '@fortawesome/free-solid-svg-icons';
 
 import 'react-table/react-table.css';
-import './StateRequest.css'
+import './StateRequest.css';
 
 export class ApprovedRequest extends Component
 {
@@ -19,7 +19,7 @@ export class ApprovedRequest extends Component
 
     this.state = {
       loading: false,
-      newRequests: null
+      approvedRequests: null
     }
 
     this.apiListRequests = '/api/v1/internal/requests/approved'
@@ -30,30 +30,32 @@ export class ApprovedRequest extends Component
 
   componentDidMount() {
     this.setState({loading: true})
+    this.fetchDataFromAPI().then();
+  }
 
-    this.backend.isActiveSession().then(sessionActive =>
-      sessionActive.active &&
-      Promise.all([this.backend.fetchData(`${this.apiListRequests}`)])
-        .then(([requests]) => this.setState({
-          newRequests: requests,
-          userDetails: sessionActive.userdetails,
-          loading: false
-        }))
-    )
+  async fetchDataFromAPI(){
+    const sessionActive = await this.backend.isActiveSession();
+    if(sessionActive.active){
+      const approvedReq = await this.backend.fetchData(this.apiListRequests);
+      this.setState({
+        approvedRequests: approvedReq,
+        loading: false
+      })
+    }
   }
 
   render() {
-    const {loading, newRequests, userDetails} = this.state
+    const {loading, approvedRequests} = this.state
 
     if (loading)
       return (<LoadingAnim />)
 
-    else if (!loading && newRequests && userDetails) {
+    else if (!loading && approvedRequests) {
       const columns = [
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => Number(newRequests.indexOf(r) + 1),
+          accessor: r => Number(approvedRequests.indexOf(r) + 1),
           maxWidth: 50,
         },
         {
@@ -101,7 +103,7 @@ export class ApprovedRequest extends Component
           title='Odobreni zahtjevi'
           location={this.location}>
           <ReactTable
-            data={newRequests}
+            data={approvedRequests}
             columns={columns}
             className="-highlight mt-4 text-center align-middle"
             defaultPageSize={10}
