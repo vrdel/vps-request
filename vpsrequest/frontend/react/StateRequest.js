@@ -10,6 +10,7 @@ import {
   faTimes,
   faCheck
   } from '@fortawesome/free-solid-svg-icons';
+import { vpsFilterMethod } from './util'
 
 import 'react-table/react-table.css';
 import './StateRequest.css'
@@ -82,7 +83,8 @@ export class StateRequest extends Component
         },
         {
           Header: 'Ustanova',
-          accessor: 'head_institution'
+          accessor: 'head_institution',
+          filterable: true
         },
         {
           id: 'contactNameLastName',
@@ -91,7 +93,8 @@ export class StateRequest extends Component
         },
         {
           Header: 'Poslužitelj',
-          accessor: 'vm_fqdn'
+          accessor: 'vm_fqdn',
+          filterable: true
         },
         {
           id: 'edit',
@@ -123,6 +126,7 @@ export class StateRequest extends Component
             rowsText='zahtjeva'
             getTheadThProps={(state, rowInfo, column) => ({className: 'table-active p-2'})}
             getTdProps={(state, rowInfo, column) => ({className: 'pt-2 pb-2 align-self-center'})}
+            defaultFilterMethod={vpsFilterMethod}
           />
         </BaseView>
       )

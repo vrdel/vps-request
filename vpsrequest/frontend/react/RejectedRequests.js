@@ -8,6 +8,7 @@ import {
   faTimes,
   faPencilAlt,
   } from '@fortawesome/free-solid-svg-icons';
+import { vpsFilterMethod } from './util';
 
 import 'react-table/react-table.css';
 import './StateRequest.css'
@@ -74,16 +75,19 @@ export class RejectedRequest extends Component
         },
         {
           Header: 'Ustanova',
-          accessor: 'head_institution'
+          accessor: 'head_institution',
+          filterable: true
         },
         {
           id: 'contactNameLastName',
           Header: 'Kontaktna osoba',
-          accessor: r => `${r.contact_name} ${r.contact_lastname}`
+          accessor: r => `${r.contact_name} ${r.contact_lastname}`,
+          filterable: true
         },
         {
           Header: 'Poslužitelj',
-          accessor: 'vm_host'
+          accessor: 'vm_host',
+          filterable: true
         },
         {
           id: 'edit',
@@ -115,6 +119,7 @@ export class RejectedRequest extends Component
             rowsText='zahtjeva'
             getTheadThProps={(state, rowInfo, column) => ({className: 'table-active p-2'})}
             getTdProps={(state, rowInfo, column) => ({className: 'pt-2 pb-2 align-self-center'})}
+            defaultFilterMethod={vpsFilterMethod}
           />
         </BaseView>
       )
