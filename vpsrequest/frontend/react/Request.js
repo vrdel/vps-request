@@ -16,8 +16,8 @@ import {
   NotifyOk,
   NotifyError,
   RequestHorizontalRule,
-  DateFormatHR
 } from './UIElements.js';
+import { DateFormatHR } from './Util';
 import { Formik, Form, Field } from 'formik';
 import './Request.css';
 
@@ -401,23 +401,27 @@ export class NewRequest extends Component
     this.handleAcceptConditions = this.handleAcceptConditions.bind(this)
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
     this.dismissAlert = this.dismissAlert.bind(this)
+    this.initializeComponent = this.initializeComponent.bind(this)
+  }
+
+  async initializeComponent() {
+    const sessionActive = await this.backend.isActiveSession()
+
+    if (sessionActive.active) {
+      const vmOSes = await this.backend.fetchData(this.apiListVMOSes)
+
+      this.setState({
+        listVMOSes: vmOSes.map(e => e.vm_os),
+        acceptConditions: false,
+        userDetails: sessionActive.userdetails,
+        loading: false
+      })
+    }
   }
 
   componentDidMount() {
     this.setState({loading: true})
-
-    this.backend.isActiveSession().then(sessionActive => {
-      sessionActive.active &&
-        Promise.all([
-          this.backend.fetchData(this.apiListVMOSes),
-        ])
-          .then(([vmOSes]) => this.setState({
-            listVMOSes: vmOSes.map(e => e.vm_os),
-            acceptConditions: false,
-            userDetails: sessionActive.userdetails,
-            loading: false
-          }))
-    })
+    this.initializeComponent()
   }
 
   dismissAlert() {

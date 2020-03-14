@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import Login from './Login';
 import { NewRequest, ChangeRequest } from './Request';
-import StateRequest from './StateRequest';
-import FreshRequests from './FreshRequests';
-import RejectedRequests from './RejectedRequests';
-import ApprovedRequests from './ApprovedRequests';
+import MyRequests from './MyRequests';
 import Home from './Home';
 import NotFound from './NotFound';
 import ReactNotification from 'react-notifications-component'
@@ -12,9 +9,39 @@ import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import { VPSPage } from './UIElements';
 import { Backend } from './DataManager';
 import Cookies from 'universal-cookie';
+import { ListRequests } from './ListRequests';
 
 import './App.css';
 import 'react-notifications-component/dist/theme.css'
+
+
+const types = new Object({
+  approved: {
+    api: '/api/v1/internal/requests/approved',
+    dateFieldSearch: 'approved_date',
+    title: 'Odobreni zahtjevi',
+    headerDate: 'Datum odobrovanja',
+    linkPath: 'odobreni-zahtjevi'
+  },
+  fresh: {
+    api: '/api/v1/internal/requests/new',
+    dateFieldSearch: 'request_date',
+    title: 'Novi zahtjevi',
+    headerDate: 'Datum podnošenja',
+    linkPath: 'novi-zahtjevi'
+  },
+  rejected: {
+    api: '/api/v1/internal/requests/rejected',
+    dateFieldSearch: 'approved_date',
+    title: 'Odbijeni zahtjevi',
+    headerDate: 'Datum odbijanja',
+    linkPath: 'odbijeni-zahtjevi'
+  }
+})
+
+const ApprovedRequests = ListRequests(types.approved)
+const FreshRequests = ListRequests(types.fresh)
+const RejectedRequests = ListRequests(types.rejected)
 
 
 class App extends Component {
@@ -128,25 +155,30 @@ class App extends Component {
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
-                      <FreshRequests {...props}/>
+                    <FreshRequests {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/odobreni-zahtjevi"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
-                      <ApprovedRequests {...props}/>
+                    <ApprovedRequests {...props}/>
+                  </VPSPage>}/>
+            <Route exact path="/ui/odobreni-zahtjevi/:id"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}>
                   </VPSPage>}/>
             <Route exact path="/ui/odbijeni-zahtjevi"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
-                      <RejectedRequests {...props}/>
+                    <RejectedRequests {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/stanje-zahtjeva"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
-                    <StateRequest {...props}/>
+                    <MyRequests {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/stanje-zahtjeva/:id"
               render={(props) =>

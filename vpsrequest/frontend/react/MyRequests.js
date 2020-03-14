@@ -1,93 +1,103 @@
 import React, { Component } from 'react';
 import { Backend } from './DataManager';
-import { BaseView, LoadingAnim, DateFormatHR } from './UIElements';
+import { BaseView, LoadingAnim } from './UIElements';
 import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faTimes,
+  faCog,
   faPencilAlt,
+  faTimes,
+  faCheck
   } from '@fortawesome/free-solid-svg-icons';
-import { vpsFilterMethod } from './util';
+import { vpsFilterMethod, DateFormatHR } from './Util'
 
 import 'react-table/react-table.css';
-import './StateRequest.css'
+import './MyRequests.css'
 
-export class RejectedRequest extends Component
+export class MyRequests extends Component
 {
   constructor(props) {
     super(props);
 
     this.state = {
       loading: false,
-      newRequests: null
+      requests: null
     }
 
-    this.apiListRequests = '/api/v1/internal/requests/rejected'
+    this.apiListRequests = '/api/v1/internal/requests/mine'
 
     this.location = props.location;
     this.backend = new Backend();
+    this.initializeComponent = this.initializeComponent.bind(this)
   }
 
   componentDidMount() {
     this.setState({loading: true})
-    this.fetchDataFromAPI().then();
+    this.initializeComponent();
   }
 
-  async fetchDataFromAPI(){
+  async initializeComponent(){
     const sessionActive = await this.backend.isActiveSession();
-    if(sessionActive.active){
-      const rejectedReq = await this.backend.fetchData(this.apiListRequests);
+
+    if (sessionActive.active) {
+      const listMyReq = await this.backend.fetchData(this.apiListRequests);
+
       this.setState({
-        rejectedRequests: rejectedReq,
-        loading: false
+        requests: listMyReq,
+        loading: false,
+        userDetails: sessionActive.userdetails
       })
     }
   }
 
   render() {
-    const {loading, rejectedRequests} = this.state
+    const {loading, requests, userDetails} = this.state
 
     if (loading)
       return (<LoadingAnim />)
 
-    else if (!loading && rejectedRequests) {
+    else if (!loading && requests && userDetails) {
       const columns = [
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => Number(rejectedRequests.indexOf(r) + 1),
+          accessor: r => Number(requests.indexOf(r) + 1),
           maxWidth: 50,
         },
         {
           id: 'isApproved',
           Header: 'Odobreno',
-          accessor: () => {
-                return (<FontAwesomeIcon className="text-danger" size="2x" icon={faTimes}/>)
+          accessor: r => {
+            if (r.approved === -1)
+              return (<FontAwesomeIcon className="text-warning" size="2x" icon={faCog}/>)
+            else if (r.approved === 0)
+              return (<FontAwesomeIcon className="text-danger" size="2x" icon={faTimes}/>)
+            else if (r.approved === 1)
+              return (<FontAwesomeIcon className="text-success" size="2x" icon={faCheck}/>)
           },
-          maxWidth: 100,
+          maxWidth: 90,
         },
         {
           id: 'requestDate',
-          Header: 'Datum odbijanja',
-          accessor: r => r.approved_date,
-          Cell: r => <span>{DateFormatHR(r.original.approved_date)}</span>
+          Header: 'Datum podnošenja',
+          accessor: r => DateFormatHR(r.request_date),
+          maxWidth: 180
         },
         {
           Header: 'Ustanova',
           accessor: 'head_institution',
-          filterable: true
         },
         {
           id: 'contactNameLastName',
           Header: 'Kontaktna osoba',
-          accessor: r => `${r.contact_name} ${r.contact_lastname}`,
-          filterable: true
+          accessor: r => `${userDetails.first_name} ${userDetails.last_name}`,
+          maxWidth: 180
         },
         {
           Header: 'Poslužitelj',
-          accessor: 'vm_host',
-          filterable: true
+          accessor: 'vm_fqdn',
+          maxWidth: 180
         },
         {
           id: 'edit',
@@ -104,10 +114,10 @@ export class RejectedRequest extends Component
       ]
       return (
         <BaseView
-          title='Odbijeni zahtjevi'
+          title='Stanje zahtjeva'
           location={this.location}>
           <ReactTable
-            data={rejectedRequests}
+            data={requests}
             columns={columns}
             className="-highlight mt-4 text-center align-middle"
             defaultPageSize={10}
@@ -129,4 +139,4 @@ export class RejectedRequest extends Component
   }
 }
 
-export default RejectedRequest;
+export default MyRequests;
