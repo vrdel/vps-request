@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Backend } from './DataManager';
-import { BaseView, LoadingAnim, DateFormatHR } from './UIElements';
+import { BaseView, LoadingAnim, DateFormatHR, FilterField } from './UIElements';
 import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCog,
   faPencilAlt,
+  faSearch,
   } from '@fortawesome/free-solid-svg-icons';
 import { vpsFilterMethod } from './util'
 
@@ -20,7 +21,10 @@ export class FreshRequest extends Component
 
     this.state = {
       loading: false,
-      newRequests: null
+      newRequests: null,
+      searchContactName: '',
+      searchDate: '',
+      searchInstitution: ''
     }
 
     this.apiListRequests = '/api/v1/internal/requests/new'
@@ -30,8 +34,10 @@ export class FreshRequest extends Component
   }
 
   componentDidMount() {
-    this.setState({loading: true})
-    this.fetchDataFromAPI().then();
+    this.setState({
+      loading: true,
+    })
+    this.fetchDataFromAPI()
   }
 
   async fetchDataFromAPI(){
@@ -46,7 +52,32 @@ export class FreshRequest extends Component
   }
 
   render() {
-    const {loading, newRequests} = this.state
+    var {loading, newRequests, searchDate, searchContactName, searchVmHost,
+      searchInstitution} = this.state
+
+    if (searchDate && newRequests) {
+      newRequests = newRequests.filter(
+        r => DateFormatHR(r.request_date).indexOf(searchDate) !== -1
+      )
+    }
+
+    if (searchContactName && newRequests) {
+      newRequests = newRequests.filter(
+        r => `${r.contact_name} ${r.contact_lastname}`.toLowerCase().includes(searchContactName.toLowerCase())
+      )
+    }
+
+    if (searchInstitution && newRequests) {
+      newRequests = newRequests.filter(
+        r => r.head_institution.toLowerCase().includes(searchInstitution.toLowerCase())
+      )
+    }
+
+    if (searchVmHost && newRequests) {
+      newRequests = newRequests.filter(
+        r => r.vm_host.toLowerCase().includes(searchVmHost.toLowerCase())
+      )
+    }
 
     if (loading)
       return (<LoadingAnim />)
@@ -58,47 +89,64 @@ export class FreshRequest extends Component
           Header: 'r. br.',
           accessor: r => Number(newRequests.indexOf(r) + 1),
           maxWidth: 50,
+          filterable: true,
+          Filter: () => <FontAwesomeIcon size="lg" icon={faSearch}/>
         },
         {
           id: 'isApproved',
           Header: 'Odobreno',
-          accessor: () => {
-                return (<FontAwesomeIcon className="text-warning" size="2x" icon={faCog}/>)
-          },
-          maxWidth: 100,
+          accessor: () => <FontAwesomeIcon className="text-warning" size="2x" icon={faCog}/>,
+          maxWidth: 90,
         },
         {
           id: 'requestDate',
           Header: 'Datum podnošenja',
-          accessor: r => r.request_date,
-          Cell: r => <span>{DateFormatHR(r.original.request_date)}</span>
+          accessor: r => DateFormatHR(r.request_date),
+          filterable: true,
+          Filter: <FilterField
+            value={this.state.searchDate}
+            onChange={event => this.setState({searchDate: event.target.value})}
+          />,
+          maxWidth: 180
         },
         {
           Header: 'Ustanova',
           accessor: 'head_institution',
-          filterable: true
+          filterable: true,
+          Filter: <FilterField
+            value={this.state.searchInstitution}
+            onChange={event => this.setState({searchInstitution: event.target.value})}
+          />
         },
         {
           id: 'contactNameLastName',
           Header: 'Kontaktna osoba',
           accessor: r => `${r.contact_name} ${r.contact_lastname}`,
-          filterable: true
+          filterable: true,
+          Filter: <FilterField
+            value={this.state.searchContactName}
+            onChange={event => this.setState({searchContactName: event.target.value})}
+          />,
+          maxWidth: 180
         },
         {
           Header: 'Poslužitelj',
           accessor: 'vm_host',
-          filterable: true
+          filterable: true,
+          Filter: <FilterField
+            value={this.state.searchVmHost}
+            onChange={event => this.setState({searchVmHost: event.target.value})}
+          />,
+          maxWidth: 180
         },
         {
           id: 'edit',
           Header: 'Uredi',
-          accessor: r => {
-            return (
+          accessor: r => (
               <Link to={`/ui/stanje-zahtjeva/${r.id}`}>
                 <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>
               </Link>
-            )
-          },
+            ),
           maxWidth: 70
         }
       ]
@@ -117,9 +165,9 @@ export class FreshRequest extends Component
             pageText='Stranica'
             ofText='od'
             rowsText='zahtjeva'
-            getTheadThProps={(state, rowInfo, column) => ({className: 'table-active p-2'})}
-            getTdProps={(state, rowInfo, column) => ({className: 'pt-2 pb-2 align-self-center'})}
-            defaultFilterMethod={vpsFilterMethod}
+            getTheadThProps={() => ({className: 'table-active p-2'})}
+            getTheadFilterThProps={() => ({className: 'table-light align-self-center'})}
+            getTdProps={() => ({className: 'pt-2 pb-2 align-self-center'})}
           />
         </BaseView>
       )
