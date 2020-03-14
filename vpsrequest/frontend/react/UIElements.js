@@ -63,17 +63,6 @@ export const Icon = props => {
 }
 
 
-export function DateFormatHR(dateStr)
-{
-  var dateObj = new Date(dateStr)
-  var options = {year: 'numeric', month: 'numeric', day: 'numeric',
-    hour:'numeric', minute: 'numeric', second: 'numeric', hour12: false,
-    timeZone: 'Europe/Zagreb'}
-
-  return new Intl.DateTimeFormat('hr-HR', options).format(dateObj)
-}
-
-
 export const DropDown = ({field, data=[]}) =>
   <Field component="select"
     name={field.name}
@@ -407,6 +396,17 @@ export const AutocompleteField = ({lists, onselect_handler, field, val, icon, se
   );
 }
 
+
+export const FilterField = ({onChange, value}) => (
+  <input
+    type='text'
+    className='text-center'
+    placeholder='Pretraži'
+    value={value}
+    onChange={onChange}
+    style={{width: '100%'}}
+  />
+)
 
 export const DropdownFilterComponent = ({value, onChange, data}) => (
   <select

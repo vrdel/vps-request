@@ -16,8 +16,8 @@ import {
   NotifyOk,
   NotifyError,
   RequestHorizontalRule,
-  DateFormatHR
 } from './UIElements.js';
+import { DateFormatHR } from './Util';
 import { Formik, Form, Field } from 'formik';
 import './Request.css';
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Backend } from './DataManager';
-import { BaseView, LoadingAnim, DateFormatHR, FilterField } from './UIElements';
+import { BaseView, LoadingAnim, FilterField } from './UIElements';
 import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,7 +9,7 @@ import {
   faPencilAlt,
   faSearch,
   } from '@fortawesome/free-solid-svg-icons';
-import { vpsFilterMethod } from './util'
+import { DateFormatHR } from './Util'
 
 import 'react-table/react-table.css';
 import './StateRequest.css'
