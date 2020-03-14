@@ -29,17 +29,20 @@ export class StateRequest extends Component
 
     this.location = props.location;
     this.backend = new Backend();
+    this.initializeComponent = this.initializeComponent.bind(this)
   }
 
   componentDidMount() {
     this.setState({loading: true})
-    this.fetchDataFromAPI().then();
+    this.initializeComponent();
   }
 
-  async fetchDataFromAPI(){
+  async initializeComponent(){
     const sessionActive = await this.backend.isActiveSession();
-    if(sessionActive.active){
+
+    if (sessionActive.active) {
       const listMyReq = await this.backend.fetchData(this.apiListRequests);
+
       this.setState({
         listMyRequests: listMyReq,
         loading: false,

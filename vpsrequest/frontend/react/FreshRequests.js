@@ -31,19 +31,20 @@ export class FreshRequest extends Component
 
     this.location = props.location;
     this.backend = new Backend();
+    this.initializeComponent = this.initializeComponent.bind(this)
   }
 
   componentDidMount() {
-    this.setState({
-      loading: true,
-    })
-    this.fetchDataFromAPI()
+    this.setState({loading: true})
+    this.initializeComponent()
   }
 
-  async fetchDataFromAPI(){
+  async initializeComponent() {
     const sessionActive = await this.backend.isActiveSession();
-    if(sessionActive.active){
+
+    if (sessionActive.active) {
       const newReq = await this.backend.fetchData(this.apiListRequests);
+
       this.setState({
         newRequests: newReq,
         loading: false
