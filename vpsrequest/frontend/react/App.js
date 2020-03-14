@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import Login from './Login';
-import { NewRequest, ChangeRequest } from './Request';
-import MyRequests from './MyRequests';
+import Cookies from 'universal-cookie';
 import Home from './Home';
+import Login from './Login';
+import MyRequests from './MyRequests';
 import NotFound from './NotFound';
+import React, { Component } from 'react';
 import ReactNotification from 'react-notifications-component'
+import { Backend } from './DataManager';
+import { ListRequests } from './ListRequests';
+import { NewRequest, ChangeRequest } from './Request';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import { VPSPage } from './UIElements';
-import { Backend } from './DataManager';
-import Cookies from 'universal-cookie';
-import { ListRequests } from './ListRequests';
 
 import './App.css';
 import 'react-notifications-component/dist/theme.css'
