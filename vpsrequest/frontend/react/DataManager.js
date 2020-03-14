@@ -23,7 +23,7 @@ export class Backend {
   {
     let cookies = new Cookies();
 
-    let response = fetch('/rest-auth/login/', {
+    let response = await fetch('/rest-auth/login/', {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',
