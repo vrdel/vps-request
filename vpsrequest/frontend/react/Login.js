@@ -14,7 +14,6 @@ import {
 import {Formik, Field, Form} from 'formik';
 import './Login.css';
 import {Footer} from './UIElements.js';
-import Cookies from 'universal-cookie';
 import CloudLogoSmall from './logos/logo_cloud-smaller.png';
 import { Backend } from './DataManager.js';
 
@@ -23,68 +22,27 @@ class Login extends Component {
   constructor(props) {
     super(props);
 
-    this._isMounted = false;
-
     this.state = {
       loginFailedVisible: false,
     };
 
     this.dismissLoginAlert = this.dismissLoginAlert.bind(this)
+    this.handleOnSubmit = this.handleOnSubmit.bind(this)
     this.backend = new Backend()
-    this.apiConfigOptions = '/api/v1/configoptions'
-  }
-
-  isSaml2Logged() {
-    return fetch('/api/v1/saml2login', {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-  }
-
-  flushSaml2Cache() {
-    let cookies = new Cookies();
-
-    return fetch('/api/v1/saml2login', {
-      method: 'DELETE',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'X-CSRFToken': cookies.get('csrftoken'),
-        'Referer': 'same-origin'
-      }});
-
-  }
-
-  componentDidMount() {
-    this._isMounted = true;
-
-    this.backend.fetchData(this.apiConfigOptions).then(json => {
-      this.isSaml2Logged().then(response => {
-        response.ok && response.json().then(
-          json => {
-            if (Object.keys(json).length > 0) {
-              this.flushSaml2Cache().then(
-                response => response.ok &&
-                  this.props.onLogin(json, this.props.history)
-              )
-            }
-          }
-        )
-      })
-    })
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
+    this.AppOnLogin = props.onLogin
   }
 
   dismissLoginAlert() {
-    this._isMounted && this.setState({loginFailedVisible: false});
+    this.setState({loginFailedVisible: false});
+  }
+
+  async handleOnSubmit(values) {
+    const sessionActive = await this.backend.doUserPassLogin(values.username, values.password)
+
+    if (sessionActive.active)
+      this.AppOnLogin(sessionActive.userdetails, this.props.history)
+    else
+      this.setState({loginFailedVisible: true});
   }
 
   render() {
@@ -102,18 +60,7 @@ class Login extends Component {
               <CardBody>
                 <Formik
                   initialValues = {{username: '', password: ''}}
-                  onSubmit = {
-                    (values) => this.backend.doUserPassLogin(values.username, values.password)
-                      .then(response =>
-                        {
-                          if (response.active) {
-                            this.props.onLogin(response.userdetails, this.props.history)
-                          }
-                          else {
-                            this.setState({loginFailedVisible: true});
-                          }
-                        })
-                  }>
+                  onSubmit = {(values) => this.handleOnSubmit(values)}>
                   <Form>
                     <FormGroup>
                       <Label for="username">Korisničko ime: </Label>

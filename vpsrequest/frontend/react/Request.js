@@ -481,7 +481,7 @@ export class NewRequest extends Component
       acceptConditions !== undefined) {
       return (
         <BaseView
-          title='Novi Zahtjev'
+          title='Novi zahtjev'
           isChangeView={false}>
           <Formik
             initialValues={initValues}

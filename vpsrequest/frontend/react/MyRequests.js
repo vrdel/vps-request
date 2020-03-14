@@ -10,7 +10,7 @@ import {
   faTimes,
   faCheck
   } from '@fortawesome/free-solid-svg-icons';
-import { vpsFilterMethod, DateFormatHR } from './Util'
+import { DateFormatHR } from './Util'
 
 import 'react-table/react-table.css';
 import './MyRequests.css'
@@ -41,10 +41,10 @@ export class MyRequests extends Component
     const sessionActive = await this.backend.isActiveSession();
 
     if (sessionActive.active) {
-      const listMyReq = await this.backend.fetchData(this.apiListRequests);
+      const fetched = await this.backend.fetchData(this.apiListRequests);
 
       this.setState({
-        requests: listMyReq,
+        requests: fetched,
         loading: false,
         userDetails: sessionActive.userdetails
       })
@@ -127,9 +127,8 @@ export class MyRequests extends Component
             pageText='Stranica'
             ofText='od'
             rowsText='zahtjeva'
-            getTheadThProps={(state, rowInfo, column) => ({className: 'table-active p-2'})}
-            getTdProps={(state, rowInfo, column) => ({className: 'pt-2 pb-2 align-self-center'})}
-            defaultFilterMethod={vpsFilterMethod}
+            getTheadThProps={() => ({className: 'table-active p-2'})}
+            getTdProps={() => ({className: 'pt-2 pb-2 align-self-center'})}
           />
         </BaseView>
       )

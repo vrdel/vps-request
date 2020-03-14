@@ -60,6 +60,7 @@ class App extends Component {
     this.onLogin = this.onLogin.bind(this);
     this.onLogout = this.onLogout.bind(this);
     this.toggleAreYouSure = this.toggleAreYouSure.bind(this);
+    this.initalizeState = this.initalizeState.bind(this);
   }
 
   onLogin(json, history) {
@@ -88,31 +89,23 @@ class App extends Component {
       ({areYouSureModal: !prevState.areYouSureModal}));
   }
 
-  fetchConfigOptions() {
-    return fetch('/api/v1/configoptions')
-      .then(response => {
-        if (response.ok)
-          return response.json();
-      })
-  }
+  async initalizeState(response) {
+    const sessionActive = await this.backend.isActiveSession()
 
-  initalizeState(response) {
-    return Promise.all([this.fetchConfigOptions()])
-      .then(([options]) => {
+    if (sessionActive.active) {
+      const options = await this.backend.fetchConfigOptions()
+
+      if (options)
         this.setState({
           isSessionActive: response.active,
           userDetails: response.userdetails,
           configOptions: options,
         })
-      })
+    }
   }
 
   componentDidMount() {
-    this.backend.isActiveSession().then(response => {
-      if (response) {
-        this.initalizeState(response)
-      }
-    })
+    this.initalizeState()
   }
 
   render() {

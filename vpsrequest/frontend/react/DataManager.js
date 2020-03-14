@@ -12,6 +12,14 @@ export class Backend {
       .catch(() => false);
   }
 
+  fetchConfigOptions() {
+    return fetch('/api/v1/configoptions')
+      .then(response => {
+        if (response.ok)
+          return response.json();
+      })
+  }
+
   doUserPassLogin(username, password)
   {
     let cookies = new Cookies();
