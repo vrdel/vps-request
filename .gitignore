@@ -131,3 +131,4 @@ dmypy.json
 docker/pysitepkg
 vpsrequest/frontend/node_modules/
 etc/security
+mnt

@@ -5,27 +5,25 @@ import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faCog,
+  faCheck,
   faPencilAlt,
-  faTimes,
-  faCheck
   } from '@fortawesome/free-solid-svg-icons';
-import { vpsFilterMethod } from './util'
+import { vpsFilterMethod } from './util';
 
 import 'react-table/react-table.css';
-import './StateRequest.css'
+import './StateRequest.css';
 
-export class StateRequest extends Component
+export class ApprovedRequest extends Component
 {
   constructor(props) {
     super(props);
 
     this.state = {
       loading: false,
-      listMyRequests: null
+      approvedRequests: null
     }
 
-    this.apiListRequests = '/api/v1/internal/requests/mine'
+    this.apiListRequests = '/api/v1/internal/requests/approved'
 
     this.location = props.location;
     this.backend = new Backend();
@@ -39,62 +37,57 @@ export class StateRequest extends Component
   async fetchDataFromAPI(){
     const sessionActive = await this.backend.isActiveSession();
     if(sessionActive.active){
-      const listMyReq = await this.backend.fetchData(this.apiListRequests);
+      const approvedReq = await this.backend.fetchData(this.apiListRequests);
       this.setState({
-        listMyRequests: listMyReq,
-        loading: false,
-        userDetails: sessionActive.userdetails
+        approvedRequests: approvedReq,
+        loading: false
       })
     }
   }
 
   render() {
-    const {loading, listMyRequests, userDetails} = this.state
+    const {loading, approvedRequests} = this.state
 
     if (loading)
       return (<LoadingAnim />)
 
-    else if (!loading && listMyRequests && userDetails) {
+    else if (!loading && approvedRequests) {
       const columns = [
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => Number(listMyRequests.indexOf(r) + 1),
+          accessor: r => Number(approvedRequests.indexOf(r) + 1),
           maxWidth: 50,
         },
         {
           id: 'isApproved',
           Header: 'Odobreno',
-          accessor: r => {
-            if (r.approved === -1)
-              return (<FontAwesomeIcon className="text-warning" size="2x" icon={faCog}/>)
-            else if (r.approved === 0)
-              return (<FontAwesomeIcon className="text-danger" size="2x" icon={faTimes}/>)
-            else if (r.approved === 1)
-              return (<FontAwesomeIcon className="text-success" size="2x" icon={faCheck}/>)
+          accessor: () => {
+                return (<FontAwesomeIcon className="text-success" size="2x" icon={faCheck}/>)
           },
           maxWidth: 100,
         },
         {
           id: 'requestDate',
-          Header: 'Datum podnošenja',
-          accessor: r => r.request_date,
-          Cell: r => <span>{DateFormatHR(r.original.request_date)}</span>
+          Header: 'Datum odobravanja',
+          accessor: r => r.approved_date,
+          Cell: r => <span>{DateFormatHR(r.original.approved_date)}</span>
         },
         {
           Header: 'Ustanova',
           accessor: 'head_institution',
-          filterable: true
+          filterable: true,
         },
         {
           id: 'contactNameLastName',
           Header: 'Kontaktna osoba',
-          accessor: r => `${userDetails.first_name} ${userDetails.last_name}`
+          accessor: r => `${r.contact_name} ${r.contact_lastname}`,
+          filterable: true,
         },
         {
           Header: 'Poslužitelj',
-          accessor: 'vm_fqdn',
-          filterable: true
+          accessor: 'vm_host',
+          filterable: true,
         },
         {
           id: 'edit',
@@ -111,10 +104,10 @@ export class StateRequest extends Component
       ]
       return (
         <BaseView
-          title='Stanje zahtjeva'
+          title='Odobreni zahtjevi'
           location={this.location}>
           <ReactTable
-            data={listMyRequests}
+            data={approvedRequests}
             columns={columns}
             className="-highlight mt-4 text-center align-middle"
             defaultPageSize={10}
@@ -136,4 +129,4 @@ export class StateRequest extends Component
   }
 }
 
-export default StateRequest;
+export default ApprovedRequest;

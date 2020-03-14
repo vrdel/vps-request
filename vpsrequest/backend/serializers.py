@@ -32,3 +32,12 @@ class VMOSSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('vm_os',)
         model = models.VMOS
+
+class ListRequestsSerializer(serializers.ModelSerializer):
+    contact_name = serializers.ReadOnlyField(source='user.first_name')
+    contact_lastname = serializers.ReadOnlyField(source='user.last_name')
+
+    class Meta:
+        fields = ('id', 'request_date', 'vm_host', 'head_institution',
+                  'approved', 'approved_date', 'contact_name', 'contact_lastname')
+        model = models.Request

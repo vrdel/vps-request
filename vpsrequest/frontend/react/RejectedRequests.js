@@ -5,27 +5,25 @@ import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faCog,
-  faPencilAlt,
   faTimes,
-  faCheck
+  faPencilAlt,
   } from '@fortawesome/free-solid-svg-icons';
-import { vpsFilterMethod } from './util'
+import { vpsFilterMethod } from './util';
 
 import 'react-table/react-table.css';
 import './StateRequest.css'
 
-export class StateRequest extends Component
+export class RejectedRequest extends Component
 {
   constructor(props) {
     super(props);
 
     this.state = {
       loading: false,
-      listMyRequests: null
+      newRequests: null
     }
 
-    this.apiListRequests = '/api/v1/internal/requests/mine'
+    this.apiListRequests = '/api/v1/internal/requests/rejected'
 
     this.location = props.location;
     this.backend = new Backend();
@@ -39,47 +37,41 @@ export class StateRequest extends Component
   async fetchDataFromAPI(){
     const sessionActive = await this.backend.isActiveSession();
     if(sessionActive.active){
-      const listMyReq = await this.backend.fetchData(this.apiListRequests);
+      const rejectedReq = await this.backend.fetchData(this.apiListRequests);
       this.setState({
-        listMyRequests: listMyReq,
-        loading: false,
-        userDetails: sessionActive.userdetails
+        rejectedRequests: rejectedReq,
+        loading: false
       })
     }
   }
 
   render() {
-    const {loading, listMyRequests, userDetails} = this.state
+    const {loading, rejectedRequests} = this.state
 
     if (loading)
       return (<LoadingAnim />)
 
-    else if (!loading && listMyRequests && userDetails) {
+    else if (!loading && rejectedRequests) {
       const columns = [
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => Number(listMyRequests.indexOf(r) + 1),
+          accessor: r => Number(rejectedRequests.indexOf(r) + 1),
           maxWidth: 50,
         },
         {
           id: 'isApproved',
           Header: 'Odobreno',
-          accessor: r => {
-            if (r.approved === -1)
-              return (<FontAwesomeIcon className="text-warning" size="2x" icon={faCog}/>)
-            else if (r.approved === 0)
-              return (<FontAwesomeIcon className="text-danger" size="2x" icon={faTimes}/>)
-            else if (r.approved === 1)
-              return (<FontAwesomeIcon className="text-success" size="2x" icon={faCheck}/>)
+          accessor: () => {
+                return (<FontAwesomeIcon className="text-danger" size="2x" icon={faTimes}/>)
           },
           maxWidth: 100,
         },
         {
           id: 'requestDate',
-          Header: 'Datum podnošenja',
-          accessor: r => r.request_date,
-          Cell: r => <span>{DateFormatHR(r.original.request_date)}</span>
+          Header: 'Datum odbijanja',
+          accessor: r => r.approved_date,
+          Cell: r => <span>{DateFormatHR(r.original.approved_date)}</span>
         },
         {
           Header: 'Ustanova',
@@ -89,11 +81,12 @@ export class StateRequest extends Component
         {
           id: 'contactNameLastName',
           Header: 'Kontaktna osoba',
-          accessor: r => `${userDetails.first_name} ${userDetails.last_name}`
+          accessor: r => `${r.contact_name} ${r.contact_lastname}`,
+          filterable: true
         },
         {
           Header: 'Poslužitelj',
-          accessor: 'vm_fqdn',
+          accessor: 'vm_host',
           filterable: true
         },
         {
@@ -111,10 +104,10 @@ export class StateRequest extends Component
       ]
       return (
         <BaseView
-          title='Stanje zahtjeva'
+          title='Odbijeni zahtjevi'
           location={this.location}>
           <ReactTable
-            data={listMyRequests}
+            data={rejectedRequests}
             columns={columns}
             className="-highlight mt-4 text-center align-middle"
             defaultPageSize={10}
@@ -136,4 +129,4 @@ export class StateRequest extends Component
   }
 }
 
-export default StateRequest;
+export default RejectedRequest;
