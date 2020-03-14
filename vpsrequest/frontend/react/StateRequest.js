@@ -76,13 +76,13 @@ export class StateRequest extends Component
             else if (r.approved === 1)
               return (<FontAwesomeIcon className="text-success" size="2x" icon={faCheck}/>)
           },
-          maxWidth: 100,
+          maxWidth: 90,
         },
         {
           id: 'requestDate',
           Header: 'Datum podnošenja',
-          accessor: r => r.request_date,
-          Cell: r => <span>{DateFormatHR(r.original.request_date)}</span>
+          accessor: r => DateFormatHR(r.request_date),
+          maxWidth: 180
         },
         {
           Header: 'Ustanova',
@@ -91,11 +91,13 @@ export class StateRequest extends Component
         {
           id: 'contactNameLastName',
           Header: 'Kontaktna osoba',
-          accessor: r => `${userDetails.first_name} ${userDetails.last_name}`
+          accessor: r => `${userDetails.first_name} ${userDetails.last_name}`,
+          maxWidth: 180
         },
         {
           Header: 'Poslužitelj',
           accessor: 'vm_fqdn',
+          maxWidth: 180
         },
         {
           id: 'edit',

@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { Backend } from './DataManager';
-import { BaseView, LoadingAnim } from './UIElements';
+import { BaseView, LoadingAnim, FilterField } from './UIElements';
 import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheck,
   faPencilAlt,
+  faSearch,
   } from '@fortawesome/free-solid-svg-icons';
-import { vpsFilterMethod, DateFormatHR } from './Util';
+import { DateFormatHR } from './Util';
 
 import 'react-table/react-table.css';
 import './StateRequest.css';
@@ -20,7 +21,10 @@ export class ApprovedRequest extends Component
 
     this.state = {
       loading: false,
-      approvedRequests: null
+      approvedRequests: null,
+      searchContactName: '',
+      searchDate: '',
+      searchInstitution: ''
     }
 
     this.apiListRequests = '/api/v1/internal/requests/approved'
@@ -49,7 +53,32 @@ export class ApprovedRequest extends Component
   }
 
   render() {
-    const {loading, approvedRequests} = this.state
+    let {loading, approvedRequests, searchDate, searchContactName,
+      searchInstitution, searchVmHost} = this.state
+
+    if (searchDate && approvedRequests) {
+      approvedRequests = approvedRequests.filter(
+        r => DateFormatHR(r.approved_date).indexOf(searchDate) !== -1
+      )
+    }
+
+    if (searchContactName && approvedRequests) {
+      approvedRequests = approvedRequests.filter(
+        r => `${r.contact_name} ${r.contact_lastname}`.toLowerCase().includes(searchContactName.toLowerCase())
+      )
+    }
+
+    if (searchInstitution && approvedRequests) {
+      approvedRequests = approvedRequests.filter(
+        r => r.head_institution.toLowerCase().includes(searchInstitution.toLowerCase())
+      )
+    }
+
+    if (searchVmHost && approvedRequests) {
+      approvedRequests = approvedRequests.filter(
+        r => r.vm_host.toLowerCase().includes(searchVmHost.toLowerCase())
+      )
+    }
 
     if (loading)
       return (<LoadingAnim />)
@@ -59,8 +88,10 @@ export class ApprovedRequest extends Component
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => Number(approvedRequests.indexOf(r) + 1),
+          accessor: r => Number(approvedRequests.length - approvedRequests.indexOf(r)),
           maxWidth: 50,
+          filterable: true,
+          Filter: () => <FontAwesomeIcon size="lg" icon={faSearch}/>
         },
         {
           id: 'isApproved',
@@ -68,29 +99,48 @@ export class ApprovedRequest extends Component
           accessor: () => {
                 return (<FontAwesomeIcon className="text-success" size="2x" icon={faCheck}/>)
           },
-          maxWidth: 100,
+          maxWidth: 90,
         },
         {
           id: 'requestDate',
           Header: 'Datum odobravanja',
-          accessor: r => r.approved_date,
-          Cell: r => <span>{DateFormatHR(r.original.approved_date)}</span>
+          accessor: r => DateFormatHR(r.approved_date),
+          filterable: true,
+          Filter: <FilterField
+            value={this.state.searchDate}
+            onChange={event => this.setState({searchDate: event.target.value})}
+          />,
+          maxWidth: 180
         },
         {
           Header: 'Ustanova',
           accessor: 'head_institution',
           filterable: true,
+          Filter: <FilterField
+            value={this.state.searchInstitution}
+            onChange={event => this.setState({searchInstitution: event.target.value})}
+          />
         },
         {
           id: 'contactNameLastName',
           Header: 'Kontaktna osoba',
           accessor: r => `${r.contact_name} ${r.contact_lastname}`,
           filterable: true,
+          Filter: <FilterField
+            value={this.state.searchContactName}
+            onChange={event => this.setState({searchContactName: event.target.value})}
+          />,
+          maxWidth: 180
         },
         {
           Header: 'Poslužitelj',
           accessor: 'vm_host',
           filterable: true,
+          Filter: <FilterField
+            value={this.state.searchVmHost}
+            onChange={event => this.setState({searchVmHost: event.target.value})}
+          />,
+          maxWidth: 180
         },
         {
           id: 'edit',
@@ -120,9 +170,9 @@ export class ApprovedRequest extends Component
             pageText='Stranica'
             ofText='od'
             rowsText='zahtjeva'
-            getTheadThProps={(state, rowInfo, column) => ({className: 'table-active p-2'})}
-            getTdProps={(state, rowInfo, column) => ({className: 'pt-2 pb-2 align-self-center'})}
-            defaultFilterMethod={vpsFilterMethod}
+            getTheadThProps={() => ({className: 'table-active p-2'})}
+            getTheadFilterThProps={() => ({className: 'table-light align-self-center'})}
+            getTdProps={() => ({className: 'pt-2 pb-2 align-self-center'})}
           />
         </BaseView>
       )

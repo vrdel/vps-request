@@ -88,7 +88,7 @@ export class FreshRequest extends Component
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => Number(newRequests.indexOf(r) + 1),
+          accessor: r => Number(newRequests.length - newRequests.indexOf(r)),
           maxWidth: 50,
           filterable: true,
           Filter: () => <FontAwesomeIcon size="lg" icon={faSearch}/>
