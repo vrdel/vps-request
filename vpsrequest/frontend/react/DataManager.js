@@ -1,30 +1,29 @@
 import Cookies from 'universal-cookie';
 
 export class Backend {
-  isActiveSession() {
-    return fetch('/api/v1/sessionactive')
-      .then(response => {
-        if (response.ok)
-          return response.json()
-        else
-          return false
-      })
-      .catch(() => false);
+  async isActiveSession() {
+    let response = await fetch('/api/v1/sessionactive')
+
+    if (response.ok)
+      return response.json()
+    else
+      return false
   }
 
-  fetchConfigOptions() {
-    return fetch('/api/v1/configoptions')
-      .then(response => {
-        if (response.ok)
-          return response.json();
-      })
+  async fetchConfigOptions() {
+    let response = await fetch('/api/v1/configoptions')
+
+    if (response.ok)
+      return response.json()
+    else
+      return false
   }
 
-  doUserPassLogin(username, password)
+  async doUserPassLogin(username, password)
   {
     let cookies = new Cookies();
 
-    return fetch('/rest-auth/login/', {
+    let response = fetch('/rest-auth/login/', {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',
@@ -39,31 +38,17 @@ export class Backend {
         'username': username,
         'password': password
       })
-    }).then(() => this.isActiveSession());
+    })
+
+    return this.isActiveSession()
   }
 
-  fetchData(url) {
-    return fetch(url)
-      .then(response => response.json())
-      .catch(err => alert(`Something went wrong: ${err}`));
-  }
-
-  fetchListOfNames(url) {
-    return fetch(url)
-      .then(response => response.json())
-      .then(json => {
-        let list = [];
-        json.forEach((e) => list.push(e.name));
-        return list;
-      })
-      .catch(err => alert(`Something went wrong: ${err}`));
-  }
-
-  fetchResult(url) {
-    return fetch(url)
-      .then(response => response.json())
-      .then(json => json['result'])
-      .catch(err => alert(`Something went wrong: ${err}`));
+  async fetchData(url) {
+    let response = await fetch(url)
+    if (response.ok)
+      return response.json()
+    else
+      alert(`Something went wrong: ${response.statusText}`)
   }
 
   changeObject(url, data) {
