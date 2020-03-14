@@ -13,9 +13,9 @@ import {
 import { vpsFilterMethod, DateFormatHR } from './Util'
 
 import 'react-table/react-table.css';
-import './StateRequest.css'
+import './MyRequests.css'
 
-export class StateRequest extends Component
+export class MyRequests extends Component
 {
   constructor(props) {
     super(props);
@@ -139,4 +139,4 @@ export class StateRequest extends Component
   }
 }
 
-export default StateRequest;
+export default MyRequests;

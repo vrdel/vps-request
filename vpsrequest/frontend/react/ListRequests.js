@@ -14,7 +14,7 @@ import {
 import { DateFormatHR } from './Util';
 
 import 'react-table/react-table.css';
-import './StateRequest.css';
+import './MyRequests.css';
 
 
 export function ListRequests(typeRequest) {
