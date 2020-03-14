@@ -24,7 +24,8 @@ export class ApprovedRequest extends Component
       approvedRequests: null,
       searchContactName: '',
       searchDate: '',
-      searchInstitution: ''
+      searchInstitution: '',
+      searchVmHost: ''
     }
 
     this.apiListRequests = '/api/v1/internal/requests/approved'

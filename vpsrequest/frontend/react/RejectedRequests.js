@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { Backend } from './DataManager';
-import { BaseView, LoadingAnim } from './UIElements';
+import { BaseView, LoadingAnim, FilterField } from './UIElements';
 import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faTimes,
   faPencilAlt,
+  faSearch
   } from '@fortawesome/free-solid-svg-icons';
-import { vpsFilterMethod, DateFormatHR } from './Util';
+import { DateFormatHR } from './Util';
 
 import 'react-table/react-table.css';
 import './StateRequest.css'
@@ -20,7 +21,11 @@ export class RejectedRequest extends Component
 
     this.state = {
       loading: false,
-      newRequests: null
+      rejectedRequests: null,
+      searchContactName: '',
+      searchDate: '',
+      searchInstitution: '',
+      searchVmHost: ''
     }
 
     this.apiListRequests = '/api/v1/internal/requests/rejected'
@@ -49,7 +54,32 @@ export class RejectedRequest extends Component
   }
 
   render() {
-    const {loading, rejectedRequests} = this.state
+    let {loading, rejectedRequests, searchDate, searchContactName,
+      searchInstitution, searchVmHost} = this.state
+
+    if (searchDate && rejectedRequests) {
+      rejectedRequests = rejectedRequests.filter(
+        r => DateFormatHR(r.request_date).indexOf(searchDate) !== -1
+      )
+    }
+
+    if (searchContactName && rejectedRequests) {
+      rejectedRequests = rejectedRequests.filter(
+        r => `${r.contact_name} ${r.contact_lastname}`.toLowerCase().includes(searchContactName.toLowerCase())
+      )
+    }
+
+    if (searchInstitution && rejectedRequests) {
+      rejectedRequests = rejectedRequests.filter(
+        r => r.head_institution.toLowerCase().includes(searchInstitution.toLowerCase())
+      )
+    }
+
+    if (searchVmHost && rejectedRequests) {
+      rejectedRequests = rejectedRequests.filter(
+        r => r.vm_host.toLowerCase().includes(searchVmHost.toLowerCase())
+      )
+    }
 
     if (loading)
       return (<LoadingAnim />)
@@ -59,38 +89,57 @@ export class RejectedRequest extends Component
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => Number(rejectedRequests.indexOf(r) + 1),
+          accessor: r => Number(rejectedRequests.length - rejectedRequests.indexOf(r)),
+          filterable: true,
+          Filter: () => <FontAwesomeIcon size="lg" icon={faSearch}/>,
           maxWidth: 50,
         },
         {
           id: 'isApproved',
           Header: 'Odobreno',
-          accessor: () => {
-                return (<FontAwesomeIcon className="text-danger" size="2x" icon={faTimes}/>)
-          },
-          maxWidth: 100,
+          accessor: () => <FontAwesomeIcon className="text-danger" size="2x" icon={faTimes}/>,
+          maxWidth: 90,
         },
         {
           id: 'requestDate',
           Header: 'Datum odbijanja',
-          accessor: r => r.approved_date,
-          Cell: r => <span>{DateFormatHR(r.original.approved_date)}</span>
+          accessor: r => DateFormatHR(r.approved_date),
+          filterable: true,
+          Filter: <FilterField
+            value={this.state.searchDate}
+            onChange={event => this.setState({searchDate: event.target.value})}
+          />,
+          maxWidth: 180
         },
         {
           Header: 'Ustanova',
           accessor: 'head_institution',
-          filterable: true
+          filterable: true,
+          Filter: <FilterField
+            value={this.state.searchInstitution}
+            onChange={event => this.setState({searchInstitution: event.target.value})}
+          />
         },
         {
           id: 'contactNameLastName',
           Header: 'Kontaktna osoba',
           accessor: r => `${r.contact_name} ${r.contact_lastname}`,
-          filterable: true
+          filterable: true,
+          Filter: <FilterField
+            value={this.state.searchContactName}
+            onChange={event => this.setState({searchContactName: event.target.value})}
+          />,
+          maxWidth: 180
         },
         {
           Header: 'Poslužitelj',
           accessor: 'vm_host',
-          filterable: true
+          filterable: true,
+          Filter: <FilterField
+            value={this.state.searchVmHost}
+            onChange={event => this.setState({searchVmHost: event.target.value})}
+          />,
+          maxWidth: 180
         },
         {
           id: 'edit',
@@ -120,9 +169,9 @@ export class RejectedRequest extends Component
             pageText='Stranica'
             ofText='od'
             rowsText='zahtjeva'
-            getTheadThProps={(state, rowInfo, column) => ({className: 'table-active p-2'})}
-            getTdProps={(state, rowInfo, column) => ({className: 'pt-2 pb-2 align-self-center'})}
-            defaultFilterMethod={vpsFilterMethod}
+            getTheadThProps={() => ({className: 'table-active p-2'})}
+            getTheadFilterThProps={() => ({className: 'table-light align-self-center'})}
+            getTdProps={() => ({className: 'pt-2 pb-2 align-self-center'})}
           />
         </BaseView>
       )

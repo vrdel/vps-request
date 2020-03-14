@@ -24,7 +24,8 @@ export class FreshRequest extends Component
       newRequests: null,
       searchContactName: '',
       searchDate: '',
-      searchInstitution: ''
+      searchInstitution: '',
+      searchVmHost: ''
     }
 
     this.apiListRequests = '/api/v1/internal/requests/new'
