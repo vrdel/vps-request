@@ -21,7 +21,7 @@ export class RejectedRequest extends Component
 
     this.state = {
       loading: false,
-      rejectedRequests: null,
+      requests: null,
       searchContactName: '',
       searchDate: '',
       searchInstitution: '',
@@ -47,49 +47,45 @@ export class RejectedRequest extends Component
       const rejectedReq = await this.backend.fetchData(this.apiListRequests);
 
       this.setState({
-        rejectedRequests: rejectedReq,
+        requests: rejectedReq,
         loading: false
       })
     }
   }
 
   render() {
-    let {loading, rejectedRequests, searchDate, searchContactName,
+    let {loading, requests, searchDate, searchContactName,
       searchInstitution, searchVmHost} = this.state
 
-    if (searchDate && rejectedRequests) {
-      rejectedRequests = rejectedRequests.filter(
+    if (searchDate)
+      requests = requests.filter(
         r => DateFormatHR(r.request_date).indexOf(searchDate) !== -1
       )
-    }
 
-    if (searchContactName && rejectedRequests) {
-      rejectedRequests = rejectedRequests.filter(
+    if (searchContactName)
+      requests = requests.filter(
         r => `${r.contact_name} ${r.contact_lastname}`.toLowerCase().includes(searchContactName.toLowerCase())
       )
-    }
 
-    if (searchInstitution && rejectedRequests) {
-      rejectedRequests = rejectedRequests.filter(
+    if (searchInstitution)
+      requests = requests.filter(
         r => r.head_institution.toLowerCase().includes(searchInstitution.toLowerCase())
       )
-    }
 
-    if (searchVmHost && rejectedRequests) {
-      rejectedRequests = rejectedRequests.filter(
+    if (searchVmHost)
+      requests = requests.filter(
         r => r.vm_host.toLowerCase().includes(searchVmHost.toLowerCase())
       )
-    }
 
     if (loading)
       return (<LoadingAnim />)
 
-    else if (!loading && rejectedRequests) {
+    else if (!loading && requests) {
       const columns = [
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => Number(rejectedRequests.length - rejectedRequests.indexOf(r)),
+          accessor: r => Number(requests.length - requests.indexOf(r)),
           filterable: true,
           Filter: () => <FontAwesomeIcon size="lg" icon={faSearch}/>,
           maxWidth: 50,
@@ -159,7 +155,7 @@ export class RejectedRequest extends Component
           title='Odbijeni zahtjevi'
           location={this.location}>
           <ReactTable
-            data={rejectedRequests}
+            data={requests}
             columns={columns}
             className="-highlight mt-4 text-center align-middle"
             defaultPageSize={10}

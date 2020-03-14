@@ -21,7 +21,7 @@ export class ApprovedRequest extends Component
 
     this.state = {
       loading: false,
-      approvedRequests: null,
+      requests: null,
       searchContactName: '',
       searchDate: '',
       searchInstitution: '',
@@ -47,49 +47,45 @@ export class ApprovedRequest extends Component
       const approvedReq = await this.backend.fetchData(this.apiListRequests);
 
       this.setState({
-        approvedRequests: approvedReq,
+        requests: approvedReq,
         loading: false
       })
     }
   }
 
   render() {
-    let {loading, approvedRequests, searchDate, searchContactName,
+    let {loading, requests, searchDate, searchContactName,
       searchInstitution, searchVmHost} = this.state
 
-    if (searchDate && approvedRequests) {
-      approvedRequests = approvedRequests.filter(
+    if (searchDate)
+      requests = requests.filter(
         r => DateFormatHR(r.approved_date).indexOf(searchDate) !== -1
       )
-    }
 
-    if (searchContactName && approvedRequests) {
-      approvedRequests = approvedRequests.filter(
+    if (searchContactName)
+      requests = requests.filter(
         r => `${r.contact_name} ${r.contact_lastname}`.toLowerCase().includes(searchContactName.toLowerCase())
       )
-    }
 
-    if (searchInstitution && approvedRequests) {
-      approvedRequests = approvedRequests.filter(
+    if (searchInstitution)
+      requests = requests.filter(
         r => r.head_institution.toLowerCase().includes(searchInstitution.toLowerCase())
       )
-    }
 
-    if (searchVmHost && approvedRequests) {
-      approvedRequests = approvedRequests.filter(
+    if (searchVmHost)
+      requests = requests.filter(
         r => r.vm_host.toLowerCase().includes(searchVmHost.toLowerCase())
       )
-    }
 
     if (loading)
       return (<LoadingAnim />)
 
-    else if (!loading && approvedRequests) {
+    else if (!loading && requests) {
       const columns = [
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => Number(approvedRequests.length - approvedRequests.indexOf(r)),
+          accessor: r => Number(requests.length - requests.indexOf(r)),
           maxWidth: 50,
           filterable: true,
           Filter: () => <FontAwesomeIcon size="lg" icon={faSearch}/>
@@ -148,7 +144,7 @@ export class ApprovedRequest extends Component
           Header: 'Uredi',
           accessor: r => {
             return (
-              <Link to={`/ui/stanje-zahtjeva/${r.id}`}>
+              <Link to={`/ui/odobreni-zahtjevi/${r.id}`}>
                 <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>
               </Link>
             )
@@ -161,7 +157,7 @@ export class ApprovedRequest extends Component
           title='Odobreni zahtjevi'
           location={this.location}>
           <ReactTable
-            data={approvedRequests}
+            data={requests}
             columns={columns}
             className="-highlight mt-4 text-center align-middle"
             defaultPageSize={10}

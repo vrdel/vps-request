@@ -22,7 +22,7 @@ export class StateRequest extends Component
 
     this.state = {
       loading: false,
-      listMyRequests: null
+      requests: null
     }
 
     this.apiListRequests = '/api/v1/internal/requests/mine'
@@ -44,7 +44,7 @@ export class StateRequest extends Component
       const listMyReq = await this.backend.fetchData(this.apiListRequests);
 
       this.setState({
-        listMyRequests: listMyReq,
+        requests: listMyReq,
         loading: false,
         userDetails: sessionActive.userdetails
       })
@@ -52,17 +52,17 @@ export class StateRequest extends Component
   }
 
   render() {
-    const {loading, listMyRequests, userDetails} = this.state
+    const {loading, requests, userDetails} = this.state
 
     if (loading)
       return (<LoadingAnim />)
 
-    else if (!loading && listMyRequests && userDetails) {
+    else if (!loading && requests && userDetails) {
       const columns = [
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => Number(listMyRequests.indexOf(r) + 1),
+          accessor: r => Number(requests.indexOf(r) + 1),
           maxWidth: 50,
         },
         {
@@ -117,7 +117,7 @@ export class StateRequest extends Component
           title='Stanje zahtjeva'
           location={this.location}>
           <ReactTable
-            data={listMyRequests}
+            data={requests}
             columns={columns}
             className="-highlight mt-4 text-center align-middle"
             defaultPageSize={10}

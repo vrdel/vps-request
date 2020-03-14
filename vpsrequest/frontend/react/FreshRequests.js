@@ -21,7 +21,7 @@ export class FreshRequest extends Component
 
     this.state = {
       loading: false,
-      newRequests: null,
+      requests: null,
       searchContactName: '',
       searchDate: '',
       searchInstitution: '',
@@ -47,49 +47,45 @@ export class FreshRequest extends Component
       const newReq = await this.backend.fetchData(this.apiListRequests);
 
       this.setState({
-        newRequests: newReq,
+        requests: newReq,
         loading: false
       })
     }
   }
 
   render() {
-    var {loading, newRequests, searchDate, searchContactName, searchVmHost,
+    var {loading, requests, searchDate, searchContactName, searchVmHost,
       searchInstitution} = this.state
 
-    if (searchDate && newRequests) {
-      newRequests = newRequests.filter(
+    if (searchDate)
+      requests = requests.filter(
         r => DateFormatHR(r.request_date).indexOf(searchDate) !== -1
       )
-    }
 
-    if (searchContactName && newRequests) {
-      newRequests = newRequests.filter(
+    if (searchContactName)
+      requests = requests.filter(
         r => `${r.contact_name} ${r.contact_lastname}`.toLowerCase().includes(searchContactName.toLowerCase())
       )
-    }
 
-    if (searchInstitution && newRequests) {
-      newRequests = newRequests.filter(
+    if (searchInstitution)
+      requests = requests.filter(
         r => r.head_institution.toLowerCase().includes(searchInstitution.toLowerCase())
       )
-    }
 
-    if (searchVmHost && newRequests) {
-      newRequests = newRequests.filter(
+    if (searchVmHost)
+      requests = requests.filter(
         r => r.vm_host.toLowerCase().includes(searchVmHost.toLowerCase())
       )
-    }
 
     if (loading)
       return (<LoadingAnim />)
 
-    else if (!loading && newRequests) {
+    else if (!loading && requests) {
       const columns = [
         {
           id: 'cardNumber',
           Header: 'r. br.',
-          accessor: r => Number(newRequests.length - newRequests.indexOf(r)),
+          accessor: r => Number(requests.length - requests.indexOf(r)),
           maxWidth: 50,
           filterable: true,
           Filter: () => <FontAwesomeIcon size="lg" icon={faSearch}/>
@@ -157,7 +153,7 @@ export class FreshRequest extends Component
           title='Novi zahtjevi'
           location={this.location}>
           <ReactTable
-            data={newRequests}
+            data={requests}
             columns={columns}
             className="-highlight mt-4 text-center align-middle"
             defaultPageSize={10}
