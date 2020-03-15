@@ -16,8 +16,6 @@ from rest_framework.exceptions import APIException
 from datetime import datetime
 
 
-
-
 class VMOSViewset(viewsets.ModelViewSet):
     queryset = models.VMOS.objects.all()
     serializer_class = serializers.VMOSSerializer
@@ -50,21 +48,14 @@ class RequestsViewset(viewsets.ModelViewSet):
     @action(detail=False)
     def rejected(self, request):
         requests = models.Request.objects.filter(approved=0).order_by('-approved_date')
-        serializer = serializers.ListRequestsSerializer(requests, many=True)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    @action(detail=False)
-    def approved(self, request):
-        requests = models.Request.objects.filter(approved=1).order_by('-approved_date')
-        serializer = serializers.ListRequestsSerializer(requests, many=True)
+        serializer = serializers.RequestsListSerializer(requests, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False)
     def new(self, request):
         requests = models.Request.objects.filter(approved=-1).order_by('-request_date')
-        serializer = serializers.ListRequestsSerializer(requests, many=True)
+        serializer = serializers.RequestsListSerializer(requests, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 

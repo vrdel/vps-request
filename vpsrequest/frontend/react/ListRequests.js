@@ -129,7 +129,7 @@ export function ListRequests(typeRequest) {
           {
             id: 'contactNameLastName',
             Header: 'Kontaktna osoba',
-            accessor: r => `${r.contact_name} ${r.contact_lastname}`,
+            accessor: r => `${r.user.first_name} ${r.user.last_name}`,
             filterable: true,
             Filter: <FilterField
               value={this.state.searchContactName}
