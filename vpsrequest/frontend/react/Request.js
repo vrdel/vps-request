@@ -5,6 +5,7 @@ import {
   Button,
   Col,
   CustomInput,
+  FormGroup,
   Label,
   Row,
 } from 'reactstrap';
@@ -20,6 +21,7 @@ import {
 import { DateFormatHR } from './Util';
 import { Formik, Form, Field } from 'formik';
 import './Request.css';
+
 
 
 const RowRequestDropDown = ({field, ...propsRest}) =>
@@ -68,6 +70,7 @@ const RowRequestField = ({field, ...propsRest}) =>
             id={propsRest.labelFor}
             className="form-control"
             required={propsRest.required ? true : false}
+            disabled={propsRest.disabled ? true : false}
             rows="5"
             {...field}/>
           {
@@ -188,6 +191,36 @@ const RequestDateField = () =>
 )
 
 
+const StateFields = ({isApprovedRequest}) =>
+(
+  <React.Fragment>
+    <RequestHorizontalRule/>
+    <h5 className="mb-3 mt-4">Stanje</h5>
+    <Field name="timestamp" component={RowRequestField} label="Datum promjene:" labelFor="timestamp" fieldType="text" disabled={true}/>
+    <Row className="mb-3">
+      <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
+        <Label
+          for='requestApproved'
+          check
+          className="mr-2">
+          Zahtjev odobren:
+        </Label>
+      </Col>
+      <Col md={{size: 1}} className="text-left">
+        <CustomInput type="checkbox" id="requestApproved"
+          checked={isApprovedRequest} onChange={undefined}
+          disabled={true}
+        />
+      </Col>
+    </Row>
+    <Field name="approvedby" component={RowRequestField} label="Obradio:" labelFor="approvedBy" fieldType="text" disabled={true}/>
+    <Field name="vm_reason" component={RowRequestField} label="Poruka:" labelFor="vmReason" fieldType="textarea" disabled={true}/>
+    <Field name="vm_admin_remark" component={RowRequestField} label="Napomena:" labelFor="vmAdminRemark" fieldType="textarea" disabled={true}/>
+    <Field name="vm_ip" component={RowRequestField} label="IP adresa:" labelFor="vmIp" fieldType="text" disabled={true}/>
+  </React.Fragment>
+)
+
+
 const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dismissAlert, stateAcceptConditionsAlert}) =>
 (
   <React.Fragment>
@@ -271,6 +304,7 @@ export class ChangeRequest extends Component
       loading: false,
       listVMOSes: [],
       requestDetails: undefined,
+      requestApproved: undefined,
       userDetail: undefined,
     }
 
@@ -282,6 +316,10 @@ export class ChangeRequest extends Component
 
     this.backend = new Backend()
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
+  }
+
+  isRequestApproved(value) {
+    return value === 1 ? true : false
   }
 
   componentDidMount() {
@@ -297,6 +335,7 @@ export class ChangeRequest extends Component
             listVMOSes: vmOSes.map(e => e.vm_os),
             userDetails: sessionActive.userdetails,
             requestDetails: requestData,
+            requestApproved: this.isRequestApproved(requestData.approved),
             loading: false
           }))
     })
@@ -316,7 +355,8 @@ export class ChangeRequest extends Component
   }
 
   render() {
-    const {loading, listVMOSes, userDetails, requestDetails} = this.state
+    const {loading, listVMOSes, userDetails,
+      requestApproved, requestDetails} = this.state
 
     if (userDetails && requestDetails)
       var initValues = {
@@ -327,10 +367,15 @@ export class ChangeRequest extends Component
         role: userDetails.role,
         email: userDetails.email,
         aaieduhr: userDetails.aaieduhr,
+        approvedby: requestDetails.approvedby,
         vm_fqdn: requestDetails.vm_fqdn,
         vm_purpose: requestDetails.vm_purpose,
+        vm_admin_remark: requestDetails.vm_admin_remark,
+        vm_reason: requestDetails.vm_reason,
         vm_remark: requestDetails.vm_remark,
         vm_os: requestDetails.vm_os,
+        vm_ip: requestDetails.vm_ip,
+        approved: requestApproved,
         sys_firstname: requestDetails.sys_firstname,
         sys_aaieduhr: requestDetails.sys_aaieduhr,
         sys_lastname: requestDetails.sys_lastname,
@@ -342,7 +387,8 @@ export class ChangeRequest extends Component
         head_institution: requestDetails.head_institution,
         head_role: requestDetails.head_role,
         head_email: requestDetails.head_email,
-        request_date: DateFormatHR(requestDetails.request_date)
+        request_date: DateFormatHR(requestDetails.request_date),
+        timestamp: DateFormatHR(requestDetails.timestamp)
       }
 
     if (loading)
@@ -367,6 +413,7 @@ export class ChangeRequest extends Component
                 <VMFields listVMOSes={listVMOSes}/>
                 <SysAdminFields/>
                 <HeadFields/>
+                <StateFields isApprovedRequest={requestApproved}/>
                 <SubmitChangeRequest/>
               </Form>
             )}
