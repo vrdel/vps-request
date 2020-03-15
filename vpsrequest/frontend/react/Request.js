@@ -282,17 +282,144 @@ const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dismissAler
 )
 
 
-const SubmitChangeRequest = () =>
+const SubmitChangeRequest = ({buttonLabel}) =>
 (
   <React.Fragment>
     <RequestHorizontalRule/>
     <Row className="mt-2 mb-4 text-center">
       <Col>
-        <Button className="btn-lg" color="success" id="submit-button" type="submit">Promijeni zahtjev</Button>
+        <Button className="btn-lg" color="success" id="submit-button" type="submit">{buttonLabel}</Button>
       </Col>
     </Row>
   </React.Fragment>
 )
+
+
+export class HandleNewRequest extends Component
+{
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      loading: false,
+      listVMOSes: [],
+      requestDetails: undefined,
+      requestApproved: undefined,
+      userDetail: undefined,
+    }
+
+    let {params} = this.props.match
+    this.requestID = params.id
+
+    this.apiListRequests = '/api/v1/internal/requests/'
+
+    this.backend = new Backend()
+    this.handleOnSubmit = this.handleOnSubmit.bind(this)
+    this.initializeComponent = this.initializeComponent.bind(this)
+  }
+
+  async initializeComponent() {
+    const session = await this.backend.isActiveSession()
+
+    if (session.active) {
+      const requestData = await this.backend.fetchData(`${this.apiListRequests}/${this.requestID}/handlenew/`)
+
+      this.setState({
+        userDetails: session.userdetails,
+        requestDetails: requestData,
+        loading: false
+      })
+    }
+  }
+
+  componentDidMount() {
+    this.setState({loading: true})
+    this.initializeComponent()
+  }
+
+  handleOnSubmit(data) {
+    this.backend.changeObject(`${this.apiListRequests}/${this.requestID}/`, data)
+      .then(response => {
+        response.ok
+          ? NotifyOk({
+              msg: 'Zahtjev uspješno promijenjen',
+              title: `Uspješno - HTTP ${response.status}`})
+          : NotifyError({
+              msg: response.statusText,
+              title: `Greška - HTTP ${response.status}`})
+      })
+  }
+
+  render() {
+    const {loading, listVMOSes, userDetails, requestDetails} = this.state
+
+    if (userDetails && requestDetails)
+      var initValues = {
+        location: '',
+        first_name: requestDetails.user.first_name,
+        last_name: requestDetails.user.last_name,
+        institution: requestDetails.user.institution,
+        role: requestDetails.user.role,
+        email: requestDetails.user.email,
+        aaieduhr: requestDetails.user.aaieduhr,
+        approvedby: requestDetails.approvedby,
+        vm_fqdn: requestDetails.vm_fqdn,
+        vm_purpose: requestDetails.vm_purpose,
+        vm_admin_remark: requestDetails.vm_admin_remark,
+        vm_reason: requestDetails.vm_reason,
+        vm_remark: requestDetails.vm_remark,
+        vm_os: requestDetails.vm_os,
+        vm_ip: requestDetails.vm_ip,
+        approved: requestDetails.approved,
+        sys_firstname: requestDetails.sys_firstname,
+        sys_aaieduhr: requestDetails.sys_aaieduhr,
+        sys_lastname: requestDetails.sys_lastname,
+        sys_institution: requestDetails.sys_institution,
+        sys_role: requestDetails.sys_role,
+        sys_email: requestDetails.sys_email,
+        head_firstname: requestDetails.head_firstname,
+        head_lastname: requestDetails.head_lastname,
+        head_institution: requestDetails.head_institution,
+        head_role: requestDetails.head_role,
+        head_email: requestDetails.head_email,
+        request_date: DateFormatHR(requestDetails.request_date),
+        timestamp: DateFormatHR(requestDetails.timestamp)
+      }
+
+    if (loading)
+      return (<LoadingAnim />)
+
+    else if (!loading && listVMOSes && initValues) {
+      return (
+        <BaseView
+          title='Obradi zahtjev'
+          isHandleNewView={true}>
+          <Formik
+            initialValues={initValues}
+            onSubmit={(values, actions) => {
+              values.timestamp = new Date().toISOString()
+              values.request_date = requestDetails.request_date
+              this.handleOnSubmit(values)
+            }}
+            render = {props => (
+              <Form>
+                <RequestDateField/>
+                <ContactUserFields/>
+                <VMFields listVMOSes={[requestDetails.vm_os]}/>
+                <SysAdminFields/>
+                <HeadFields/>
+                <SubmitChangeRequest buttonLabel='Spremi promjene'/>
+              </Form>
+            )}
+          />
+        </BaseView>
+      )
+    }
+
+    else
+      return null
+  }
+}
 
 
 export class ChangeRequest extends Component
@@ -401,7 +528,7 @@ export class ChangeRequest extends Component
     else if (!loading && listVMOSes && initValues) {
       return (
         <BaseView
-          title='Promjeni Zahtjev'
+          title='Promijeni zahtjev'
           isChangeView={true}>
           <Formik
             initialValues={initValues}
@@ -418,7 +545,7 @@ export class ChangeRequest extends Component
                 <SysAdminFields/>
                 <HeadFields/>
                 <StateFields isApprovedRequest={requestApproved}/>
-                <SubmitChangeRequest/>
+                <SubmitChangeRequest buttonLabel='Promijeni zahtjev'/>
               </Form>
             )}
           />

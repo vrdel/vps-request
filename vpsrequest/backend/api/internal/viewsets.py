@@ -59,6 +59,13 @@ class RequestsViewset(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @action(detail=True)
+    def handlenew(self, request, pk=None):
+        request = models.Request.objects.get(pk=pk)
+        serializer = serializers.RequestsListSerializer(request)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class UsersViewset(viewsets.ModelViewSet):
     serializer_class = serializers.UsersSerializer

@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import ReactNotification from 'react-notifications-component'
 import { Backend } from './DataManager';
 import { ListRequests } from './ListRequests';
-import { NewRequest, ChangeRequest } from './Request';
+import { NewRequest, HandleNewRequest, ChangeRequest } from './Request';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import { VPSPage } from './UIElements';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -156,6 +156,12 @@ class App extends Component {
                   <VPSPage
                     {...propsPage}>
                     <FreshRequests {...props}/>
+                  </VPSPage>}/>
+            <Route exact path="/ui/novi-zahtjevi/:id"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}>
+                    <HandleNewRequest {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/odobreni-zahtjevi"
               render={(props) =>
