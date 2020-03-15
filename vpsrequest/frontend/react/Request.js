@@ -316,29 +316,33 @@ export class ChangeRequest extends Component
 
     this.backend = new Backend()
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
+    this.initializeComponent = this.initializeComponent.bind(this)
   }
 
   isRequestApproved(value) {
     return value === 1 ? true : false
   }
 
+  async initializeComponent() {
+    const session = await this.backend.isActiveSession()
+
+    if (session.active) {
+      const vmOSes = await this.backend.fetchData(this.apiListVMOSes)
+      const requestData = await this.backend.fetchData(`${this.apiListRequests}/${this.requestID}`)
+
+      this.setState({
+        listVMOSes: vmOSes.map(e => e.vm_os),
+        userDetails: session.userdetails,
+        requestDetails: requestData,
+        requestApproved: this.isRequestApproved(requestData.approved),
+        loading: false
+      })
+    }
+  }
+
   componentDidMount() {
     this.setState({loading: true})
-
-    this.backend.isActiveSession().then(sessionActive => {
-      sessionActive.active &&
-        Promise.all([
-          this.backend.fetchData(this.apiListVMOSes),
-          this.backend.fetchData(`${this.apiListRequests}/${this.requestID}`),
-        ])
-          .then(([vmOSes, requestData]) => this.setState({
-            listVMOSes: vmOSes.map(e => e.vm_os),
-            userDetails: sessionActive.userdetails,
-            requestDetails: requestData,
-            requestApproved: this.isRequestApproved(requestData.approved),
-            loading: false
-          }))
-    })
+    this.initializeComponent()
   }
 
   handleOnSubmit(data) {
@@ -452,15 +456,15 @@ export class NewRequest extends Component
   }
 
   async initializeComponent() {
-    const sessionActive = await this.backend.isActiveSession()
+    const session = await this.backend.isActiveSession()
 
-    if (sessionActive.active) {
+    if (session.active) {
       const vmOSes = await this.backend.fetchData(this.apiListVMOSes)
 
       this.setState({
         listVMOSes: vmOSes.map(e => e.vm_os),
         acceptConditions: false,
-        userDetails: sessionActive.userdetails,
+        userDetails: session.userdetails,
         loading: false
       })
     }
