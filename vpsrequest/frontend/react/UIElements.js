@@ -319,28 +319,39 @@ export const NotifyError = ({msg='', title='', callback=undefined}) => {
 }
 
 
-export const BaseView = ({title='', isChangeView=false, modal=false, toggle=undefined, state=undefined, children}) =>
-(
-  <React.Fragment>
-    {
-      modal &&
-      <ModalAreYouSure
-        isOpen={state.areYouSureModal}
-        toggle={toggle}
-        title={state.modalTitle}
-        msg={state.modalMsg}
-        onYes={state.modalFunc} />
-    }
-    <div id="vpsreq-contentwrap" className="pl-4 pb-4 pr-4 pt-3 border rounded">
+export const BaseView = ({title='', isChangeView=false, isHandleNewView=false,
+    modal=false, toggle=undefined, state=undefined, children}) =>
+{
+  let bgTitle = "bg-light"
+
+  if (isChangeView)
+    bgTitle = "bg-danger text-white"
+
+  if (isHandleNewView)
+    bgTitle = "bg-success text-white"
+
+  return (
+    <React.Fragment>
       {
-        <div className={`"shadow-sm p-2 mb-2 rounded " ${isChangeView ? "bg-danger text-white" : "bg-light"}`}>
-          <h3>{title}</h3>
-        </div>
+        modal &&
+        <ModalAreYouSure
+          isOpen={state.areYouSureModal}
+          toggle={toggle}
+          title={state.modalTitle}
+          msg={state.modalMsg}
+          onYes={state.modalFunc} />
       }
-      {children}
-    </div>
-  </React.Fragment>
-)
+      <div id="vpsreq-contentwrap" className="pl-4 pb-4 pr-4 pt-3 border rounded">
+        {
+          <div className={`"shadow-sm p-2 mb-2 rounded " ${bgTitle}`}>
+            <h3>{title}</h3>
+          </div>
+        }
+        {children}
+      </div>
+    </React.Fragment>
+  )
+}
 
 
 function matchItem(item, value) {

@@ -7,10 +7,14 @@ import React, { Component } from 'react';
 import ReactNotification from 'react-notifications-component'
 import { Backend } from './DataManager';
 import { ListRequests } from './ListRequests';
-import { NewRequest, ChangeRequest } from './Request';
+import { NewRequest, HandleNewRequest, ChangeRequest } from './Request';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import { VPSPage } from './UIElements';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faSearch,
+  faPencilAlt,
+  } from '@fortawesome/free-solid-svg-icons';
 import './App.css';
 import 'react-notifications-component/dist/theme.css'
 
@@ -20,22 +24,28 @@ const types = new Object({
     api: '/api/v1/internal/requests/approved',
     dateFieldSearch: 'approved_date',
     title: 'Odobreni zahtjevi',
-    headerDate: 'Datum odobrovanja',
-    linkPath: 'odobreni-zahtjevi'
+    headerDate: 'Datum odobravanja',
+    linkPath: 'odobreni-zahtjevi',
+    lastColHeader: 'Vidi',
+    lastColIcon: <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>
   },
   fresh: {
     api: '/api/v1/internal/requests/new',
     dateFieldSearch: 'request_date',
     title: 'Novi zahtjevi',
     headerDate: 'Datum podnošenja',
-    linkPath: 'novi-zahtjevi'
+    linkPath: 'novi-zahtjevi',
+    lastColHeader: 'Vidi',
+    lastColIcon: <FontAwesomeIcon className="text-primary" size="2x" icon={faSearch}/>
   },
   rejected: {
     api: '/api/v1/internal/requests/rejected',
     dateFieldSearch: 'approved_date',
     title: 'Odbijeni zahtjevi',
     headerDate: 'Datum odbijanja',
-    linkPath: 'odbijeni-zahtjevi'
+    linkPath: 'odbijeni-zahtjevi',
+    lastColHeader: 'Vidi',
+    lastColIcon: <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>
   }
 })
 
@@ -146,6 +156,12 @@ class App extends Component {
                   <VPSPage
                     {...propsPage}>
                     <FreshRequests {...props}/>
+                  </VPSPage>}/>
+            <Route exact path="/ui/novi-zahtjevi/:id"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}>
+                    <HandleNewRequest {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/odobreni-zahtjevi"
               render={(props) =>
