@@ -37,10 +37,10 @@ class Login extends Component {
   }
 
   async handleOnSubmit(values) {
-    const sessionActive = await this.backend.doUserPassLogin(values.username, values.password)
+    const session = await this.backend.doUserPassLogin(values.username, values.password)
 
-    if (sessionActive.active)
-      this.AppOnLogin(sessionActive.userdetails, this.props.history)
+    if (session.active)
+      this.AppOnLogin(session, this.props.history)
     else
       this.setState({loginFailedVisible: true});
   }

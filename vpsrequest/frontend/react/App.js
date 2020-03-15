@@ -63,17 +63,13 @@ class App extends Component {
     this.initalizeState = this.initalizeState.bind(this);
   }
 
-  onLogin(json, history) {
-    let response = new Object();
+  onLogin(session, history) {
     let goToURL = '/ui/novi-zahtjevi'
 
-    response.active = true
-    response.userdetails = json
-
-    if (!response.userdetails.is_staff)
+    if (!session.userdetails.is_staff)
       goToURL = '/ui/novi-zahtjev'
 
-    this.initalizeState(response).then(
+    this.initalizeState(session).then(
       setTimeout(() => {
         history.push(goToURL);
       }, 50
@@ -89,16 +85,17 @@ class App extends Component {
       ({areYouSureModal: !prevState.areYouSureModal}));
   }
 
-  async initalizeState(response) {
-    const sessionActive = await this.backend.isActiveSession()
+  async initalizeState(session=undefined) {
+    if (session === undefined)
+        session = await this.backend.isActiveSession()
 
-    if (sessionActive.active) {
+    if (session.active) {
       const options = await this.backend.fetchConfigOptions()
 
       if (options)
         this.setState({
-          isSessionActive: response.active,
-          userDetails: response.userdetails,
+          isSessionActive: session.active,
+          userDetails: session.userdetails,
           configOptions: options,
         })
     }
