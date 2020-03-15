@@ -149,11 +149,11 @@ export function ListRequests(typeRequest) {
           },
           {
             id: 'edit',
-            Header: 'Uredi',
+            Header: typeRequest.lastColHeader,
             accessor: r => {
               return (
                 <Link to={`/ui/${typeRequest.linkPath}/${r.id}`}>
-                  <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>
+                  {typeRequest.lastColIcon}
                 </Link>
               )
             },
