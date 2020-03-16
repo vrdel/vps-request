@@ -67,7 +67,7 @@ export function ListRequests(typeRequest) {
 
       if (searchContactName)
         requests = requests.filter(
-          r => `${r.contact_name} ${r.contact_lastname}`.toLowerCase().includes(searchContactName.toLowerCase())
+          r => `${r.user.first_name} ${r.user.last_name}`.toLowerCase().includes(searchContactName.toLowerCase())
         )
 
       if (searchInstitution)
