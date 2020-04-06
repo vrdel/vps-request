@@ -311,7 +311,7 @@ export class HandleNewRequest extends Component
     let {params} = this.props.match
     this.requestID = params.id
 
-    this.apiListRequests = '/api/v1/internal/requests/'
+    this.apiListRequests = '/api/v1/internal/requests'
 
     this.backend = new Backend()
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
