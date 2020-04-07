@@ -5,33 +5,24 @@ from dateutil.parser import parse
 import smtplib
 import socket
 import os, re, datetime
+from django.conf import settings
 
 class Notification(object):
 
-    SRCE_SMTP = 'smtp.srce.hr'
-    SRCE_FROM = 'vps-adminAAA@srce.hr'
-    TEMPLATES_DIR = '{}/templates/'.format(os.path.dirname(os.path.realpath(__file__)))
-    ADMIN_FRESH_TEMPLATE = TEMPLATES_DIR + 'fresh_request_admin.tpl'
-    ADMIN_FRESH_SUBJECT = 'Novi zahtjev za virtualnim poslužiteljem u usluzi VPS'
-    USER_FRESH_TEMPLATE = TEMPLATES_DIR + 'fresh_request_user.tpl'
-    USER_FRESH_SUBJECT = '[Srce] Zahtjev za virtualnim poslužiteljem u usluzi VPS'
-    HEAD_FRESH_TEMPLATE = TEMPLATES_DIR + 'fresh_request_head.tpl'
-    HEAD_FRESH_SUBJECT = '[Srce] Zahtjev za virtualnim poslužiteljem u usluzi VPS'
-
     def __init__(self, requestID, logger = None):
         self.logger = logger
-        self.sender = self.SRCE_FROM
+        self.sender = settings.ADMIN_MAIL
 
         reqData = models.Request.objects.get(pk=requestID)
         serializer = serializers.RequestsListSerializer(reqData, many=False)
         self.request = serializer.data
 
-        #self.request = request #models.Request.objects.get(pk=requestID)
 
     def composeFreshRequestAdminEmail(self):
         email_text = None
         to = 'hsute@srce.hr'
-        email_text = self.prepareMail(self.ADMIN_FRESH_TEMPLATE, self.ADMIN_FRESH_SUBJECT, to)
+        cc = 'hrvoje.sute@srce.hr'
+        email_text = self.prepareMail(settings.ADMIN_FRESH_TEMPLATE, settings.ADMIN_FRESH_SUBJECT, to, cc)
 
         if email_text:
             self.send(email_text, to)
@@ -40,7 +31,7 @@ class Notification(object):
     def composeFreshRequestUserEmail(self):
         email_text = None
         to = 'hsute@srce.hr'
-        email_text = self.prepareMail(self.USER_FRESH_TEMPLATE, self.USER_FRESH_SUBJECT, to)
+        email_text = self.prepareMail(settings.USER_FRESH_TEMPLATE, settings.USER_FRESH_SUBJECT, to)
 
         if email_text:
             self.send(email_text, to)
@@ -48,20 +39,17 @@ class Notification(object):
     def composeFreshRequestHeadEmail(self):
         email_text = None
         to = 'hsute@srce.hr'
-        email_text = self.prepareMail(self.HEAD_FRESH_TEMPLATE, self.HEAD_FRESH_SUBJECT, to)
+        email_text = self.prepareMail(settings.HEAD_FRESH_TEMPLATE, settings.HEAD_FRESH_SUBJECT, to)
 
         if email_text:
             self.send(email_text, to)
 
 
-    def prepareMail(self, template, subject, to):
+    def prepareMail(self, template, subject, to, cc = None):
         body = None
         with open(template, mode='r', encoding='utf-8') as fp:
             body = fp.readlines()
         
-        import ipdb; ipdb.set_trace()
-      
-
         if body:
             body = ''.join(body)
             placeholders = re.findall(r"(__[A-Z_]+__)", body)
@@ -80,6 +68,8 @@ class Notification(object):
             m = MIMEText(body, 'plain', 'utf-8')
             m['From'] = self.sender
             m['To'] = to
+            if cc:
+                m['Cc'] = cc
             m['Subject'] = Header(subject, 'utf-8')
             
             return m.as_string()    
@@ -93,7 +83,7 @@ class Notification(object):
 
         else:
             try:
-                s = smtplib.SMTP(self.SRCE_SMTP, 25, timeout=120)
+                s = smtplib.SMTP(settings.SRCE_SMTP, 25, timeout=120)
                 s.ehlo()
                 s.sendmail(self.sender, ['hsute@srce.hr', self.sender], email_text)
                 s.quit()

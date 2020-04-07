@@ -28,7 +28,7 @@ CONFIG_FILE = '{}/etc/vpsrequest/vpsrequest.conf'.format(VENV)
 try:
     config = ConfigParser()
 
-    if not config.read([CONFIG_FILE]):
+    if not config.read([CONFIG_FILE], encoding='utf-8'):
         raise ImproperlyConfigured('Unable to parse config file %s' % CONFIG_FILE)
 
     # General
@@ -48,6 +48,22 @@ try:
     SUPERUSER_NAME = config.get('SUPERUSER', 'name')
     SUPERUSER_PASS = config.get('SUPERUSER', 'password')
     SUPERUSER_EMAIL = config.get('SUPERUSER', 'email')
+
+    SRCE_SMTP = config.get('EMAIL', 'SrceSmtp')
+    ADMIN_MAIL = config.get('EMAIL', 'AdminMail')
+    ADMIN_FRESH_TEMPLATE = config.get('EMAIL', 'AdminFreshTemplate')
+    ADMIN_FRESH_SUBJECT = config.get('EMAIL', 'AdminFreshSubject')
+    USER_FRESH_TEMPLATE = config.get('EMAIL', 'UserFreshTemplate')
+    USER_FRESH_SUBJECT = config.get('EMAIL', 'UserFreshSubject')
+    HEAD_FRESH_TEMPLATE = config.get('EMAIL', 'HeadFreshTemplate')
+    HEAD_FRESH_SUBJECT = config.get('EMAIL', 'HeadFreshSubject')
+    APPROVED_REQ_TEMPLATE = config.get('EMAIL', 'ApprovedRequestTemplate')
+    APPROVED_REQ_SUBJECT = config.get('EMAIL', 'ApprovedRequestSubject')
+    REJECTED_REQ_TEMPLATE = config.get('EMAIL', 'RejectedRequestTemplate')
+    REJECTED_REQ_SUBJECT = config.get('EMAIL', 'RejectedRequestSubject')
+    CHANGED_REQ_TEMPLATE = config.get('EMAIL', 'ChangedRequestTemplate')
+    CHANGED_REQ_SUBJECT = config.get('EMAIL', 'ChangedRequestSubject')
+     
 
 except NoSectionError as e:
     print(e)
