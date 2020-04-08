@@ -17,6 +17,7 @@ import {
   } from '@fortawesome/free-solid-svg-icons';
 import './App.css';
 import 'react-notifications-component/dist/theme.css'
+import { ViewSingleRequest } from './ViewRequest';
 
 
 const types = new Object({
@@ -45,7 +46,7 @@ const types = new Object({
     headerDate: 'Datum odbijanja',
     linkPath: 'odbijeni-zahtjevi',
     lastColHeader: 'Vidi',
-    lastColIcon: <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>
+    lastColIcon: <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
   }
 })
 
@@ -179,6 +180,12 @@ class App extends Component {
                   <VPSPage
                     {...propsPage}>
                     <RejectedRequests {...props}/>
+                  </VPSPage>}/>
+            <Route exact path="/ui/odbijeni-zahtjevi/:id"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}>
+                    <ViewSingleRequest {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/stanje-zahtjeva"
               render={(props) =>
