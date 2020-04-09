@@ -27,8 +27,10 @@ const types = new Object({
     title: 'Odobreni zahtjevi',
     headerDate: 'Datum odobravanja',
     linkPath: 'odobreni-zahtjevi',
-    lastColHeader: 'Vidi',
-    lastColIcon: <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>
+    linkPathRetired: 'umirovljeni-zahtjevi',
+    lastColHeader: 'Akcija',
+    lastColIcon: <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>,
+    lastColIconRetired: <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
   },
   fresh: {
     api: '/api/v1/internal/requests/new',
@@ -175,6 +177,13 @@ class App extends Component {
                   <VPSPage
                     {...propsPage}>
                   </VPSPage>}/>
+            <Route exact path="/ui/umirovljeni-zahtjevi/:id"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}>
+                    <ViewSingleRequest {...props}/>
+                  </VPSPage>}/>
+            
             <Route exact path="/ui/odbijeni-zahtjevi"
               render={(props) =>
                   <VPSPage

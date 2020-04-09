@@ -7,14 +7,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCheck,
     faCog,
-    faPencilAlt,
-    faSearch,
     faTimes,
+    faCouch,
+    faCheckDouble
     } from '@fortawesome/free-solid-svg-icons';
 import {
     Col,
     Row,
-  } from 'reactstrap';
+    } from 'reactstrap';
 
 
 const RequestRow = ({...props}) =>
@@ -32,15 +32,33 @@ const RequestRow = ({...props}) =>
     </Row>
 )
  
+const RetiredRequestDetails = ({values}) =>
+{
+    if(values.approved === 3)
+        return(
+            <React.Fragment>
+                <RequestRow label="Odobrio:" value={values.approvedby}/>
+                <RequestRow label="IP adresa:" value={values.vm_ip}/>
+                <RequestRow label="Poruka:" value={values.vm_reason}/>
+                <RequestRow label="Datum umirovljenja:" value={values.vm_dismissed}/>
+            </React.Fragment>
+        )
 
+    return null
+}
 
-const ContactUserFields = ({values}) =>
+const RequestDetails = ({values}) =>
 {
     let reqStatus = <FontAwesomeIcon className="text-warning" size="2x" icon={faCog}/>
     if (values.approved === 0)
         reqStatus = <FontAwesomeIcon className="text-danger" size="2x" icon={faTimes}/>
     else if (values.approved === 1)
-        reqStatus = <FontAwesomeIcon className="text-success" size="2x" icon={faCheck}/>
+            reqStatus = <FontAwesomeIcon className="text-primary" size="2x" icon={faCheck}/>
+    else if (values.approved === 2)
+        reqStatus = <FontAwesomeIcon className="text-success" size="2x" icon={faCheckDouble}/>
+    else if (values.approved === 3)
+        reqStatus = <FontAwesomeIcon className="text-secondary" size="2x" icon={faCouch}/>
+    
     return (            
         <React.Fragment>
             <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
@@ -75,14 +93,13 @@ const ContactUserFields = ({values}) =>
             <RequestRow label="Email:" value={values.head_email}/>
             <RequestHorizontalRule/>
 
-            <RequestRow label="Datum podnošenja:" value={values.request_date}/>
             <RequestRow label="Status:" value={reqStatus}/>
+            <RequestRow label="Datum podnošenja:" value={values.request_date}/>
             <RequestRow label="Napomena administratora:" value={values.vm_admin_remark}/>
+            <RetiredRequestDetails values={values}/>
         </React.Fragment>
     )
 }
-
-
 
 
 export class ViewSingleRequest extends Component
@@ -92,9 +109,7 @@ export class ViewSingleRequest extends Component
 
     this.state = {
       loading: false,
-      listVMOSes: [],
       requestDetails: undefined,
-      requestApproved: undefined,
       userDetail: undefined,
     }
 
@@ -127,7 +142,7 @@ export class ViewSingleRequest extends Component
   }
 
   render() {
-    const {loading, listVMOSes, userDetails, requestDetails} = this.state
+    const {loading, userDetails, requestDetails} = this.state
 
     if (userDetails && requestDetails)
       var initValues = {
@@ -159,17 +174,18 @@ export class ViewSingleRequest extends Component
         head_role: requestDetails.head_role,
         head_email: requestDetails.head_email,
         request_date: DateFormatHR(requestDetails.request_date),
-        timestamp: DateFormatHR(requestDetails.timestamp)
+        timestamp: DateFormatHR(requestDetails.timestamp),
+        vm_dismissed: DateFormatHR(requestDetails.vm_dismissed)
       }
 
     if (loading)
       return (<LoadingAnim />)
 
-    else if (!loading && listVMOSes && initValues) {
+    else if (!loading && initValues) {
       return (
         <BaseView
           title='Detalji zahtjeva'>
-              <ContactUserFields values={initValues}/>
+              <RequestDetails values={initValues}/>
         </BaseView>
       )
     }
