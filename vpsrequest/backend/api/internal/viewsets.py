@@ -67,16 +67,19 @@ class RequestsViewset(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, args, kwargs)
+    def partial_update(self, request, pk=None):
+        # TODO: send emails
+        return super().partial_update(request, pk)
+
+    def create(self, request):
+        response = super().create(request)
         new_request = response.data
         notification = Notification(new_request['id'])
         notification.composeFreshRequestAdminEmail()
         notification.composeFreshRequestUserEmail()
         notification.composeFreshRequestHeadEmail()
-        
-        return response
 
+        return response
 
 
 class UsersViewset(viewsets.ModelViewSet):

@@ -333,6 +333,7 @@ const ProcessFields = ({approved, handleState}) =>
         </FormGroup>
       </Col>
     </Row>
+    <Field name="vm_reason" component={RowRequestField} label="Razlog:" labelFor="vmReason" fieldType="textarea"/>
   </React.Fragment>
 )
 
