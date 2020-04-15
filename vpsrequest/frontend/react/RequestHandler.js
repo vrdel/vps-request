@@ -10,6 +10,7 @@ import {
     Row,
     Button
     } from 'reactstrap';
+    import { Redirect } from 'react-router-dom';
 
 
 const AvailableButtons = ({ status, setFieldValue, handleSubmit }) => {
@@ -49,6 +50,7 @@ export class ApprovedRequestHandler extends Component
       requestDetails: undefined,
       requestApproved: undefined,
       userDetail: undefined,
+      fireRedirect: false
     }
 
     let {params} = this.props.match
@@ -96,7 +98,7 @@ export class ApprovedRequestHandler extends Component
   }
 
   render() {
-    const {loading, listVMOSes, userDetails, requestDetails} = this.state
+    const {loading, listVMOSes, userDetails, requestDetails, fireRedirect} = this.state
 
     if (userDetails && requestDetails)
       var initValues = {
@@ -153,6 +155,7 @@ export class ApprovedRequestHandler extends Component
               }
               delete values.retire
               this.handleOnSubmit(values)
+              this.setState({ fireRedirect: true })
             }}
             render = {({setFieldValue, handleSubmit}) => (
               <Form onSubmit={handleSubmit}>
@@ -163,6 +166,7 @@ export class ApprovedRequestHandler extends Component
                 <HeadFields/>
                 <StateFields isSuperUser={userDetails.is_superuser}/>
                 <AvailableButtons status={initValues.approved} setFieldValue={setFieldValue} handleSubmit={handleSubmit}/>
+                {fireRedirect && (<Redirect to='/ui/odobreni-zahtjevi'/>)}
               </Form>
             )}
           />
