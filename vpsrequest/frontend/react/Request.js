@@ -295,7 +295,7 @@ const SubmitChangeRequest = ({buttonLabel}) =>
 )
 
 
-export class HandleNewRequest extends Component
+export class ProcessNewRequest extends Component
 {
   constructor(props) {
     super(props)
