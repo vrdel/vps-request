@@ -17,6 +17,7 @@ import {
   } from '@fortawesome/free-solid-svg-icons';
 import './App.css';
 import 'react-notifications-component/dist/theme.css'
+import { ViewSingleRequest } from './ViewRequest';
 
 
 const types = new Object({
@@ -26,8 +27,10 @@ const types = new Object({
     title: 'Odobreni zahtjevi',
     headerDate: 'Datum odobravanja',
     linkPath: 'odobreni-zahtjevi',
-    lastColHeader: 'Vidi',
-    lastColIcon: <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>
+    linkPathRetired: 'umirovljeni-zahtjevi',
+    lastColHeader: 'Akcija',
+    lastColIcon: <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>,
+    lastColIconRetired: <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
   },
   fresh: {
     api: '/api/v1/internal/requests/new',
@@ -45,7 +48,7 @@ const types = new Object({
     headerDate: 'Datum odbijanja',
     linkPath: 'odbijeni-zahtjevi',
     lastColHeader: 'Vidi',
-    lastColIcon: <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>
+    lastColIcon: <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
   }
 })
 
@@ -174,11 +177,24 @@ class App extends Component {
                   <VPSPage
                     {...propsPage}>
                   </VPSPage>}/>
+            <Route exact path="/ui/umirovljeni-zahtjevi/:id"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}>
+                    <ViewSingleRequest {...props}/>
+                  </VPSPage>}/>
+            
             <Route exact path="/ui/odbijeni-zahtjevi"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
                     <RejectedRequests {...props}/>
+                  </VPSPage>}/>
+            <Route exact path="/ui/odbijeni-zahtjevi/:id"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}>
+                    <ViewSingleRequest {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/stanje-zahtjeva"
               render={(props) =>

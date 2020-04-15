@@ -7,9 +7,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheck,
   faCog,
-  faPencilAlt,
+  faCheckDouble,
   faSearch,
   faTimes,
+  faCouch,
   } from '@fortawesome/free-solid-svg-icons';
 import { DateFormatHR } from './Util';
 
@@ -95,14 +96,18 @@ export function ListRequests(typeRequest) {
           },
           {
             id: 'isApproved',
-            Header: 'Odobreno',
+            Header: 'Status',
             accessor: r => {
               if (r.approved === -1)
                 return (<FontAwesomeIcon className="text-warning" size="2x" icon={faCog}/>)
               else if (r.approved === 0)
                 return (<FontAwesomeIcon className="text-danger" size="2x" icon={faTimes}/>)
               else if (r.approved === 1)
-                return (<FontAwesomeIcon className="text-success" size="2x" icon={faCheck}/>)
+                return (<FontAwesomeIcon className="text-primary" size="2x" icon={faCheck}/>)
+              else if (r.approved === 2)
+                return (<FontAwesomeIcon className="text-success" size="2x" icon={faCheckDouble}/>)
+              else if (r.approved === 3)
+                return (<FontAwesomeIcon className="text-secondary" size="2x" icon={faCouch}/>)  
             },
             maxWidth: 90,
           },
@@ -151,9 +156,15 @@ export function ListRequests(typeRequest) {
             id: 'edit',
             Header: typeRequest.lastColHeader,
             accessor: r => {
+              let linkPath = typeRequest.linkPath
+              let lastColIcon = typeRequest.lastColIcon
+              if(r.approved === 3){
+                linkPath = typeRequest.linkPathRetired
+                lastColIcon = typeRequest.lastColIconRetired
+              }
               return (
-                <Link to={`/ui/${typeRequest.linkPath}/${r.id}`}>
-                  {typeRequest.lastColIcon}
+                <Link to={`/ui/${linkPath}/${r.id}`}>
+                  {lastColIcon}
                 </Link>
               )
             },

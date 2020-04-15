@@ -1,5 +1,6 @@
 from backend import serializers
 from backend import models
+from backend.api.email.notif import Notification
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -41,7 +42,7 @@ class RequestsViewset(viewsets.ModelViewSet):
 
     @action(detail=False)
     def approved(self, request):
-        requests = models.Request.objects.filter(approved=1).order_by('-approved_date')
+        requests = models.Request.objects.filter(approved__gte=1).order_by('-approved_date')
         serializer = serializers.RequestsListSerializer(requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -65,6 +66,17 @@ class RequestsViewset(viewsets.ModelViewSet):
         serializer = serializers.RequestsListSerializer(request)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, args, kwargs)
+        new_request = response.data
+        notification = Notification(new_request['id'])
+        notification.composeFreshRequestAdminEmail()
+        notification.composeFreshRequestUserEmail()
+        notification.composeFreshRequestHeadEmail()
+        
+        return response
+
 
 
 class UsersViewset(viewsets.ModelViewSet):
