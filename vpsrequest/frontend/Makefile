@@ -36,7 +36,13 @@ py-audit-view:
 	docker exec -t $(container_name) ./safety.sh
 
 js-audit-view:
-	npm audit
+	docker exec -t $(container_name) ./wrap_make.sh js-audit-view-container
 
 js-audit-fix:
+	docker exec -t $(container_name) ./wrap_make.sh js-audit-fix-container
+
+js-audit-view-container:
+	npm audit
+
+js-audit-fix-container:
 	npm audit fix
