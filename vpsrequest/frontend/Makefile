@@ -31,3 +31,12 @@ devel-container:
 prod-container:
 	rm -rf bundles/reactbundle/* ; \
 	node_modules/.bin/webpack --config webpack.config.js --progress --mode production
+
+py-audit-view:
+	docker exec -t $(container_name) ./safety.sh
+
+js-audit-view:
+	npm audit
+
+js-audit-fix:
+	npm audit fix
