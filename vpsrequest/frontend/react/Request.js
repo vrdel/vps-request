@@ -295,12 +295,44 @@ const SubmitChangeRequest = ({buttonLabel}) =>
 )
 
 
-const ProcessFields = () =>
+const ProcessFields = ({approved, handleState}) =>
 (
   <React.Fragment>
     <RequestHorizontalRule/>
     <h5 className="mb-3 mt-4">Obrada</h5>
     <Field name="vm_admin_remark" component={RowRequestField} label="Napomena:" labelFor="vmAdminRemark" fieldType="textarea" disabled={false}/>
+    <Row className="mb-3">
+      <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end align-items-center">
+        <Label
+          for='requestState'
+          className='mr-2'>
+          Stanje:
+        </Label>
+      </Col>
+      <Col md={{size: 7}}>
+        <FormGroup check>
+          <CustomInput className="font-weight-bold m-2" type="radio" name="radioRequestState"
+            checked={approved === -1}
+            id="requestStateProcessing"
+            onChange={() => handleState(-1)}
+            label="U obradi"/>
+        </FormGroup>
+        <FormGroup check>
+          <CustomInput className="font-weight-bold m-2" type="radio" name="radioRequestState"
+            checked={approved === 1}
+            id="requestStateEnabled"
+            onChange={() => handleState(1)}
+            label="Zahtjev odobren"/>
+        </FormGroup>
+        <FormGroup check>
+          <CustomInput className="font-weight-bold m-2" type="radio" name="radioRequestState"
+            checked={approved === 0}
+            id="requestStateDenied"
+            onChange={() => handleState(0)}
+            label="Zahtjev nije odobren"/>
+        </FormGroup>
+      </Col>
+    </Row>
   </React.Fragment>
 )
 
@@ -326,6 +358,7 @@ export class ProcessNewRequest extends Component
     this.backend = new Backend()
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
     this.initializeComponent = this.initializeComponent.bind(this)
+    this.handleRequestState = this.handleRequestState.bind(this)
   }
 
   async initializeComponent() {
@@ -337,6 +370,7 @@ export class ProcessNewRequest extends Component
       this.setState({
         userDetails: session.userdetails,
         requestDetails: requestData,
+        requestApproved: requestData.approved,
         loading: false
       })
     }
@@ -367,10 +401,15 @@ export class ProcessNewRequest extends Component
       return field
   }
 
-  render() {
-    const {loading, listVMOSes, userDetails, requestDetails} = this.state
+  handleRequestState(value) {
+    this.setState({requestApproved: value})
+  }
 
-    if (userDetails && requestDetails)
+  render() {
+    const {loading, listVMOSes, userDetails,
+      requestApproved, requestDetails} = this.state
+
+    if (userDetails && requestDetails && requestApproved !== undefined)
       var initValues = {
         location: '',
         first_name: requestDetails.user.first_name,
@@ -387,7 +426,7 @@ export class ProcessNewRequest extends Component
         vm_remark: requestDetails.vm_remark,
         vm_os: requestDetails.vm_os,
         vm_ip: requestDetails.vm_ip,
-        approved: requestDetails.approved,
+        approved: requestApproved,
         sys_firstname: requestDetails.sys_firstname,
         sys_aaieduhr: requestDetails.sys_aaieduhr,
         sys_lastname: requestDetails.sys_lastname,
@@ -414,8 +453,10 @@ export class ProcessNewRequest extends Component
           <Formik
             initialValues={initValues}
             onSubmit={(values, actions) => {
+              values.approved_date = new Date().toISOString()
               values.timestamp = new Date().toISOString()
               values.request_date = requestDetails.request_date
+              values.approved = requestApproved
               this.handleOnSubmit(values)
             }}
             render = {props => (
@@ -425,7 +466,7 @@ export class ProcessNewRequest extends Component
                 <VMFields listVMOSes={[requestDetails.vm_os]}/>
                 <SysAdminFields/>
                 <HeadFields/>
-                <ProcessFields/>
+                <ProcessFields approved={requestApproved} handleState={this.handleRequestState}/>
                 <SubmitChangeRequest buttonLabel='Spremi promjene'/>
               </Form>
             )}
