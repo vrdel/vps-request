@@ -295,6 +295,16 @@ const SubmitChangeRequest = ({buttonLabel}) =>
 )
 
 
+const ProcessFields = () =>
+(
+  <React.Fragment>
+    <RequestHorizontalRule/>
+    <h5 className="mb-3 mt-4">Obrada</h5>
+    <Field name="vm_admin_remark" component={RowRequestField} label="Napomena:" labelFor="vmAdminRemark" fieldType="textarea" disabled={false}/>
+  </React.Fragment>
+)
+
+
 export class ProcessNewRequest extends Component
 {
   constructor(props) {
@@ -337,17 +347,24 @@ export class ProcessNewRequest extends Component
     this.initializeComponent()
   }
 
-  handleOnSubmit(data) {
-    this.backend.changeObject(`${this.apiListRequests}/${this.requestID}/`, data)
-      .then(response => {
-        response.ok
-          ? NotifyOk({
-              msg: 'Zahtjev uspješno promijenjen',
-              title: `Uspješno - HTTP ${response.status}`})
-          : NotifyError({
-              msg: response.statusText,
-              title: `Greška - HTTP ${response.status}`})
-      })
+  async handleOnSubmit(data) {
+    const response = await this.backend.changeObject(`${this.apiListRequests}/${this.requestID}/`, data)
+
+    if (response.ok)
+      NotifyOk({
+        msg: 'Zahtjev uspješno promijenjen',
+        title: `Uspješno - HTTP ${response.status}`})
+    else
+      NotifyError({
+        msg: response.statusText,
+        title: `Greška - HTTP ${response.status}`})
+  }
+
+  emptyIfNull(field) {
+    if (field === null)
+      return ''
+    else
+      return field
   }
 
   render() {
@@ -365,7 +382,7 @@ export class ProcessNewRequest extends Component
         approvedby: requestDetails.approvedby,
         vm_fqdn: requestDetails.vm_fqdn,
         vm_purpose: requestDetails.vm_purpose,
-        vm_admin_remark: requestDetails.vm_admin_remark,
+        vm_admin_remark: this.emptyIfNull(requestDetails.vm_admin_remark),
         vm_reason: requestDetails.vm_reason,
         vm_remark: requestDetails.vm_remark,
         vm_os: requestDetails.vm_os,
@@ -408,6 +425,7 @@ export class ProcessNewRequest extends Component
                 <VMFields listVMOSes={[requestDetails.vm_os]}/>
                 <SysAdminFields/>
                 <HeadFields/>
+                <ProcessFields/>
                 <SubmitChangeRequest buttonLabel='Spremi promjene'/>
               </Form>
             )}
