@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Backend} from './DataManager';
-import { BaseView, LoadingAnim, RequestHorizontalRule, NotifyError, NotifyOk } from './UIElements';
+import { BaseView, LoadingAnim, RequestHorizontalRule, NotifyError, NotifyOk, ModalAreYouSure } from './UIElements';
 import { DateFormatHR } from './Util';
 import { Formik, Form } from 'formik';
 import { ContactUserFields, SysAdminFields, HeadFields, VMFields, RequestDateField, SubmitChangeRequest, StateFields } from './Request'
@@ -13,25 +13,30 @@ import {
     import { Redirect } from 'react-router-dom';
 
 
-const AvailableButtons = ({ status, setFieldValue, handleSubmit }) => {
+const AvailableButtons = ({ status, setFieldValue, handleSubmit, isOpenModal, toggle }) => {
   if(status === 1)
     return <SubmitChangeRequest buttonLabel='Izdaj VM'/>
   else if(status === 2)
     return(
       <React.Fragment>
+        <ModalAreYouSure
+          isOpen={isOpenModal}
+          toggle={toggle}
+          title="Mirovina"
+          msg="Želite li umiroviti server (naknadne promjene nisu više moguće)?"
+          onYes={() => {
+            setFieldValue('retire', true, false)
+            handleSubmit()
+          }} />
         <RequestHorizontalRule/>
         <Row className="mt-2 mb-4">
           <Col md={{offset: 4}}>
             <Button className="btn-lg" color="success" id="button-save" type="button" onClick={() => {
-              setFieldValue('retire', false, false)
               handleSubmit()
             }}>Spremi promjene</Button>
           </Col>
           <Col>
-            <Button className="btn-lg" color="secondary" id="button-retire" type="button" onClick={() => {
-              setFieldValue('retire', true, false)
-              handleSubmit()
-            }}>Umirovi</Button>
+            <Button className="btn-lg" color="secondary" id="button-retire" type="button" onClick={() => toggle()}>Umirovi</Button>
           </Col>
         </Row>
       </React.Fragment>
@@ -50,7 +55,8 @@ export class ApprovedRequestHandler extends Component
       requestDetails: undefined,
       requestApproved: undefined,
       userDetail: undefined,
-      fireRedirect: false
+      fireRedirect: false,
+      isModalOpen: false,
     }
 
     let {params} = this.props.match
@@ -61,6 +67,7 @@ export class ApprovedRequestHandler extends Component
     this.backend = new Backend()
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
     this.initializeComponent = this.initializeComponent.bind(this)
+    this.toggleAreYouSure = this.toggleAreYouSure.bind(this)
   }
 
   async initializeComponent() {
@@ -77,6 +84,11 @@ export class ApprovedRequestHandler extends Component
         loading: false,
       })
     }
+  }
+
+  toggleAreYouSure() {
+    this.setState(prevState =>
+      ({isModalOpen: !prevState.isModalOpen}));
   }
 
   componentDidMount() {
@@ -98,7 +110,7 @@ export class ApprovedRequestHandler extends Component
   }
 
   render() {
-    const {loading, listVMOSes, userDetails, requestDetails, fireRedirect} = this.state
+    const {loading, listVMOSes, userDetails, requestDetails, fireRedirect, isModalOpen} = this.state
 
     if (userDetails && requestDetails)
       var initValues = {
@@ -138,7 +150,10 @@ export class ApprovedRequestHandler extends Component
       return (<LoadingAnim />)
 
     else if (!loading && listVMOSes && initValues) {
-      return (
+      if(fireRedirect)
+        return <Redirect to='/ui/odobreni-zahtjevi'/>
+      else
+        return (
         <BaseView
           title='Obradi zahtjev'
           isHandleApprovedView={initValues.approved === 1}
@@ -165,11 +180,12 @@ export class ApprovedRequestHandler extends Component
                 <SysAdminFields/>
                 <HeadFields/>
                 <StateFields isSuperUser={userDetails.is_superuser}/>
-                <AvailableButtons status={initValues.approved} setFieldValue={setFieldValue} handleSubmit={handleSubmit}/>
-                {fireRedirect && (<Redirect to='/ui/odobreni-zahtjevi'/>)}
+                <AvailableButtons status={initValues.approved} setFieldValue={setFieldValue} handleSubmit={handleSubmit} 
+                  isOpenModal={isModalOpen} toggle={this.toggleAreYouSure}/>      
               </Form>
             )}
           />
+          
         </BaseView>
       )
     }
