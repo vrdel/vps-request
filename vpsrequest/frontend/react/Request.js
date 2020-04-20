@@ -295,7 +295,7 @@ const SubmitChangeRequest = ({buttonLabel}) =>
 )
 
 
-const ProcessFields = ({approved, handleState}) =>
+const ProcessFields = ({approved, handleState, handleMsgContact, handleMsgHead, stateMsgHead, stateMsgContact}) =>
 (
   <React.Fragment>
     <RequestHorizontalRule/>
@@ -334,6 +334,21 @@ const ProcessFields = ({approved, handleState}) =>
       </Col>
     </Row>
     <Field name="vm_reason" component={RowRequestField} label="Razlog:" labelFor="vmReason" fieldType="textarea"/>
+    <div className="m-5"></div>
+    <Row>
+      <Col md={{size: 8, offset: 2}} className="text-center">
+        <CustomInput className="m-2" type="checkbox" id="checkMsgContact" checked={stateMsgContact} onChange={handleMsgContact}
+          label="Pošalju poruku kontaktnoj osobi kod spremanja promjena"
+        />
+      </Col>
+    </Row>
+    <Row>
+      <Col md={{size: 8, offset: 2}} className="text-center">
+        <CustomInput className="m-2" type="checkbox" id="checkMsgHead" checked={stateMsgHead} onChange={handleMsgHead}
+          label="Pošalju poruku čelniku ustanove kod spremanja promjena"
+        />
+      </Col>
+    </Row>
   </React.Fragment>
 )
 
@@ -349,6 +364,8 @@ export class ProcessNewRequest extends Component
       requestDetails: undefined,
       requestApproved: undefined,
       userDetail: undefined,
+      sendMsgHead: false,
+      sendMsgContact: false,
     }
 
     let {params} = this.props.match
@@ -360,6 +377,8 @@ export class ProcessNewRequest extends Component
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
     this.initializeComponent = this.initializeComponent.bind(this)
     this.handleRequestState = this.handleRequestState.bind(this)
+    this.handleMsgHead = this.handleMsgHead.bind(this)
+    this.handleMsgContact = this.handleMsgContact.bind(this)
   }
 
   async initializeComponent() {
@@ -406,9 +425,21 @@ export class ProcessNewRequest extends Component
     this.setState({requestApproved: value})
   }
 
+  handleMsgHead() {
+    this.setState(prevState => ({
+      sendMsgHead: !prevState.sendMsgHead
+    }))
+  }
+
+  handleMsgContact() {
+    this.setState(prevState => ({
+      sendMsgContact: !prevState.sendMsgContact
+    }))
+  }
+
   render() {
-    const {loading, listVMOSes, userDetails,
-      requestApproved, requestDetails} = this.state
+    const {loading, listVMOSes, userDetails, requestApproved, requestDetails,
+      sendMsgHead, sendMsgContact} = this.state
 
     if (userDetails && requestDetails && requestApproved !== undefined)
       var initValues = {
@@ -458,6 +489,8 @@ export class ProcessNewRequest extends Component
               values.timestamp = new Date().toISOString()
               values.request_date = requestDetails.request_date
               values.approved = requestApproved
+              values.sendMsgHead = sendMsgHead
+              values.sendMsgContact = sendMsgContact
               this.handleOnSubmit(values)
             }}
             render = {props => (
@@ -467,7 +500,13 @@ export class ProcessNewRequest extends Component
                 <VMFields listVMOSes={[requestDetails.vm_os]}/>
                 <SysAdminFields/>
                 <HeadFields/>
-                <ProcessFields approved={requestApproved} handleState={this.handleRequestState}/>
+                <ProcessFields approved={requestApproved}
+                  handleState={this.handleRequestState}
+                  handleMsgContact={this.handleMsgContact}
+                  handleMsgHead={this.handleMsgHead}
+                  stateMsgHead={sendMsgHead}
+                  stateMsgContact={sendMsgContact}
+                />
                 <SubmitChangeRequest buttonLabel='Spremi promjene'/>
               </Form>
             )}
