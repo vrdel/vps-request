@@ -1,6 +1,6 @@
 from backend import serializers
 from backend import models
-from backend.api.email.notif import Notification
+from backend.email.notif import Notification
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -68,7 +68,8 @@ class RequestsViewset(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def partial_update(self, request, pk=None):
-        # TODO: send emails
+        sendMsgContact = request.data.pop('sendMsgContact')
+        sendMsgHead = request.data.pop('sendMsgHead')
         return super().partial_update(request, pk)
 
     def create(self, request):

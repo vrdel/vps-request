@@ -30,6 +30,6 @@ docker run --net vrdel-net --ip 172.18.0.10 --privileged --rm --name vps-request
 -v $WORKDIR/bin/vpsreq-db:$VENV/bin/vpsreq-db \
 -v $WORKDIR/bin/vpsreq-manage:$VENV/bin/vpsreq-manage \
 -v $WORKDIR/bin/vpsreq-genseckey:$VENV/bin/vpsreq-genseckey \
--v $WORKDIR/etc/vpsrequest.conf:$VENV/etc/vpsrequest/vpsrequest.conf \
+-v $WORKDIR/etc/:$VENV/etc/vpsrequest/ \
 $IMG \
 /bin/bash

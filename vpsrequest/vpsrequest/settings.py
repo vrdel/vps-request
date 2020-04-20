@@ -63,7 +63,7 @@ try:
     REJECTED_REQ_SUBJECT = config.get('EMAIL', 'RejectedRequestSubject')
     CHANGED_REQ_TEMPLATE = config.get('EMAIL', 'ChangedRequestTemplate')
     CHANGED_REQ_SUBJECT = config.get('EMAIL', 'ChangedRequestSubject')
-     
+
 
 except NoSectionError as e:
     print(e)
