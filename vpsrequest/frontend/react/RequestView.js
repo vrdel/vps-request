@@ -15,6 +15,7 @@ import {
     Col,
     Row,
     } from 'reactstrap';
+import { CONFIG } from './Config'
 
 
 const RequestRow = ({...props}) =>
@@ -31,7 +32,7 @@ const RequestRow = ({...props}) =>
         </Col>
     </Row>
 )
- 
+
 const RetiredRequestDetails = ({values}) =>
 {
     if(values.approved === 3)
@@ -58,8 +59,8 @@ const RequestDetails = ({values}) =>
         reqStatus = <FontAwesomeIcon className="text-success" size="2x" icon={faCheckDouble}/>
     else if (values.approved === 3)
         reqStatus = <FontAwesomeIcon className="text-secondary" size="2x" icon={faCouch}/>
-    
-    return (            
+
+    return (
         <React.Fragment>
             <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
             <RequestRow label="Ime:" value={values.first_name}/>
@@ -75,7 +76,7 @@ const RequestDetails = ({values}) =>
             <RequestRow label="Operacijski sustav:" value={values.vm_os}/>
             <RequestRow label="Napomena:" value={values.vm_remark}/>
             <RequestHorizontalRule/>
-            
+
             <h5 className="mb-3 mt-4">Sistem-inženjer virtualnog poslužitelja</h5>
             <RequestRow label="Ime:" value={values.sys_firstname}/>
             <RequestRow label="Prezime:" value={values.sys_lastname}/>
@@ -116,7 +117,7 @@ export class ViewSingleRequest extends Component
     let {params} = this.props.match
     this.requestID = params.id
 
-    this.apiListRequests = '/api/v1/internal/requests'
+    this.apiListRequests = CONFIG.listReqUrl
 
     this.backend = new Backend()
     this.initializeComponent = this.initializeComponent.bind(this)

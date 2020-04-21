@@ -1,13 +1,14 @@
 import Cookies from 'universal-cookie';
-import Home from './Home';
 import Login from './Login';
-import MyRequests from './MyRequests';
+import MyRequests from './RequestsMy';
 import NotFound from './NotFound';
 import React, { Component } from 'react';
 import ReactNotification from 'react-notifications-component'
 import { Backend } from './DataManager';
-import { ListRequests } from './ListRequests';
-import { NewRequest, ProcessNewRequest, ChangeRequest } from './Request';
+import { ListRequests } from './RequestsList';
+import { NewRequest } from './RequestNew';
+import { ProcessNewRequest } from './RequestProcessNew';
+import { ChangeRequest } from './RequestChange';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import { VPSPage } from './UIElements';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,14 +18,14 @@ import {
   } from '@fortawesome/free-solid-svg-icons';
 import './App.css';
 import 'react-notifications-component/dist/theme.css'
-import { ViewSingleRequest } from './ViewRequest';
-
+import { ViewSingleRequest } from './RequestView';
 import { ApprovedRequestHandler } from './RequestHandler'
+import { CONFIG } from './Config'
 
 
 const types = new Object({
   approved: {
-    api: '/api/v1/internal/requests/approved',
+    api: `${CONFIG.listReqUrl}/approved`,
     dateFieldSearch: 'approved_date',
     title: 'Odobreni zahtjevi',
     headerDate: 'Datum odobravanja',
@@ -35,7 +36,7 @@ const types = new Object({
     lastColIconRetired: <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
   },
   fresh: {
-    api: '/api/v1/internal/requests/new',
+    api: `${CONFIG.listReqUrl}/new`,
     dateFieldSearch: 'request_date',
     title: 'Novi zahtjevi',
     headerDate: 'Datum podnošenja',
@@ -44,7 +45,7 @@ const types = new Object({
     lastColIcon: <FontAwesomeIcon className="text-primary" size="2x" icon={faSearch}/>
   },
   rejected: {
-    api: '/api/v1/internal/requests/rejected',
+    api: `${CONFIG.listReqUrl}/rejected`,
     dateFieldSearch: 'approved_date',
     title: 'Odbijeni zahtjevi',
     headerDate: 'Datum odbijanja',
