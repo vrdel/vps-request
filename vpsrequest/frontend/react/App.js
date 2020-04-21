@@ -9,7 +9,7 @@ import { ListRequests } from './RequestsList';
 import { NewRequest } from './RequestNew';
 import { ProcessNewRequest } from './RequestProcessNew';
 import { ChangeRequest } from './RequestChange';
-import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
 import { VPSPage } from './UIElements';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -60,6 +60,40 @@ const FreshRequests = ListRequests(types.fresh)
 const RejectedRequests = ListRequests(types.rejected)
 
 
+const RedirectAfterLogin = ({userDetails, ...props}) => {
+  let last = ''
+  let before_last = ''
+  let destination = ''
+  let referrer = localStorage.getItem('referrer')
+
+  if (userDetails.is_staff || userDetails.is_superuser)
+    destination = "/ui/novi-zahtjevi"
+  else
+    destination = "/ui/novi-zahtjev"
+
+  if (referrer) {
+    let urls = JSON.parse(referrer)
+
+    if (urls.length === 1) {
+      last = urls.pop()
+      before_last = last
+    }
+    else {
+      last = urls.pop()
+      before_last = urls.pop()
+    }
+  }
+
+  if (last !== before_last)
+    destination = before_last
+
+  localStorage.removeItem('referrer')
+  console.log(destination)
+
+  return <Redirect to={destination}/>
+}
+
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -79,21 +113,13 @@ class App extends Component {
     this.initalizeState = this.initalizeState.bind(this);
   }
 
-  onLogin(session, history) {
-    let goToURL = '/ui/novi-zahtjevi'
-
-    if (!session.userdetails.is_staff)
-      goToURL = '/ui/novi-zahtjev'
-
-    this.initalizeState(session).then(
-      setTimeout(() => {
-        history.push(goToURL);
-      }, 50
-    ))
+  onLogin(session) {
+    this.initalizeState(session)
   }
 
   onLogout() {
-    this.setState({isSessionActive: false});
+    this.setState({isSessionActive: false})
+    localStorage.removeItem('referrer')
   }
 
   toggleAreYouSure() {
@@ -117,8 +143,22 @@ class App extends Component {
     }
   }
 
+  getAndSetReferrer() {
+    let referrer = localStorage.getItem('referrer')
+    let stackUrls = undefined
+
+    if (referrer)
+      stackUrls = JSON.parse(referrer)
+    else
+      stackUrls = new Array()
+
+    stackUrls.push(window.location.pathname)
+    localStorage.setItem('referrer', JSON.stringify(stackUrls))
+  }
+
   componentDidMount() {
     this.initalizeState()
+    this.getAndSetReferrer()
   }
 
   render() {
@@ -151,6 +191,10 @@ class App extends Component {
         <BrowserRouter>
           <ReactNotification />
           <Switch>
+            <Route exact path="/ui/prijava"
+              render={(props) => <RedirectAfterLogin userDetails={userDetails} {...props} />
+              }
+            />
             <Route exact path="/ui/novi-zahtjev"
               render={(props) =>
                   <VPSPage

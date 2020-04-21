@@ -17,8 +17,11 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include
 from django.views.generic import TemplateView
+from django.http import HttpResponseRedirect
+
 
 urlpatterns = [
+    re_path(r'^$', lambda x: HttpResponseRedirect('/ui/prijava')),
     re_path(r'^ui', TemplateView.as_view(template_name='index.html')),
     re_path(r'^saml2/', include(('djangosaml2.urls', 'backend'), namespace='saml2')),
     re_path(r'^api/v1/internal/', include('backend.api.internal.urls', namespace='internalapi')),

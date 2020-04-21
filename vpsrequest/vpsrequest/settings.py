@@ -225,7 +225,7 @@ WEBPACK_LOADER = {
 }
 
 # load SAML settings
-LOGIN_REDIRECT_URL = '/ui/novi-zahtjevi'
+LOGIN_REDIRECT_URL = '/ui/prijava'
 LOGOUT_REDIRECT_URL = '/ui/prijava'
 SAML_CONFIG_LOADER = 'backend.saml2.config.get_saml_config'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True

@@ -40,7 +40,7 @@ class Login extends Component {
     const session = await this.backend.doUserPassLogin(values.username, values.password)
 
     if (session.active)
-      this.AppOnLogin(session, this.props.history)
+      this.AppOnLogin(session)
     else
       this.setState({loginFailedVisible: true});
   }
