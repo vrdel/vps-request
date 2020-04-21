@@ -70,7 +70,17 @@ class RequestsViewset(viewsets.ModelViewSet):
     def partial_update(self, request, pk=None):
         sendMsgContact = request.data.pop('sendMsgContact')
         sendMsgHead = request.data.pop('sendMsgHead')
-        return super().partial_update(request, pk)
+
+        ret = super().partial_update(request, pk)
+        request = ret.data
+
+        notification = Notification(request['id'])
+        if sendMsgContact:
+            notification.composeFreshRequestUserEmail()
+        if sendMsgHead:
+            notification.composeFreshRequestHeadEmail()
+
+        return ret
 
     def create(self, request):
         response = super().create(request)
