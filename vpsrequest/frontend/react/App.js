@@ -19,6 +19,8 @@ import './App.css';
 import 'react-notifications-component/dist/theme.css'
 import { ViewSingleRequest } from './ViewRequest';
 
+import { ApprovedRequestHandler } from './RequestHandler'
+
 
 const types = new Object({
   approved: {
@@ -176,6 +178,7 @@ class App extends Component {
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
+                    <ApprovedRequestHandler {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/umirovljeni-zahtjevi/:id"
               render={(props) =>
