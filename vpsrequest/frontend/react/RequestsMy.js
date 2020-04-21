@@ -4,6 +4,7 @@ import { BaseView, LoadingAnim } from './UIElements';
 import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { CONFIG } from './Config'
 import {
   faCog,
   faPencilAlt,
@@ -25,10 +26,10 @@ export class MyRequests extends Component
       requests: null
     }
 
-    this.apiListRequests = '/api/v1/internal/requests/mine'
+    this.apiListRequests = `${CONFIG.listReqUrl}/mine`
 
-    this.location = props.location;
-    this.backend = new Backend();
+    this.location = props.location
+    this.backend = new Backend()
     this.initializeComponent = this.initializeComponent.bind(this)
   }
 

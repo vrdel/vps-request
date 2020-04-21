@@ -6,6 +6,7 @@ import {
   NotifyError,
 } from './UIElements.js';
 import { Formik, Form } from 'formik';
+import { Backend } from './DataManager';
 import {
   ContactUserFields,
   HeadFields,
@@ -15,6 +16,8 @@ import {
   SysAdminFields,
   VMFields,
 } from './RequestElements.js';
+import { CONFIG } from './Config'
+import { DateFormatHR } from './Util';
 
 
 export class ChangeRequest extends Component
@@ -33,8 +36,8 @@ export class ChangeRequest extends Component
     let {params} = this.props.match
     this.requestID = params.id
 
-    this.apiListVMOSes = '/api/v1/internal/vmos/'
-    this.apiListRequests = '/api/v1/internal/requests'
+    this.apiListVMOSes = CONFIG.vmosUrl
+    this.apiListRequests = CONFIG.listReqUrl
 
     this.backend = new Backend()
     this.handleOnSubmit = this.handleOnSubmit.bind(this)

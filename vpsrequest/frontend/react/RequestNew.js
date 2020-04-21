@@ -15,6 +15,7 @@ import {
   HeadFields,
   SubmitNewRequest
 } from './RequestElements.js';
+import { CONFIG } from './Config'
 
 
 export class NewRequest extends Component
@@ -30,8 +31,8 @@ export class NewRequest extends Component
       userDetail: undefined,
     }
 
-    this.apiListVMOSes = '/api/v1/internal/vmos/'
-    this.apiListRequests = '/api/v1/internal/requests/'
+    this.apiListVMOSes = CONFIG.vmosUrl
+    this.apiListRequests = CONFIG.listReqUrl
 
     this.backend = new Backend()
     this.handleAcceptConditions = this.handleAcceptConditions.bind(this)

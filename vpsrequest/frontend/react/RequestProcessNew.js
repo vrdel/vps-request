@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Formik, Form } from 'formik';
 import { DateFormatHR } from './Util';
 import { Backend } from './DataManager';
+import { CONFIG } from './Config'
 import {
   BaseView,
   LoadingAnim,
@@ -37,7 +38,7 @@ export class ProcessNewRequest extends Component
     let {params} = this.props.match
     this.requestID = params.id
 
-    this.apiListRequests = '/api/v1/internal/requests'
+    this.apiListRequests = CONFIG.listReqUrl
 
     this.backend = new Backend()
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
