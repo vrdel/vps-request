@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Formik, Form } from 'formik';
-import { DateFormatHR } from './Util';
+import { DateFormatHR, EmptyIfNull } from './Util';
 import { Backend } from './DataManager';
 import { CONFIG } from './Config'
 import {
@@ -81,13 +81,6 @@ export class ProcessNewRequest extends Component
         title: `Greška - HTTP ${response.status}`})
   }
 
-  emptyIfNull(field) {
-    if (field === null)
-      return ''
-    else
-      return field
-  }
-
   handleRequestState(value) {
     this.setState({requestApproved: value})
   }
@@ -118,11 +111,11 @@ export class ProcessNewRequest extends Component
         email: requestDetails.user.email,
         aaieduhr: requestDetails.user.aaieduhr,
         approvedby: requestDetails.approvedby,
-        vm_fqdn: requestDetails.vm_fqdn,
-        vm_purpose: requestDetails.vm_purpose,
-        vm_admin_remark: this.emptyIfNull(requestDetails.vm_admin_remark),
-        vm_reason: requestDetails.vm_reason,
-        vm_remark: requestDetails.vm_remark,
+        vm_fqdn: EmptyIfNull(requestDetails.vm_fqdn),
+        vm_purpose: EmptyIfNull(requestDetails.vm_purpose),
+        vm_admin_remark: EmptyIfNull(requestDetails.vm_admin_remark),
+        vm_reason: EmptyIfNull(requestDetails.vm_reason),
+        vm_remark: EmptyIfNull(requestDetails.vm_remark),
         vm_os: requestDetails.vm_os,
         vm_ip: requestDetails.vm_ip,
         approved: requestApproved,
@@ -156,6 +149,7 @@ export class ProcessNewRequest extends Component
               values.timestamp = new Date().toISOString()
               values.request_date = requestDetails.request_date
               values.approved = requestApproved
+              values.approvedby = `${userDetails.first_name} ${userDetails.last_name}`
               values.sendMsgHead = sendMsgHead
               values.sendMsgContact = sendMsgContact
               this.handleOnSubmit(values)

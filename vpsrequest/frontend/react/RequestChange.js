@@ -17,7 +17,7 @@ import {
   VMFields,
 } from './RequestElements.js';
 import { CONFIG } from './Config'
-import { DateFormatHR } from './Util';
+import { DateFormatHR, EmptyIfNull } from './Util';
 
 
 export class ChangeRequest extends Component
@@ -96,14 +96,15 @@ export class ChangeRequest extends Component
         role: userDetails.role,
         email: userDetails.email,
         aaieduhr: userDetails.aaieduhr,
-        approvedby: requestDetails.approvedby,
+        approvedby: EmptyIfNull(requestDetails.approvedby),
         vm_fqdn: requestDetails.vm_fqdn,
         vm_purpose: requestDetails.vm_purpose,
-        vm_admin_remark: requestDetails.vm_admin_remark,
-        vm_reason: requestDetails.vm_reason,
+        vm_admin_remark: EmptyIfNull(requestDetails.vm_admin_remark),
+        vm_reason: EmptyIfNull(requestDetails.vm_reason),
         vm_remark: requestDetails.vm_remark,
         vm_os: requestDetails.vm_os,
-        vm_ip: requestDetails.vm_ip,
+        vm_host:  EmptyIfNull(requestDetails.vm_host),
+        vm_ip: EmptyIfNull(requestDetails.vm_ip),
         approved: requestApproved,
         sys_firstname: requestDetails.sys_firstname,
         sys_aaieduhr: requestDetails.sys_aaieduhr,

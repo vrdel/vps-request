@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import { Backend } from './DataManager';
+import React from 'react';
 import {
   Alert,
   Button,
@@ -10,16 +9,11 @@ import {
   Row,
 } from 'reactstrap';
 import {
-  BaseView,
   DropDown,
   InfoLink,
-  LoadingAnim,
-  NotifyOk,
-  NotifyError,
   RequestHorizontalRule,
 } from './UIElements.js';
-import { DateFormatHR } from './Util';
-import { Formik, Form, Field } from 'formik';
+import { Field } from 'formik';
 import './Request.css';
 
 
