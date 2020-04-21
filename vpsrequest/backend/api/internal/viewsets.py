@@ -68,8 +68,8 @@ class RequestsViewset(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def partial_update(self, request, pk=None):
-        sendMsgContact = request.data.pop('sendMsgContact')
-        sendMsgHead = request.data.pop('sendMsgHead')
+        sendMsgContact = request.data.pop('sendMsgContact', False)
+        sendMsgHead = request.data.pop('sendMsgHead', False)
 
         ret = super().partial_update(request, pk)
         request = ret.data
