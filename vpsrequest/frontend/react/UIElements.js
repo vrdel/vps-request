@@ -332,7 +332,7 @@ export const BaseView = ({title='', isChangeView=false, isHandleNewView=false, i
 
   if (isHandleApprovedView)
     bgTitle = "bg-primary text-white"
-  
+
   return (
     <React.Fragment>
       {

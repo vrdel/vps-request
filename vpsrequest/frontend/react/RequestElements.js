@@ -191,17 +191,17 @@ export const RequestDateField = () =>
 )
 
 
-export const StateFields = ({isSuperUser}) =>
+export const StateFields = ({readOnly}) =>
 (
   <React.Fragment>
     <RequestHorizontalRule/>
     <h5 className="mb-3 mt-4">Stanje</h5>
-    <Field name="timestamp" component={RowRequestField} label="Datum promjene:" labelFor="timestamp" fieldType="text" disabled={true} plain={true}/>
-    <Field name="vm_reason" component={RowRequestField} label="Poruka:" labelFor="vmReason" fieldType="textarea" disabled={true}/>
-    <Field name="approvedby" component={RowRequestField} label="Obradio:" labelFor="approvedBy" fieldType="text" disabled={true} plain={true}/>
-    <Field name="vm_admin_remark" component={RowRequestField} label="Napomena:" labelFor="vmAdminRemark" fieldType="textarea" disabled={true}/>
-    <Field name="vm_ip" component={RowRequestField} label="IP adresa:" labelFor="vmIp" fieldType="text" disabled={true}/>
-    <Field name="vm_host" component={RowRequestField} label="Zabbix hostname:" labelFor="vmHost" fieldType="text" disabled={true}/>
+    <Field name="timestamp" component={RowRequestField} label="Datum promjene:" labelFor="timestamp" fieldType="text" disabled={readOnly} plain={true}/>
+    <Field name="vm_reason" component={RowRequestField} label="Poruka:" labelFor="vmReason" fieldType="textarea" disabled={readOnly}/>
+    <Field name="approvedby" component={RowRequestField} label="Obradio:" labelFor="approvedBy" fieldType="text" disabled={readOnly} plain={true}/>
+    <Field name="vm_admin_remark" component={RowRequestField} label="Napomena:" labelFor="vmAdminRemark" fieldType="textarea" disabled={readOnly}/>
+    <Field name="vm_ip" component={RowRequestField} label="IP adresa:" labelFor="vmIp" fieldType="text" disabled={readOnly}/>
+    <Field name="vm_host" component={RowRequestField} label="Zabbix hostname:" labelFor="vmHost" fieldType="text" disabled={readOnly}/>
   </React.Fragment>
 )
 

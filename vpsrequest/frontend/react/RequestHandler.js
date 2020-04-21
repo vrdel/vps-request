@@ -194,7 +194,7 @@ export class ApprovedRequestHandler extends Component
                 <VMFields listVMOSes={listVMOSes}/>
                 <SysAdminFields/>
                 <HeadFields/>
-                <StateFields isSuperUser={userDetails.is_superuser}/>
+                <StateFields readOnly={false}/>
                 <AvailableButtons status={initValues.approved} setFieldValue={setFieldValue} handleSubmit={handleSubmit}
                   isOpenModal={isModalOpen} toggle={this.toggleAreYouSure}/>
               </Form>

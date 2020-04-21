@@ -144,7 +144,7 @@ export class ChangeRequest extends Component
                 <VMFields listVMOSes={listVMOSes}/>
                 <SysAdminFields/>
                 <HeadFields/>
-                <StateFields isSuperUser={userDetails.is_superuser}/>
+                <StateFields readOnly={true}/>
                 <SubmitChangeRequest buttonLabel='Promijeni zahtjev'/>
               </Form>
             )}
