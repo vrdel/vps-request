@@ -15,7 +15,7 @@ import {
 import { DateFormatHR } from './Util';
 
 import 'react-table/react-table.css';
-import './MyRequests.css';
+import './RequestsMy.css';
 
 
 export function ListRequests(typeRequest) {
@@ -107,7 +107,7 @@ export function ListRequests(typeRequest) {
               else if (r.approved === 2)
                 return (<FontAwesomeIcon className="text-success" size="2x" icon={faCheckDouble}/>)
               else if (r.approved === 3)
-                return (<FontAwesomeIcon className="text-secondary" size="2x" icon={faCouch}/>)  
+                return (<FontAwesomeIcon className="text-secondary" size="2x" icon={faCouch}/>)
             },
             maxWidth: 90,
           },

@@ -1,13 +1,14 @@
 import Cookies from 'universal-cookie';
-import Home from './Home';
 import Login from './Login';
-import MyRequests from './MyRequests';
+import MyRequests from './RequestsMy';
 import NotFound from './NotFound';
 import React, { Component } from 'react';
 import ReactNotification from 'react-notifications-component'
 import { Backend } from './DataManager';
-import { ListRequests } from './ListRequests';
-import { NewRequest, ProcessNewRequest, ChangeRequest } from './Request';
+import { ListRequests } from './RequestsList';
+import { NewRequest } from './RequestNew';
+import { ProcessNewRequest } from './RequestProcessNew';
+import { ChangeRequest } from './RequestChange';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import { VPSPage } from './UIElements';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,8 +18,7 @@ import {
   } from '@fortawesome/free-solid-svg-icons';
 import './App.css';
 import 'react-notifications-component/dist/theme.css'
-import { ViewSingleRequest } from './ViewRequest';
-
+import { ViewSingleRequest } from './RequestView';
 import { ApprovedRequestHandler } from './RequestHandler'
 
 
