@@ -1,17 +1,16 @@
 Poštovani/a,
 
-Razmotrili smo Vaš zahtjev za virtualnim poslužiteljem u cloudu Srca:
+Zaprimili smo Vaš zahtjev za virtualnim poslužiteljem u usluzi Virtual Private Server:
 
 http://vps.srce.hr/zahtjev/ui/stanje-zahtjeva/__ID__
 
-te donijeli odluku da se Vaš zahtjev prihvaća.
-
-Za daljnje tehnicke detalje kontaktirat cemo vas e-mailom na adresu
-podnositelja zahtjeva (__USER_EMAIL__).
+U roku od 5 radnih dana dobit ćete e-mailom na adrese kontaktne osobe
+zahtjeva (__USER_EMAIL__) i sistem-inženjera (__SYS_EMAIL__) obavijest o našoj
+odluci.
 
 S poštovanjem
 
---
+-- 
 Cloud usluga za trajne potrebe ustanova
 
 Sveučilište u Zagrebu, Sveučilišni računski centar (Srce),

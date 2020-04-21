@@ -1,16 +1,17 @@
 Poštovani/a,
 
-Došlo je od promjene zahtjeva za virtualnim poslužiteljem.
+Razmotrili smo Vaš zahtjev za virtualnim poslužiteljem u cloudu Srca:
 
 http://vps.srce.hr/zahtjev/ui/stanje-zahtjeva/__ID__
 
-Promjene:
+te donijeli odluku da se Vaš zahtjev prihvaća.
 
-{changes}
+Za daljnje tehnicke detalje kontaktirat cemo vas e-mailom na adresu
+podnositelja zahtjeva (__USER_EMAIL__).
 
 S poštovanjem
 
---
+-- 
 Cloud usluga za trajne potrebe ustanova
 
 Sveučilište u Zagrebu, Sveučilišni računski centar (Srce),

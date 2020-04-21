@@ -4,12 +4,15 @@ from email.header import Header
 from dateutil.parser import parse
 import smtplib
 import socket
-import os, re, datetime
+import re
 from django.conf import settings
 
-class Notification(object):
+TESTING_TO = 'dvrcic@srce.hr'
+TESTING_CC = 'dvrcic@srce.hr'
 
-    def __init__(self, requestID, logger = None):
+
+class Notification(object):
+    def __init__(self, requestID, logger=None):
         self.logger = logger
         self.sender = settings.ADMIN_MAIL
 
@@ -17,20 +20,18 @@ class Notification(object):
         serializer = serializers.RequestsListSerializer(reqData, many=False)
         self.request = serializer.data
 
-
     def composeFreshRequestAdminEmail(self):
         email_text = None
-        to = 'hsute@srce.hr'
-        cc = 'hrvoje.sute@srce.hr'
+        to = TESTING_TO
+        cc = TESTING_CC
         email_text = self.prepareMail(settings.ADMIN_FRESH_TEMPLATE, settings.ADMIN_FRESH_SUBJECT, to, cc)
 
         if email_text:
             self.send(email_text, to)
 
-
     def composeFreshRequestUserEmail(self):
         email_text = None
-        to = 'hsute@srce.hr'
+        to = TESTING_TO
         email_text = self.prepareMail(settings.USER_FRESH_TEMPLATE, settings.USER_FRESH_SUBJECT, to)
 
         if email_text:
@@ -38,18 +39,17 @@ class Notification(object):
 
     def composeFreshRequestHeadEmail(self):
         email_text = None
-        to = 'hsute@srce.hr'
+        to = TESTING_TO
         email_text = self.prepareMail(settings.HEAD_FRESH_TEMPLATE, settings.HEAD_FRESH_SUBJECT, to)
 
         if email_text:
             self.send(email_text, to)
 
-
-    def prepareMail(self, template, subject, to, cc = None):
+    def prepareMail(self, template, subject, to, cc=None):
         body = None
         with open(template, mode='r', encoding='utf-8') as fp:
             body = fp.readlines()
-        
+
         if body:
             body = ''.join(body)
             placeholders = re.findall(r"(__[A-Z_]+__)", body)
@@ -71,12 +71,11 @@ class Notification(object):
             if cc:
                 m['Cc'] = cc
             m['Subject'] = Header(subject, 'utf-8')
-            
-            return m.as_string()    
+
+            return m.as_string()
 
         return None
 
-    
     def send(self, email_text, to):
         if not email_text:
             self.logger.error('Could not construct an email')
@@ -85,12 +84,10 @@ class Notification(object):
             try:
                 s = smtplib.SMTP(settings.SRCE_SMTP, 25, timeout=120)
                 s.ehlo()
-                s.sendmail(self.sender, ['hsute@srce.hr', self.sender], email_text)
+                s.sendmail(self.sender, [TESTING_TO, self.sender], email_text)
                 s.quit()
 
                 return True
 
             except (socket.error, smtplib.SMTPException) as e:
                 self.logger.error(repr(e))
-
-        

@@ -34,6 +34,7 @@ COPY \
      entrypoint.sh\
      mysql_setup.sh \
      requirements.txt \
+     safety.sh \
      wrap_make.sh \
      /home/user/
 COPY 60-allifaces.cnf /etc/mysql/mariadb.conf.d/

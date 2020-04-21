@@ -295,7 +295,65 @@ const SubmitChangeRequest = ({buttonLabel}) =>
 )
 
 
-export class HandleNewRequest extends Component
+const ProcessFields = ({approved, handleState, handleMsgContact, handleMsgHead, stateMsgHead, stateMsgContact}) =>
+(
+  <React.Fragment>
+    <RequestHorizontalRule/>
+    <h5 className="mb-3 mt-4">Obrada</h5>
+    <Field name="vm_admin_remark" component={RowRequestField} label="Napomena:" labelFor="vmAdminRemark" fieldType="textarea" disabled={false}/>
+    <Row className="mb-3">
+      <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end align-items-center">
+        <Label
+          for='requestState'
+          className='mr-2'>
+          Stanje:
+        </Label>
+      </Col>
+      <Col md={{size: 7}}>
+        <FormGroup check>
+          <CustomInput className="font-weight-bold m-2" type="radio" name="radioRequestState"
+            checked={approved === -1}
+            id="requestStateProcessing"
+            onChange={() => handleState(-1)}
+            label="U obradi"/>
+        </FormGroup>
+        <FormGroup check>
+          <CustomInput className="font-weight-bold m-2" type="radio" name="radioRequestState"
+            checked={approved === 1}
+            id="requestStateEnabled"
+            onChange={() => handleState(1)}
+            label="Zahtjev odobren"/>
+        </FormGroup>
+        <FormGroup check>
+          <CustomInput className="font-weight-bold m-2" type="radio" name="radioRequestState"
+            checked={approved === 0}
+            id="requestStateDenied"
+            onChange={() => handleState(0)}
+            label="Zahtjev nije odobren"/>
+        </FormGroup>
+      </Col>
+    </Row>
+    <Field name="vm_reason" component={RowRequestField} label="Razlog:" labelFor="vmReason" fieldType="textarea"/>
+    <div className="m-5"></div>
+    <Row>
+      <Col md={{size: 8, offset: 2}} className="text-center">
+        <CustomInput className="m-2" type="checkbox" id="checkMsgContact" checked={stateMsgContact} onChange={handleMsgContact}
+          label="Pošalju poruku kontaktnoj osobi kod spremanja promjena"
+        />
+      </Col>
+    </Row>
+    <Row>
+      <Col md={{size: 8, offset: 2}} className="text-center">
+        <CustomInput className="m-2" type="checkbox" id="checkMsgHead" checked={stateMsgHead} onChange={handleMsgHead}
+          label="Pošalju poruku čelniku ustanove kod spremanja promjena"
+        />
+      </Col>
+    </Row>
+  </React.Fragment>
+)
+
+
+export class ProcessNewRequest extends Component
 {
   constructor(props) {
     super(props)
@@ -306,6 +364,8 @@ export class HandleNewRequest extends Component
       requestDetails: undefined,
       requestApproved: undefined,
       userDetail: undefined,
+      sendMsgHead: false,
+      sendMsgContact: false,
     }
 
     let {params} = this.props.match
@@ -316,6 +376,9 @@ export class HandleNewRequest extends Component
     this.backend = new Backend()
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
     this.initializeComponent = this.initializeComponent.bind(this)
+    this.handleRequestState = this.handleRequestState.bind(this)
+    this.handleMsgHead = this.handleMsgHead.bind(this)
+    this.handleMsgContact = this.handleMsgContact.bind(this)
   }
 
   async initializeComponent() {
@@ -327,6 +390,7 @@ export class HandleNewRequest extends Component
       this.setState({
         userDetails: session.userdetails,
         requestDetails: requestData,
+        requestApproved: requestData.approved,
         loading: false
       })
     }
@@ -337,23 +401,47 @@ export class HandleNewRequest extends Component
     this.initializeComponent()
   }
 
-  handleOnSubmit(data) {
-    this.backend.changeObject(`${this.apiListRequests}/${this.requestID}/`, data)
-      .then(response => {
-        response.ok
-          ? NotifyOk({
-              msg: 'Zahtjev uspješno promijenjen',
-              title: `Uspješno - HTTP ${response.status}`})
-          : NotifyError({
-              msg: response.statusText,
-              title: `Greška - HTTP ${response.status}`})
-      })
+  async handleOnSubmit(data) {
+    const response = await this.backend.changeObject(`${this.apiListRequests}/${this.requestID}/`, data)
+
+    if (response.ok)
+      NotifyOk({
+        msg: 'Zahtjev uspješno promijenjen',
+        title: `Uspješno - HTTP ${response.status}`})
+    else
+      NotifyError({
+        msg: response.statusText,
+        title: `Greška - HTTP ${response.status}`})
+  }
+
+  emptyIfNull(field) {
+    if (field === null)
+      return ''
+    else
+      return field
+  }
+
+  handleRequestState(value) {
+    this.setState({requestApproved: value})
+  }
+
+  handleMsgHead() {
+    this.setState(prevState => ({
+      sendMsgHead: !prevState.sendMsgHead
+    }))
+  }
+
+  handleMsgContact() {
+    this.setState(prevState => ({
+      sendMsgContact: !prevState.sendMsgContact
+    }))
   }
 
   render() {
-    const {loading, listVMOSes, userDetails, requestDetails} = this.state
+    const {loading, listVMOSes, userDetails, requestApproved, requestDetails,
+      sendMsgHead, sendMsgContact} = this.state
 
-    if (userDetails && requestDetails)
+    if (userDetails && requestDetails && requestApproved !== undefined)
       var initValues = {
         location: '',
         first_name: requestDetails.user.first_name,
@@ -365,12 +453,12 @@ export class HandleNewRequest extends Component
         approvedby: requestDetails.approvedby,
         vm_fqdn: requestDetails.vm_fqdn,
         vm_purpose: requestDetails.vm_purpose,
-        vm_admin_remark: requestDetails.vm_admin_remark,
+        vm_admin_remark: this.emptyIfNull(requestDetails.vm_admin_remark),
         vm_reason: requestDetails.vm_reason,
         vm_remark: requestDetails.vm_remark,
         vm_os: requestDetails.vm_os,
         vm_ip: requestDetails.vm_ip,
-        approved: requestDetails.approved,
+        approved: requestApproved,
         sys_firstname: requestDetails.sys_firstname,
         sys_aaieduhr: requestDetails.sys_aaieduhr,
         sys_lastname: requestDetails.sys_lastname,
@@ -397,8 +485,12 @@ export class HandleNewRequest extends Component
           <Formik
             initialValues={initValues}
             onSubmit={(values, actions) => {
+              values.approved_date = new Date().toISOString()
               values.timestamp = new Date().toISOString()
               values.request_date = requestDetails.request_date
+              values.approved = requestApproved
+              values.sendMsgHead = sendMsgHead
+              values.sendMsgContact = sendMsgContact
               this.handleOnSubmit(values)
             }}
             render = {props => (
@@ -408,6 +500,13 @@ export class HandleNewRequest extends Component
                 <VMFields listVMOSes={[requestDetails.vm_os]}/>
                 <SysAdminFields/>
                 <HeadFields/>
+                <ProcessFields approved={requestApproved}
+                  handleState={this.handleRequestState}
+                  handleMsgContact={this.handleMsgContact}
+                  handleMsgHead={this.handleMsgHead}
+                  stateMsgHead={sendMsgHead}
+                  stateMsgContact={sendMsgContact}
+                />
                 <SubmitChangeRequest buttonLabel='Spremi promjene'/>
               </Form>
             )}
