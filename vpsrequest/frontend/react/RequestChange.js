@@ -118,7 +118,8 @@ export class ChangeRequest extends Component
         head_role: requestDetails.head_role,
         head_email: requestDetails.head_email,
         request_date: DateFormatHR(requestDetails.request_date),
-        timestamp: DateFormatHR(requestDetails.timestamp)
+        timestamp: DateFormatHR(requestDetails.timestamp ?
+          requestDetails.timestamp : requestDetails.request_date)
       }
 
     if (loading)
