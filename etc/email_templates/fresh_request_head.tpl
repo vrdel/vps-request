@@ -52,7 +52,7 @@ Ustanova: __HEAD_INSTITUTION__
 Funkcija: __HEAD_ROLE__
 E-mail: __HEAD_EMAIL__
 
----
+-- 
 Tim usluge
 Virtual Private Server (VPS)
 http://www.srce.hr/vps

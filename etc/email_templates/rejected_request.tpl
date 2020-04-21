@@ -8,7 +8,7 @@ te donijeli odluku da se Vaš zahtjev odbija.
 
 S poštovanjem
 
---
+-- 
 Cloud usluga za trajne potrebe ustanova
 
 Sveučilište u Zagrebu, Sveučilišni računski centar (Srce),

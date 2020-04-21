@@ -11,7 +11,7 @@ podnositelja zahtjeva (__USER_EMAIL__).
 
 S poštovanjem
 
---
+-- 
 Cloud usluga za trajne potrebe ustanova
 
 Sveučilište u Zagrebu, Sveučilišni računski centar (Srce),
