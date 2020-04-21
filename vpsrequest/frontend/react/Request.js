@@ -24,7 +24,7 @@ import './Request.css';
 
 
 
-const RowRequestDropDown = ({field, ...propsRest}) =>
+export const RowRequestDropDown = ({field, ...propsRest}) =>
 (
   <Row className="form-group align-items-center">
     <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
@@ -52,7 +52,7 @@ const RowRequestDropDown = ({field, ...propsRest}) =>
 )
 
 
-const RowRequestField = ({field, ...propsRest}) =>
+export const RowRequestField = ({field, ...propsRest}) =>
 (
   <Row className="form-group align-items-center">
     <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
@@ -109,7 +109,7 @@ const RowRequestField = ({field, ...propsRest}) =>
 )
 
 
-const ContactUserFields = () =>
+export const ContactUserFields = () =>
 (
   <React.Fragment>
     <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
@@ -122,7 +122,7 @@ const ContactUserFields = () =>
 )
 
 
-const VMFields = ({listVMOSes}) => {
+export const VMFields = ({listVMOSes}) => {
   let infoVMOS = "* Čelnik ustanove odgovara za posjedovanje i aktiviranje valjane licence za gore odabrani operacijski sustav."
   let infoPurpose = "* Potrebno je detaljno obrazložiti namjenu virtualnog poslužitelja. Zahtjev može biti odbijen ukoliko Srce procijeni da navedena namjena virtualnog poslužitelja nije primjerena namjeni usluge, ili ne predstavlja trajne potrebe ustanove za poslužiteljskim kapacitetima.";
 
@@ -144,7 +144,7 @@ const VMFields = ({listVMOSes}) => {
 }
 
 
-const SysAdminFields = () => {
+export const SysAdminFields = () => {
   let infoAAI = "* Sistem-inženjer jedini ima pravo pristupa na XenOrchestra sučelje dostupno na adresi "
   return (
     <React.Fragment>
@@ -166,7 +166,7 @@ const SysAdminFields = () => {
 }
 
 
-const HeadFields = () =>
+export const HeadFields = () =>
 (
   <React.Fragment>
     <RequestHorizontalRule/>
@@ -180,7 +180,7 @@ const HeadFields = () =>
 )
 
 
-const RequestDateField = () =>
+export const RequestDateField = () =>
 (
   <React.Fragment>
     <div className="mt-5">
@@ -191,32 +191,17 @@ const RequestDateField = () =>
 )
 
 
-const StateFields = ({isApprovedRequest}) =>
+export const StateFields = ({isSuperUser}) =>
 (
   <React.Fragment>
     <RequestHorizontalRule/>
     <h5 className="mb-3 mt-4">Stanje</h5>
     <Field name="timestamp" component={RowRequestField} label="Datum promjene:" labelFor="timestamp" fieldType="text" disabled={true}/>
-    <Row className="mb-3">
-      <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
-        <Label
-          for='requestApproved'
-          check
-          className="mr-2">
-          Zahtjev odobren:
-        </Label>
-      </Col>
-      <Col md={{size: 1}} className="text-left">
-        <CustomInput type="checkbox" id="requestApproved"
-          checked={isApprovedRequest} onChange={undefined}
-          disabled={true}
-        />
-      </Col>
-    </Row>
     <Field name="approvedby" component={RowRequestField} label="Obradio:" labelFor="approvedBy" fieldType="text" disabled={true}/>
-    <Field name="vm_reason" component={RowRequestField} label="Poruka:" labelFor="vmReason" fieldType="textarea" disabled={true}/>
-    <Field name="vm_admin_remark" component={RowRequestField} label="Napomena:" labelFor="vmAdminRemark" fieldType="textarea" disabled={true}/>
-    <Field name="vm_ip" component={RowRequestField} label="IP adresa:" labelFor="vmIp" fieldType="text" disabled={true}/>
+    <Field name="vm_reason" component={RowRequestField} label="Poruka:" labelFor="vmReason" fieldType="textarea" disabled={!isSuperUser}/>
+    <Field name="vm_admin_remark" component={RowRequestField} label="Napomena:" labelFor="vmAdminRemark" fieldType="textarea" disabled={!isSuperUser}/>
+    <Field name="vm_ip" component={RowRequestField} label="IP adresa:" labelFor="vmIp" fieldType="text" disabled={!isSuperUser}/>
+    <Field name="vm_host" component={RowRequestField} label="Zabbix hostname:" labelFor="vmHost" fieldType="text" disabled={!isSuperUser}/>
   </React.Fragment>
 )
 
@@ -282,7 +267,7 @@ const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dismissAler
 )
 
 
-const SubmitChangeRequest = ({buttonLabel}) =>
+export const SubmitChangeRequest = ({buttonLabel}) =>
 (
   <React.Fragment>
     <RequestHorizontalRule/>
@@ -643,7 +628,7 @@ export class ChangeRequest extends Component
                 <VMFields listVMOSes={listVMOSes}/>
                 <SysAdminFields/>
                 <HeadFields/>
-                <StateFields isApprovedRequest={requestApproved}/>
+                <StateFields isSuperUser={userDetails.is_superuser}/>
                 <SubmitChangeRequest buttonLabel='Promijeni zahtjev'/>
               </Form>
             )}

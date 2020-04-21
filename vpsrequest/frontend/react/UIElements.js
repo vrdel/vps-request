@@ -319,7 +319,7 @@ export const NotifyError = ({msg='', title='', callback=undefined}) => {
 }
 
 
-export const BaseView = ({title='', isChangeView=false, isHandleNewView=false,
+export const BaseView = ({title='', isChangeView=false, isHandleNewView=false, isHandleApprovedView = false, isIssuedVMView = false,
     modal=false, toggle=undefined, state=undefined, children}) =>
 {
   let bgTitle = "bg-light"
@@ -327,9 +327,12 @@ export const BaseView = ({title='', isChangeView=false, isHandleNewView=false,
   if (isChangeView)
     bgTitle = "bg-danger text-white"
 
-  if (isHandleNewView)
+  if (isHandleNewView || isIssuedVMView)
     bgTitle = "bg-success text-white"
 
+  if (isHandleApprovedView)
+    bgTitle = "bg-primary text-white"
+  
   return (
     <React.Fragment>
       {
