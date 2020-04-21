@@ -47,7 +47,7 @@ export const RowRequestDropDown = ({field, ...propsRest}) =>
 
 export const RowRequestField = ({field, ...propsRest}) =>
 (
-  <Row className="form-group align-items-center">
+  <Row className={`${propsRest.plain ? "from-group mb-2" : "form-group align-items-center"}`}>
     <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
       <Label
         for={propsRest.labelFor}
@@ -76,13 +76,20 @@ export const RowRequestField = ({field, ...propsRest}) =>
         </div>
         :
         <div>
-          <input
-            id={propsRest.labelFor}
-            type={propsRest.fieldType}
-            className="form-control"
-            required={propsRest.required ? true : false}
-            disabled={propsRest.disabled ? true : false}
-            {...field}/>
+          {
+            propsRest.plain ?
+              <span>
+                {field.value}
+              </span>
+            :
+            <input
+              id={propsRest.labelFor}
+              type={propsRest.fieldType}
+              className="form-control"
+              required={propsRest.required ? true : false}
+              disabled={propsRest.disabled ? true : false}
+              {...field}/>
+          }
           {
             propsRest.infoMsg ?
               <div id="vpsreq-field-infomsg">
@@ -177,7 +184,7 @@ export const RequestDateField = () =>
 (
   <React.Fragment>
     <div className="mt-5">
-      <Field name="request_date" component={RowRequestField} label="Datum podnošenja:" labelFor="dateRequest" fieldType="text" disabled={true} required={true}/>
+      <Field name="request_date" component={RowRequestField} label="Datum podnošenja:" labelFor="dateRequest" fieldType="text" disabled={true} required={true} plain={true}/>
     </div>
     <RequestHorizontalRule/>
   </React.Fragment>
@@ -189,9 +196,9 @@ export const StateFields = ({isSuperUser}) =>
   <React.Fragment>
     <RequestHorizontalRule/>
     <h5 className="mb-3 mt-4">Stanje</h5>
-    <Field name="timestamp" component={RowRequestField} label="Datum promjene:" labelFor="timestamp" fieldType="text" disabled={true}/>
-    <Field name="approvedby" component={RowRequestField} label="Obradio:" labelFor="approvedBy" fieldType="text" disabled={true}/>
+    <Field name="timestamp" component={RowRequestField} label="Datum promjene:" labelFor="timestamp" fieldType="text" disabled={true} plain={true}/>
     <Field name="vm_reason" component={RowRequestField} label="Poruka:" labelFor="vmReason" fieldType="textarea" disabled={!isSuperUser}/>
+    <Field name="approvedby" component={RowRequestField} label="Obradio:" labelFor="approvedBy" fieldType="text" disabled={true} plain={true}/>
     <Field name="vm_admin_remark" component={RowRequestField} label="Napomena:" labelFor="vmAdminRemark" fieldType="textarea" disabled={!isSuperUser}/>
     <Field name="vm_ip" component={RowRequestField} label="IP adresa:" labelFor="vmIp" fieldType="text" disabled={!isSuperUser}/>
     <Field name="vm_host" component={RowRequestField} label="Zabbix hostname:" labelFor="vmHost" fieldType="text" disabled={!isSuperUser}/>
