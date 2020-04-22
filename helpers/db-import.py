@@ -46,6 +46,10 @@ def main():
         ts = request.pop('ts')
         request['timestamp'] = ts
         request['id'] = num_request
+        if request['vm_ready'] == 1:
+            request['approved'] = 2
+        if request['vm_dismissed'] is not None:
+            request['approved'] = 3
         for (k, v) in request.items():
             if type(v) is str or type(v) is unicode:
                 request[k] = v.replace('\r\n', '\n')
