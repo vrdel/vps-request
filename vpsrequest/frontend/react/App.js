@@ -42,7 +42,7 @@ const types = new Object({
     headerDate: 'Datum podnošenja',
     linkPath: 'novi-zahtjevi',
     lastColHeader: 'Vidi',
-    lastColIcon: <FontAwesomeIcon className="text-primary" size="2x" icon={faSearch}/>
+    lastColIcon: <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
   },
   rejected: {
     api: `${CONFIG.listReqUrl}/rejected`,

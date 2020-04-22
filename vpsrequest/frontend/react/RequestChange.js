@@ -29,7 +29,6 @@ export class ChangeRequest extends Component
       loading: false,
       listVMOSes: [],
       requestDetails: undefined,
-      requestApproved: undefined,
       userDetail: undefined,
     }
 
@@ -59,7 +58,6 @@ export class ChangeRequest extends Component
         listVMOSes: vmOSes.map(e => e.vm_os),
         userDetails: session.userdetails,
         requestDetails: requestData,
-        requestApproved: this.isRequestApproved(requestData.approved),
         loading: false
       })
     }
@@ -84,8 +82,7 @@ export class ChangeRequest extends Component
   }
 
   render() {
-    const {loading, listVMOSes, userDetails,
-      requestApproved, requestDetails} = this.state
+    const {loading, listVMOSes, userDetails, requestDetails} = this.state
 
     if (userDetails && requestDetails)
       var initValues = {
@@ -105,7 +102,7 @@ export class ChangeRequest extends Component
         vm_os: requestDetails.vm_os,
         vm_host:  EmptyIfNull(requestDetails.vm_host),
         vm_ip: EmptyIfNull(requestDetails.vm_ip),
-        approved: requestApproved,
+        approved: requestDetails.approved,
         sys_firstname: requestDetails.sys_firstname,
         sys_aaieduhr: requestDetails.sys_aaieduhr,
         sys_lastname: requestDetails.sys_lastname,
