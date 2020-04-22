@@ -97,7 +97,6 @@ class Request(models.Model):
         blank=True,
         null=True
     )
-    vm_ready = models.IntegerField('VM Ready', blank=True, null=True)
     vm_dismissed = models.DateTimeField('VM Dismissed', blank=True, null=True)
     sys_firstname = models.CharField(
         'Sys Firstname',
