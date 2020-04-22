@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
 import { Backend } from './DataManager';
-import { BaseView, LoadingAnim, FilterField } from './UIElements';
+import { BaseView, LoadingAnim, FilterField, Status } from './UIElements';
 import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faCheck,
-  faCog,
-  faCheckDouble,
   faSearch,
-  faTimes,
-  faCouch,
-  } from '@fortawesome/free-solid-svg-icons';
+} from '@fortawesome/free-solid-svg-icons';
 import { DateFormatHR } from './Util';
 
 import 'react-table/react-table.css';
@@ -98,16 +93,7 @@ export function ListRequests(typeRequest) {
             id: 'isApproved',
             Header: 'Status',
             accessor: r => {
-              if (r.approved === -1)
-                return (<FontAwesomeIcon className="text-warning" size="2x" icon={faCog}/>)
-              else if (r.approved === 0)
-                return (<FontAwesomeIcon className="text-danger" size="2x" icon={faTimes}/>)
-              else if (r.approved === 1)
-                return (<FontAwesomeIcon className="text-primary" size="2x" icon={faCheck}/>)
-              else if (r.approved === 2)
-                return (<FontAwesomeIcon className="text-success" size="2x" icon={faCheckDouble}/>)
-              else if (r.approved === 3)
-                return (<FontAwesomeIcon className="text-secondary" size="2x" icon={faCouch}/>)
+              return (Status[r.approved])
             },
             maxWidth: 90,
           },
@@ -159,8 +145,8 @@ export function ListRequests(typeRequest) {
               let linkPath = typeRequest.linkPath
               let lastColIcon = typeRequest.lastColIcon
               if(r.approved === 3){
-                linkPath = typeRequest.linkPathRetired
-                lastColIcon = typeRequest.lastColIconRetired
+                linkPath = typeRequest.linkPathReadOnly
+                lastColIcon = typeRequest.lastColIconReadOnly
               }
               return (
                 <Link to={`/ui/${linkPath}/${r.id}`}>

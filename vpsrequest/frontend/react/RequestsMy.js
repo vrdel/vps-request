@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import { Backend } from './DataManager';
-import { BaseView, LoadingAnim } from './UIElements';
+import { BaseView, LoadingAnim, Status } from './UIElements';
 import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CONFIG } from './Config'
 import {
-  faCog,
   faPencilAlt,
-  faTimes,
-  faCheck
+  faSearch
   } from '@fortawesome/free-solid-svg-icons';
 import { DateFormatHR } from './Util'
 
@@ -68,14 +66,9 @@ export class MyRequests extends Component
         },
         {
           id: 'isApproved',
-          Header: 'Odobreno',
+          Header: 'Status',
           accessor: r => {
-            if (r.approved === -1)
-              return (<FontAwesomeIcon className="text-warning" size="2x" icon={faCog}/>)
-            else if (r.approved === 0)
-              return (<FontAwesomeIcon className="text-danger" size="2x" icon={faTimes}/>)
-            else if (r.approved === 1)
-              return (<FontAwesomeIcon className="text-success" size="2x" icon={faCheck}/>)
+              return (Status[r.approved])
           },
           maxWidth: 90,
         },
@@ -102,11 +95,19 @@ export class MyRequests extends Component
         },
         {
           id: 'edit',
-          Header: 'Uredi',
+          Header: 'Akcija',
           accessor: r => {
+            let url = '/ui/pregled-zahtjeva/' + r.id
+            let icon = <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
+
+            if(r.approved === -1){
+              url = '/ui/stanje-zahtjeva/' + r.id
+              icon = <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>
+            }
+
             return (
-              <Link to={`/ui/stanje-zahtjeva/${r.id}`}>
-                <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>
+              <Link to={url}>
+                {icon}
               </Link>
             )
           },

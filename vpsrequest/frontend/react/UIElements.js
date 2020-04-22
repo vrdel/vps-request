@@ -18,6 +18,7 @@ import {
   NavbarBrand,
   Spinner,
   Row,
+  UncontrolledTooltip
 } from 'reactstrap';
 import { Link, withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -28,7 +29,13 @@ import {
   faFileSignature,
   faHandshake,
   faThumbsDown,
-  faBatteryHalf} from '@fortawesome/free-solid-svg-icons';
+  faBatteryHalf,
+  faCog,
+  faTimes,
+  faCheckDouble,
+  faCheck,
+  faCouch
+} from '@fortawesome/free-solid-svg-icons';
 import { store } from 'react-notifications-component';
 import { Field } from 'formik';
 import Autocomplete from 'react-autocomplete';
@@ -437,3 +444,31 @@ export const DropdownFilterComponent = ({value, onChange, data}) => (
     }
   </select>
 )
+
+export const Status = {
+  '-1': <div>
+          <FontAwesomeIcon className="text-warning" size="2x" icon={faCog} id='Novi'/>
+          <UncontrolledTooltip placement="right" target="Novi">Novi</UncontrolledTooltip>
+        </div>,
+  
+  '0': <div>
+        <FontAwesomeIcon className="text-danger" size="2x" icon={faTimes} id='Odbijen'/>
+        <UncontrolledTooltip placement="right" target="Odbijen">Odbijen</UncontrolledTooltip>
+      </div>,
+  
+  '1': <div>
+        <FontAwesomeIcon className="text-primary" size="2x" icon={faCheck} id='Odobren'/>
+        <UncontrolledTooltip placement="right" target="Odobren">Odobren</UncontrolledTooltip>
+      </div>,
+  
+  '2': <div>
+        <FontAwesomeIcon className="text-success" size="2x" icon={faCheckDouble} id='IzdatVM'/>
+        <UncontrolledTooltip placement="right" target="IzdatVM">Izdat VM</UncontrolledTooltip>
+      </div>,
+  
+  '3': <div>
+        <FontAwesomeIcon className="text-secondary" size="2x" icon={faCouch} id='Umirovljen'/>
+        <UncontrolledTooltip placement="right" target="Umirovljen">Umirovljen</UncontrolledTooltip>
+      </div>,
+
+}

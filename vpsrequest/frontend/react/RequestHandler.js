@@ -157,6 +157,7 @@ export class ApprovedRequestHandler extends Component
           <Formik
             initialValues={initValues}
             onSubmit={(values, actions) => {
+              let oldState = values.approved
               values.approved = 2
               values.timestamp = new Date().toISOString()
               values.request_date = requestDetails.request_date
@@ -167,12 +168,11 @@ export class ApprovedRequestHandler extends Component
               }
               delete values.retire
 
-              if (values.approved === 3) {
-                let callback = () => this.history.push('/ui/odobreni-zahtjevi')
-                this.handleOnSubmit(values, callback)
-              }
-              else
-                this.handleOnSubmit(values)
+              let callback = undefined
+              if (values.approved !== oldState) {
+                callback = () => this.history.push('/ui/odobreni-zahtjevi')
+              }    
+              this.handleOnSubmit(values, callback)
             }}
             render = {({setFieldValue, handleSubmit}) => (
               <Form onSubmit={handleSubmit}>

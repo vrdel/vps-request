@@ -1,16 +1,8 @@
 
 import React, { Component } from 'react';
 import {Backend} from './DataManager';
-import { BaseView, LoadingAnim, RequestHorizontalRule } from './UIElements';
+import { BaseView, LoadingAnim, RequestHorizontalRule, Status } from './UIElements';
 import { DateFormatHR } from './Util';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faCheck,
-    faCog,
-    faTimes,
-    faCouch,
-    faCheckDouble
-    } from '@fortawesome/free-solid-svg-icons';
 import {
     Col,
     Row,
@@ -48,17 +40,12 @@ const RetiredRequestDetails = ({values}) =>
     return null
 }
 
-const RequestDetails = ({values}) =>
+const RequestDetails = ({values, userDetails}) =>
 {
-    let reqStatus = <FontAwesomeIcon className="text-warning" size="2x" icon={faCog}/>
-    if (values.approved === 0)
-        reqStatus = <FontAwesomeIcon className="text-danger" size="2x" icon={faTimes}/>
-    else if (values.approved === 1)
-            reqStatus = <FontAwesomeIcon className="text-primary" size="2x" icon={faCheck}/>
-    else if (values.approved === 2)
-        reqStatus = <FontAwesomeIcon className="text-success" size="2x" icon={faCheckDouble}/>
-    else if (values.approved === 3)
-        reqStatus = <FontAwesomeIcon className="text-secondary" size="2x" icon={faCouch}/>
+    let reqStatus = Status[values.approved]
+    let adminRemark = null
+    if(userDetails.is_superuser)
+      adminRemark = <RequestRow label="Napomena administratora:" value={values.vm_admin_remark}/>
 
     return (
         <React.Fragment>
@@ -94,9 +81,10 @@ const RequestDetails = ({values}) =>
             <RequestRow label="Email:" value={values.head_email}/>
             <RequestHorizontalRule/>
 
+            {adminRemark}
             <RequestRow label="Status:" value={reqStatus}/>
             <RequestRow label="Datum podnošenja:" value={values.request_date}/>
-            <RequestRow label="Napomena administratora:" value={values.vm_admin_remark}/>
+            
             <RetiredRequestDetails values={values}/>
         </React.Fragment>
     )
@@ -186,7 +174,7 @@ export class ViewSingleRequest extends Component
       return (
         <BaseView
           title='Detalji zahtjeva'>
-              <RequestDetails values={initValues}/>
+              <RequestDetails values={initValues} userDetails={userDetails}/>
         </BaseView>
       )
     }
