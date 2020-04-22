@@ -24,39 +24,7 @@ import {
   Row,
   Button
 } from 'reactstrap';
-import { Redirect } from 'react-router-dom';
 import { DateFormatHR } from './Util';
-
-
-const AvailableButtons = ({ status, setFieldValue, handleSubmit, isOpenModal, toggle }) => {
-  if(status === 1)
-    return <SubmitChangeRequest buttonLabel='Izdaj VM'/>
-  else if(status === 2)
-    return(
-      <React.Fragment>
-        <ModalAreYouSure
-          isOpen={isOpenModal}
-          toggle={toggle}
-          title="Mirovina"
-          msg="Želite li umiroviti server (naknadne promjene nisu više moguće)?"
-          onYes={() => {
-            setFieldValue('retire', true, false)
-            handleSubmit()
-          }} />
-        <RequestHorizontalRule/>
-        <Row className="mt-2 mb-4">
-          <Col md={{offset: 4}}>
-            <Button className="btn-lg" color="success" id="button-save" type="button" onClick={() => {
-              handleSubmit()
-            }}>Spremi promjene</Button>
-          </Col>
-          <Col>
-            <Button className="btn-lg" color="secondary" id="button-retire" type="button" onClick={() => toggle()}>Umirovi</Button>
-          </Col>
-        </Row>
-      </React.Fragment>
-    )
-}
 
 
 export class ApprovedRequestHandler extends Component
@@ -70,12 +38,15 @@ export class ApprovedRequestHandler extends Component
       requestDetails: undefined,
       requestApproved: undefined,
       userDetail: undefined,
-      fireRedirect: false,
-      isModalOpen: false,
+      modalTitle: undefined,
+      modalMsg: undefined,
+      modalFunc: undefined,
+      areYouSureModal: false,
     }
 
     let {params} = this.props.match
     this.requestID = params.id
+    this.history = props.history
 
     this.apiListRequests = CONFIG.listReqUrl
 
@@ -101,9 +72,18 @@ export class ApprovedRequestHandler extends Component
     }
   }
 
+  toggleAreYouSureSetModal(msg, title, onYes) {
+    this.setState(prevState =>
+      ({areYouSureModal: !prevState.areYouSureModal,
+        modalFunc: onYes,
+        modalMsg: msg,
+        modalTitle: title,
+      }));
+  }
+
   toggleAreYouSure() {
     this.setState(prevState =>
-      ({isModalOpen: !prevState.isModalOpen}));
+      ({areYouSureModal: !prevState.areYouSureModal}));
   }
 
   componentDidMount() {
@@ -111,21 +91,22 @@ export class ApprovedRequestHandler extends Component
     this.initializeComponent()
   }
 
-  handleOnSubmit(data) {
-    this.backend.changeObject(`${this.apiListRequests}/${this.requestID}/`, data)
-      .then(response => {
-        response.ok
-          ? NotifyOk({
-              msg: 'Zahtjev uspješno promijenjen',
-              title: `Uspješno - HTTP ${response.status}`})
-          : NotifyError({
-              msg: response.statusText,
-              title: `Greška - HTTP ${response.status}`})
-      })
+  async handleOnSubmit(data, callback=undefined) {
+    let response = await this.backend.changeObject(`${this.apiListRequests}/${this.requestID}/`, data)
+
+    if (response.ok)
+      NotifyOk({
+        msg: 'Zahtjev uspješno promijenjen',
+        title: `Uspješno - HTTP ${response.status}`,
+        callback: callback})
+    else
+      NotifyError({
+        msg: response.statusText,
+        title: `Greška - HTTP ${response.status}`})
   }
 
   render() {
-    const {loading, listVMOSes, userDetails, requestDetails, fireRedirect, isModalOpen} = this.state
+    const {loading, listVMOSes, userDetails, requestDetails} = this.state
 
     if (userDetails && requestDetails)
       var initValues = {
@@ -165,12 +146,12 @@ export class ApprovedRequestHandler extends Component
       return (<LoadingAnim />)
 
     else if (!loading && listVMOSes && initValues) {
-      if(fireRedirect)
-        return <Redirect to='/ui/odobreni-zahtjevi'/>
-      else
-        return (
+      return (
         <BaseView
           title='Obradi zahtjev'
+          modal={true}
+          toggle={this.toggleAreYouSure}
+          state={this.state}
           isHandleApprovedView={initValues.approved === 1}
           isIssuedVMView={initValues.approved !== 1}>
           <Formik
@@ -179,13 +160,19 @@ export class ApprovedRequestHandler extends Component
               values.approved = 2
               values.timestamp = new Date().toISOString()
               values.request_date = requestDetails.request_date
-              if(values.retire){
+
+              if (values.retire) {
                 values.approved = 3
                 values.vm_dismissed = values.timestamp
               }
               delete values.retire
-              this.handleOnSubmit(values)
-              this.setState({ fireRedirect: true })
+
+              if (values.approved === 3) {
+                let callback = () => this.history.push('/ui/odobreni-zahtjevi')
+                this.handleOnSubmit(values, callback)
+              }
+              else
+                this.handleOnSubmit(values)
             }}
             render = {({setFieldValue, handleSubmit}) => (
               <Form onSubmit={handleSubmit}>
@@ -195,8 +182,40 @@ export class ApprovedRequestHandler extends Component
                 <SysAdminFields/>
                 <HeadFields/>
                 <StateFields readOnly={false}/>
-                <AvailableButtons status={initValues.approved} setFieldValue={setFieldValue} handleSubmit={handleSubmit}
-                  isOpenModal={isModalOpen} toggle={this.toggleAreYouSure}/>
+                {
+                  initValues.approved === 1 ?
+                    <SubmitChangeRequest buttonLabel='Izdaj VM'/>
+                  :
+                  initValues.approved === 2 ?
+                    <React.Fragment>
+                      <RequestHorizontalRule/>
+                      <Row className="mt-2 mb-4">
+                        <Col md={{offset: 4}}>
+                          <Button className="btn-lg" color="success"
+                            id="button-save" type="button"
+                            onClick={() => handleSubmit()}>
+                              Spremi promjene
+                          </Button>
+                        </Col>
+                        <Col>
+                          <Button className="btn-lg" color="secondary"
+                            id="button-retire" type="button"
+                            onClick={() => {
+                              this.toggleAreYouSureSetModal(
+                                "Želite li umiroviti server (naknadne promjene nisu više moguće)?",
+                                "Mirovina",
+                                () => {
+                                  setFieldValue('retire', true, false)
+                                  handleSubmit()
+                                })}}>
+                            Umirovi
+                          </Button>
+                        </Col>
+                      </Row>
+                    </React.Fragment>
+                  :
+                    null
+                }
               </Form>
             )}
           />

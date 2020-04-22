@@ -70,17 +70,17 @@ export class ChangeRequest extends Component
     this.initializeComponent()
   }
 
-  handleOnSubmit(data) {
-    this.backend.changeObject(`${this.apiListRequests}/${this.requestID}/`, data)
-      .then(response => {
-        response.ok
-          ? NotifyOk({
-              msg: 'Zahtjev uspješno promijenjen',
-              title: `Uspješno - HTTP ${response.status}`})
-          : NotifyError({
-              msg: response.statusText,
-              title: `Greška - HTTP ${response.status}`})
-      })
+  async handleOnSubmit(data) {
+    let response = await this.backend.changeObject(`${this.apiListRequests}/${this.requestID}/`, data)
+
+    if (response.ok)
+      NotifyOk({
+        msg: 'Zahtjev uspješno promijenjen',
+        title: `Uspješno - HTTP ${response.status}`})
+    else
+      NotifyError({
+        msg: response.statusText,
+        title: `Greška - HTTP ${response.status}`})
   }
 
   render() {

@@ -192,9 +192,11 @@ class App extends Component {
           <ReactNotification />
           <Switch>
             <Route exact path="/ui/prijava"
-              render={(props) => <RedirectAfterLogin userDetails={userDetails} {...props} />
-              }
-            />
+              render={(props) =>
+                  <RedirectAfterLogin
+                    userDetails={userDetails}
+                    {...props}
+                  />}/>
             <Route exact path="/ui/novi-zahtjev"
               render={(props) =>
                   <VPSPage

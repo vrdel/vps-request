@@ -319,8 +319,9 @@ export const NotifyError = ({msg='', title='', callback=undefined}) => {
 }
 
 
-export const BaseView = ({title='', isChangeView=false, isHandleNewView=false, isHandleApprovedView = false, isIssuedVMView = false,
-    modal=false, toggle=undefined, state=undefined, children}) =>
+export const BaseView = ({title='', isChangeView=false, isHandleNewView=false,
+  isHandleApprovedView = false, isIssuedVMView = false, modal=false,
+  toggle=undefined, state=undefined, children}) =>
 {
   let bgTitle = "bg-light"
 
