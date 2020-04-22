@@ -50,6 +50,7 @@ def main():
             request['approved'] = 2
         if request['vm_dismissed'] is not None:
             request['approved'] = 3
+        request.pop('vm_ready')
         for (k, v) in request.items():
             if type(v) is str or type(v) is unicode:
                 request[k] = v.replace('\r\n', '\n')
