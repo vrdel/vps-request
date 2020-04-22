@@ -28,6 +28,7 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | /bin/bash -
 RUN apt-get install -y nodejs
 RUN python3 -m venv /data/vps-request
 RUN . ${virtenvdir}/bin/activate && pip install wheel
+RUN . ${virtenvdir}/bin/activate && pip install -U pip 
 RUN . ${virtenvdir}/bin/activate && pip install ipdb pylint-django
 COPY \
      create_dbuser.sql \
