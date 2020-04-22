@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import Permission
+from django.conf import settings
 
 import random
 
@@ -20,11 +21,29 @@ class Command(BaseCommand):
         parser.add_argument('--set', action='store_true', dest='operation_set', help='Set password for user')
         parser.add_argument('--is-staff', action='store_true', default=False, dest='isstaff', help='Make user staff')
         parser.add_argument('--approve-request', action='store_true', default=False, dest='approverequest', help='User can approve request')
-        parser.add_argument('--username', type=str, dest='username', help='Username of user', required=True)
+        parser.add_argument('--username', type=str, dest='username', help='Username of user', required=False)
         parser.add_argument('--password', type=str, dest='password', help='Password of user')
+        parser.add_argument('--permissions-config', action='store_true',
+                            default=False, dest='permissions-config',
+                            help='Pick usernames and permissions from default config')
 
     def handle(self, *args, **options):
-        if options['operation_create']:
+        if options['permissions-config']:
+            staff_users_db = self.user_model.objects.filter(is_staff=1)
+
+            # first reset all
+            for user in staff_users_db:
+                user.is_staff = 0
+                user.save()
+
+            # set staff for users listed in config
+            staff_users_config = self.user_model.objects.filter(username__in=settings.PERMISSIONS_STAFF)
+            for user in staff_users_config:
+                user.is_staff = 1
+                user.save()
+
+            pass
+        elif options['operation_create']:
             try:
                 user = self.user_model.objects.create_user(options['username'],
                                                            '{0}@email.hr'.format(options['username']),
