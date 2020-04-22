@@ -59,6 +59,12 @@ const ApprovedRequests = ListRequests(types.approved)
 const FreshRequests = ListRequests(types.fresh)
 const RejectedRequests = ListRequests(types.rejected)
 
+const ProtectedRoute = ({userDetails, ...props}) => (
+  userDetails.is_staff || userDetails.is_superuser ?
+    <Route {...props} />
+  :
+    <Route component={NotFound} />
+)
 
 const RedirectAfterLogin = ({userDetails, ...props}) => {
   let last = ''
@@ -203,43 +209,43 @@ class App extends Component {
                     {...propsPage}>
                     <NewRequest {...props}/>
                   </VPSPage>}/>
-            <Route exact path="/ui/novi-zahtjevi"
+            <ProtectedRoute userDetails={userDetails} exact path="/ui/novi-zahtjevi"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
                     <FreshRequests {...props}/>
                   </VPSPage>}/>
-            <Route exact path="/ui/novi-zahtjevi/:id"
+            <ProtectedRoute userDetails={userDetails} exact path="/ui/novi-zahtjevi/:id"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
                     <ProcessNewRequest {...props}/>
                   </VPSPage>}/>
-            <Route exact path="/ui/odobreni-zahtjevi"
+            <ProtectedRoute userDetails={userDetails} exact path="/ui/odobreni-zahtjevi"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
                     <ApprovedRequests {...props}/>
                   </VPSPage>}/>
-            <Route exact path="/ui/odobreni-zahtjevi/:id"
+            <ProtectedRoute userDetails={userDetails} exact path="/ui/odobreni-zahtjevi/:id"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
                     <ApprovedRequestHandler {...props}/>
                   </VPSPage>}/>
-            <Route exact path="/ui/umirovljeni-zahtjevi/:id"
+            <ProtectedRoute userDetails={userDetails} exact path="/ui/umirovljeni-zahtjevi/:id"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
                     <ViewSingleRequest {...props}/>
                   </VPSPage>}/>
-            <Route exact path="/ui/odbijeni-zahtjevi"
+            <ProtectedRoute userDetails={userDetails} exact path="/ui/odbijeni-zahtjevi"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
                     <RejectedRequests {...props}/>
                   </VPSPage>}/>
-            <Route exact path="/ui/odbijeni-zahtjevi/:id"
+            <ProtectedRoute userDetails={userDetails} exact path="/ui/odbijeni-zahtjevi/:id"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
