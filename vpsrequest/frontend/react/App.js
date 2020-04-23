@@ -31,10 +31,10 @@ const types = new Object({
     title: 'Odobreni zahtjevi',
     headerDate: 'Datum odobravanja',
     linkPath: 'odobreni-zahtjevi',
-    linkPathRetired: 'umirovljeni-zahtjevi',
+    linkPathReadOnly: 'pregled-zahtjeva',
     lastColHeader: 'Akcija',
     lastColIcon: <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>,
-    lastColIconRetired: <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
+    lastColIconReadOnly: <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
   },
   fresh: {
     api: `${CONFIG.listReqUrl}/new`,
@@ -50,7 +50,7 @@ const types = new Object({
     dateFieldSearch: 'approved_date',
     title: 'Odbijeni zahtjevi',
     headerDate: 'Datum odbijanja',
-    linkPath: 'odbijeni-zahtjevi',
+    linkPath: 'pregled-zahtjeva',
     lastColHeader: 'Vidi',
     lastColIcon: <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
   }
@@ -245,7 +245,7 @@ class App extends Component {
                     {...propsPage}>
                     <RejectedRequests {...props}/>
                   </VPSPage>}/>
-            <ProtectedRoute userDetails={userDetails} exact path="/ui/odbijeni-zahtjevi/:id"
+            <ProtectedRoute userDetails={userDetails} exact path="/ui/pregled-zahtjeva/:id"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>

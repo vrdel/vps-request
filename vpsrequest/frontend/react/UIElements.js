@@ -18,6 +18,7 @@ import {
   NavbarBrand,
   Spinner,
   Row,
+  UncontrolledTooltip
 } from 'reactstrap';
 import { Link, withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -28,7 +29,13 @@ import {
   faFileSignature,
   faHandshake,
   faThumbsDown,
-  faBatteryHalf} from '@fortawesome/free-solid-svg-icons';
+  faBatteryHalf,
+  faCog,
+  faTimes,
+  faCheckDouble,
+  faCheck,
+  faCouch
+} from '@fortawesome/free-solid-svg-icons';
 import { store } from 'react-notifications-component';
 import { Field } from 'formik';
 import Autocomplete from 'react-autocomplete';
@@ -438,4 +445,11 @@ export const DropdownFilterComponent = ({value, onChange, data}) => (
       )
     }
   </select>
+)
+
+export const Status = ({params}) => (
+  <div>
+    <FontAwesomeIcon className={params['classname']} size="2x" icon={params['icon']} id={params['id']}/>
+    <UncontrolledTooltip placement="right" target={params['id']}>{params['label']}</UncontrolledTooltip>
+</div>
 )
