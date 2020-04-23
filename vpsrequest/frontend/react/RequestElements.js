@@ -184,7 +184,7 @@ export const HeadFields = ({disabled=false}) =>
     <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
     <Field name="head_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" required={true} disabled={disabled}/>
     <Field name="head_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" required={true} disabled={disabled}/>
-    <Field name="head_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" required={true} disabled={disabled}/>
+    <Field name="head_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" required={true} disabled={true}/>
     <Field name="head_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" required={true} disabled={disabled}/>
     <Field name="head_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" required={true} disabled={disabled}/>
   </React.Fragment>
@@ -205,7 +205,7 @@ export const RequestDateField = () =>
 export const StateFields = ({readOnly}) =>
 (
   <React.Fragment>
-    <RequestStateDivider state='danger'/>
+    <RequestStateDivider/>
     <h5 className="mb-3 mt-4">Stanje</h5>
     <Field name="timestamp" component={RowRequestField} label="Datum promjene:" labelFor="timestamp" fieldType="text" disabled={readOnly} plain={true}/>
     <Field name="vm_reason" component={RowRequestField} label="Poruka:" labelFor="vmReason" fieldType="textarea" disabled={readOnly}/>

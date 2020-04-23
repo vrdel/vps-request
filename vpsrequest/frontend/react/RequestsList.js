@@ -93,9 +93,8 @@ export function ListRequests(typeRequest) {
           {
             id: 'isApproved',
             Header: 'Status',
-            accessor: r => {
-              return (<Status params={CONFIG['status'][r.approved]}/>)
-            },
+            accessor: r => r.approved,
+            Cell: props => <Status params={CONFIG['status'][props.value]}/>,
             maxWidth: 90,
           },
           {

@@ -276,7 +276,7 @@ export const RequestHorizontalRule = () =>
 )
 
 
-export const RequestStateDivider = ({state='success'}) =>
+export const RequestStateDivider = ({state='danger'}) =>
 {
   let color = {
     success: "#28a745",
