@@ -42,7 +42,7 @@ const RetiredRequestDetails = ({values}) =>
 
 const RequestDetails = ({values, userDetails}) =>
 {
-    let reqStatus = Status[values.approved]
+    let reqStatus = <Status params={CONFIG['status'][values.approved]}/>
     let adminRemark = null
     if(userDetails.is_superuser)
       adminRemark = <RequestRow label="Napomena administratora:" value={values.vm_admin_remark}/>

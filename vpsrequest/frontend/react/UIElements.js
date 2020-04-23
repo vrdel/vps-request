@@ -445,30 +445,9 @@ export const DropdownFilterComponent = ({value, onChange, data}) => (
   </select>
 )
 
-export const Status = {
-  '-1': <div>
-          <FontAwesomeIcon className="text-warning" size="2x" icon={faCog} id='Novi'/>
-          <UncontrolledTooltip placement="right" target="Novi">Novi</UncontrolledTooltip>
-        </div>,
-  
-  '0': <div>
-        <FontAwesomeIcon className="text-danger" size="2x" icon={faTimes} id='Odbijen'/>
-        <UncontrolledTooltip placement="right" target="Odbijen">Odbijen</UncontrolledTooltip>
-      </div>,
-  
-  '1': <div>
-        <FontAwesomeIcon className="text-primary" size="2x" icon={faCheck} id='Odobren'/>
-        <UncontrolledTooltip placement="right" target="Odobren">Odobren</UncontrolledTooltip>
-      </div>,
-  
-  '2': <div>
-        <FontAwesomeIcon className="text-success" size="2x" icon={faCheckDouble} id='IzdatVM'/>
-        <UncontrolledTooltip placement="right" target="IzdatVM">Izdat VM</UncontrolledTooltip>
-      </div>,
-  
-  '3': <div>
-        <FontAwesomeIcon className="text-secondary" size="2x" icon={faCouch} id='Umirovljen'/>
-        <UncontrolledTooltip placement="right" target="Umirovljen">Umirovljen</UncontrolledTooltip>
-      </div>,
-
-}
+export const Status = ({params}) => (
+  <div>
+    <FontAwesomeIcon className={params['classname']} size="2x" icon={params['icon']} id={params['id']}/>
+    <UncontrolledTooltip placement="right" target={params['id']}>{params['label']}</UncontrolledTooltip>
+</div>
+)

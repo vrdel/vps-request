@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CONFIG } from './Config'
 import {
   faPencilAlt,
-  faSearch
+  faSearch, faCog
   } from '@fortawesome/free-solid-svg-icons';
 import { DateFormatHR } from './Util'
 
@@ -68,7 +68,7 @@ export class MyRequests extends Component
           id: 'isApproved',
           Header: 'Status',
           accessor: r => {
-              return (Status[r.approved])
+              return (<Status params={CONFIG['status'][r.approved]}/>)
           },
           maxWidth: 90,
         },

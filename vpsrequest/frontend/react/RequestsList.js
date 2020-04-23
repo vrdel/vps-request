@@ -11,6 +11,7 @@ import { DateFormatHR } from './Util';
 
 import 'react-table/react-table.css';
 import './RequestsMy.css';
+import { CONFIG } from './Config'
 
 
 export function ListRequests(typeRequest) {
@@ -93,7 +94,7 @@ export function ListRequests(typeRequest) {
             id: 'isApproved',
             Header: 'Status',
             accessor: r => {
-              return (Status[r.approved])
+              return (<Status params={CONFIG['status'][r.approved]}/>)
             },
             maxWidth: 90,
           },
