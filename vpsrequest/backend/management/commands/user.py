@@ -24,11 +24,11 @@ class Command(BaseCommand):
         parser.add_argument('--username', type=str, dest='username', help='Username of user', required=False)
         parser.add_argument('--password', type=str, dest='password', help='Password of user')
         parser.add_argument('--permissions-config', action='store_true',
-                            default=False, dest='permissions-config',
+                            default=False, dest='permissions_config',
                             help='Pick usernames and permissions from default config')
 
     def handle(self, *args, **options):
-        if options['permissions-config']:
+        if options['permissions_config']:
             staff_users_db = self.user_model.objects.filter(is_staff=1)
 
             # first reset all
@@ -42,7 +42,17 @@ class Command(BaseCommand):
                 user.is_staff = 1
                 user.save()
 
-            pass
+            # first reset all
+            pu = Permission.objects.get(codename='approve_request')
+            for user in self.user_model.objects.all():
+                if user.has_perm('backend.approve_request'):
+                    user.user_permissions.remove(pu)
+
+            # set approve_request for users listed in config
+            approve_user_config = self.user_model.objects.filter(username__in=settings.PERMISSIONS_APPROVE)
+            for user in approve_user_config:
+                user.user_permissions.add(pu)
+
         elif options['operation_create']:
             try:
                 user = self.user_model.objects.create_user(options['username'],
