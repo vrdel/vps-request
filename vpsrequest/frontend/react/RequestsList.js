@@ -131,7 +131,7 @@ export function ListRequests(typeRequest) {
           },
           {
             Header: 'Poslužitelj',
-            accessor: 'vm_host',
+            accessor: 'vm_fqdn',
             filterable: true,
             Filter: <FilterField
               value={this.state.searchVmHost}

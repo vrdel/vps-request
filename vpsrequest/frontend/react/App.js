@@ -263,6 +263,12 @@ class App extends Component {
                     {...propsPage}>
                     <ChangeRequest {...props}/>
                   </VPSPage>}/>
+            <Route exact path="/ui/stanje-zahtjeva/umirovljen/:id"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}>
+                    <ViewSingleRequest {...props}/>
+                  </VPSPage>}/>
           </Switch>
         </BrowserRouter>
       )

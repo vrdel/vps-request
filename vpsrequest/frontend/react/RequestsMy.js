@@ -97,10 +97,14 @@ export class MyRequests extends Component
           id: 'edit',
           Header: 'Akcija',
           accessor: r => {
-            let url = '/ui/pregled-zahtjeva/' + r.id
-            let icon = <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
+            let url = ''
+            let icon = undefined
 
-            if(r.approved === -1){
+            if (r.approved === 3) {
+              url = '/ui/stanje-zahtjeva/umirovljen/' + r.id
+              icon = <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
+            }
+            else {
               url = '/ui/stanje-zahtjeva/' + r.id
               icon = <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>
             }
