@@ -23,7 +23,8 @@ export const RowRequestDropDown = ({field, ...propsRest}) =>
     <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
       <Label
         for={propsRest.labelFor}
-        className="mr-2">
+        className="mr-2"
+        {...propsRest}>
         {propsRest.label}
       </Label>
     </Col>
@@ -32,6 +33,7 @@ export const RowRequestDropDown = ({field, ...propsRest}) =>
         field={field}
         data={propsRest.data}
         id={propsRest.labelFor}
+        {...propsRest}
       />
       {
         propsRest.infoMsg ?
@@ -122,7 +124,7 @@ export const ContactUserFields = () =>
 )
 
 
-export const VMFields = ({listVMOSes}) => {
+export const VMFields = ({listVMOSes, disabled=false}) => {
   let infoVMOS = "* Čelnik ustanove odgovara za posjedovanje i aktiviranje valjane licence za gore odabrani operacijski sustav."
   let infoPurpose = "* Potrebno je detaljno obrazložiti namjenu virtualnog poslužitelja. Zahtjev može biti odbijen ukoliko Srce procijeni da navedena namjena virtualnog poslužitelja nije primjerena namjeni usluge, ili ne predstavlja trajne potrebe ustanove za poslužiteljskim kapacitetima.";
 
@@ -130,52 +132,60 @@ export const VMFields = ({listVMOSes}) => {
     <React.Fragment>
       <RequestHorizontalRule/>
       <h5 className="mb-3 mt-4">Zahtijevani resursi</h5>
-      <Field name="vm_purpose" component={RowRequestField} label="Namjena:" labelFor="vmPurpose" fieldType="textarea" infoMsg={infoPurpose} required={true}/>
-      <Field name="vm_fqdn" component={RowRequestField} label="Puno ime poslužitelja (FQDN):" labelFor="fqdn" fieldType="text" required={true}/>
+      <Field name="vm_purpose" component={RowRequestField} label="Namjena:"
+        labelFor="vmPurpose" fieldType="textarea" infoMsg={infoPurpose}
+        required={true} disabled={disabled}/>
+      <Field name="vm_fqdn" component={RowRequestField} label="Puno ime poslužitelja (FQDN):"
+        labelFor="fqdn" fieldType="text" required={true}
+        disabled={disabled}/>
       <Field name="vm_os" component={RowRequestDropDown}
         label="Operacijski sustav:"
         labelFor="vm_oses"
         data={['', ...listVMOSes]}
         infoMsg={infoVMOS}
-        required={true}/>
-      <Field name="vm_remark" component={RowRequestField} label="Napomena:" labelFor="vmRemark" fieldType="textarea" required={true}/>
+        required={true}
+        disabled={disabled}/>
+      <Field name="vm_remark" component={RowRequestField} label="Napomena:"
+        labelFor="vmRemark" fieldType="textarea" required={true}
+        disabled={disabled}/>
     </React.Fragment>
   )
 }
 
 
-export const SysAdminFields = () => {
+export const SysAdminFields = ({disabled=false}) => {
   let infoAAI = "* Sistem-inženjer jedini ima pravo pristupa na XenOrchestra sučelje dostupno na adresi "
   return (
     <React.Fragment>
       <RequestHorizontalRule/>
       <h5 className="mb-3 mt-4">Sistem-inženjer virtualnog poslužitelja</h5>
-      <Field name="sys_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" required={true}/>
-      <Field name="sys_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" required={true}/>
-      <Field name="sys_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" required={true}/>
-      <Field name="sys_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" required={true}/>
-      <Field name="sys_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" required={true}/>
+      <Field name="sys_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" required={true} disabled={disabled}/>
+      <Field name="sys_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" required={true} disabled={disabled}/>
+      <Field name="sys_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" required={true} disabled={disabled}/>
+      <Field name="sys_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" required={true} disabled={disabled}/>
+      <Field name="sys_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" required={true} disabled={disabled}/>
       <Field name="sys_aaieduhr"
         component={RowRequestField}
         label="AAI@EduHr korisnička oznaka:" labelFor="aaieduhr"
         fieldType="text"
         infoMsgComponent={<InfoLink prefix={infoAAI} linkHref="https://vps.srce.hr"/>}
-        required={true}/>
+        required={true}
+        disabled={disabled}/>
     </React.Fragment>
   )
 }
 
 
-export const HeadFields = () =>
+export const HeadFields = ({disabled=false}) =>
 (
   <React.Fragment>
     <RequestHorizontalRule/>
     <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
-    <Field name="head_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" required={true}/>
-    <Field name="head_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" required={true}/>
-    <Field name="head_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" disabled={true} required={true}/>
-    <Field name="head_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" required={true}/>
-    <Field name="head_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" required={true}/>
+    <Field name="head_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" required={true} disabled={disabled}/>
+    <Field name="head_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" required={true} disabled={disabled}/>
+    <Field name="head_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" required={true} disabled={disabled}/>
+    <Field name="head_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" required={true} disabled={disabled}/>
+    <Field name="head_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" required={true} disabled={disabled}/>
   </React.Fragment>
 )
 
@@ -267,25 +277,31 @@ export const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dism
 )
 
 
-export const SubmitChangeRequest = ({buttonLabel}) =>
+export const SubmitChangeRequest = ({buttonLabel, disabled=false}) =>
 (
   <React.Fragment>
     <RequestHorizontalRule/>
     <Row className="mt-2 mb-4 text-center">
       <Col>
-        <Button className="btn-lg" color="success" id="submit-button" type="submit">{buttonLabel}</Button>
+        <Button className="btn-lg" color="success" id="submit-button"
+          type="submit" disabled={disabled}>{buttonLabel}</Button>
       </Col>
     </Row>
   </React.Fragment>
 )
 
 
-export const ProcessFields = ({approved, handleState, handleMsgContact, handleMsgHead, stateMsgHead, stateMsgContact}) =>
+export const ProcessFields = ({approved, handleState, handleMsgContact, handleMsgHead, stateMsgHead, stateMsgContact, canApproveRequest}) =>
 (
   <React.Fragment>
     <RequestHorizontalRule/>
     <h5 className="mb-3 mt-4">Obrada</h5>
-    <Field name="vm_admin_remark" component={RowRequestField} label="Napomena:" labelFor="vmAdminRemark" fieldType="textarea" disabled={false}/>
+    <Field name="vm_admin_remark" component={RowRequestField}
+      label="Napomena:"
+      labelFor="vmAdminRemark"
+      fieldType="textarea"
+      required={false}
+      disabled={!canApproveRequest}/>
     <Row className="mb-3">
       <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end align-items-center">
         <Label
@@ -318,7 +334,12 @@ export const ProcessFields = ({approved, handleState, handleMsgContact, handleMs
         </FormGroup>
       </Col>
     </Row>
-    <Field name="vm_reason" component={RowRequestField} label="Razlog:" labelFor="vmReason" fieldType="textarea"/>
+    <Field name="vm_reason" component={RowRequestField}
+      label="Razlog:"
+      labelFor="vmReason"
+      fieldType="textarea"
+      required={canApproveRequest}
+      disabled={!canApproveRequest}/>
     <div className="m-5"></div>
     <Row>
       <Col md={{size: 8, offset: 2}} className="text-center">

@@ -49,6 +49,9 @@ try:
     SUPERUSER_PASS = config.get('SUPERUSER', 'password')
     SUPERUSER_EMAIL = config.get('SUPERUSER', 'email')
 
+    PERMISSIONS_STAFF = config.get('PERMISSIONS', 'staff')
+    PERMISSIONS_APPROVE = config.get('PERMISSIONS', 'approve')
+
     SRCE_SMTP = config.get('EMAIL', 'SrceSmtp')
     ADMIN_MAIL = config.get('EMAIL', 'AdminMail')
     ADMIN_FRESH_TEMPLATE = config.get('EMAIL', 'AdminFreshTemplate')
@@ -64,7 +67,6 @@ try:
     CHANGED_REQ_TEMPLATE = config.get('EMAIL', 'ChangedRequestTemplate')
     CHANGED_REQ_SUBJECT = config.get('EMAIL', 'ChangedRequestSubject')
 
-
 except NoSectionError as e:
     print(e)
     raise SystemExit(1)
@@ -77,6 +79,16 @@ if ',' in ALLOWED_HOSTS:
     ALLOWED_HOSTS = [h.strip() for h in ALLOWED_HOSTS.split(',')]
 else:
     ALLOWED_HOSTS = [ALLOWED_HOSTS]
+
+if ',' in PERMISSIONS_STAFF:
+    PERMISSIONS_STAFF = [u.strip() for u in PERMISSIONS_STAFF.split(',')]
+else:
+    PERMISSIONS_STAFF = [PERMISSIONS_STAFF]
+
+if ',' in PERMISSIONS_APPROVE:
+    PERMISSIONS_APPROVE = [u.strip() for u in PERMISSIONS_APPROVE.split(',')]
+else:
+    PERMISSIONS_APPROVE = [PERMISSIONS_APPROVE]
 
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
