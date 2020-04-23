@@ -11,6 +11,7 @@ import {
 import {
   DropDown,
   InfoLink,
+  RequestStateDivider,
   RequestHorizontalRule,
 } from './UIElements.js';
 import { Field } from 'formik';
@@ -204,7 +205,7 @@ export const RequestDateField = () =>
 export const StateFields = ({readOnly}) =>
 (
   <React.Fragment>
-    <RequestHorizontalRule/>
+    <RequestStateDivider state='danger'/>
     <h5 className="mb-3 mt-4">Stanje</h5>
     <Field name="timestamp" component={RowRequestField} label="Datum promjene:" labelFor="timestamp" fieldType="text" disabled={readOnly} plain={true}/>
     <Field name="vm_reason" component={RowRequestField} label="Poruka:" labelFor="vmReason" fieldType="textarea" disabled={readOnly}/>
@@ -294,7 +295,7 @@ export const SubmitChangeRequest = ({buttonLabel, disabled=false}) =>
 export const ProcessFields = ({approved, handleState, handleMsgContact, handleMsgHead, stateMsgHead, stateMsgContact, canApproveRequest}) =>
 (
   <React.Fragment>
-    <RequestHorizontalRule/>
+    <RequestStateDivider/>
     <h5 className="mb-3 mt-4">Obrada</h5>
     <Field name="vm_admin_remark" component={RowRequestField}
       label="Napomena:"

@@ -275,6 +275,22 @@ export const RequestHorizontalRule = () =>
   </div>
 )
 
+
+export const RequestStateDivider = ({state='success'}) =>
+{
+  let color = {
+    success: "#28a745",
+    danger: "#dc3545"
+  }
+
+  return (
+    <div className="m-5">
+      <hr style={{'border-top': `2px dotted ${color[state]}`}}/>
+    </div>
+  )
+}
+
+
 export const LoadingAnim = () => (
   <Card className="text-center">
     <CardHeader className="bg-light">
@@ -432,6 +448,7 @@ export const FilterField = ({onChange, value}) => (
   />
 )
 
+
 export const DropdownFilterComponent = ({value, onChange, data}) => (
   <select
     onChange={onChange}
@@ -446,6 +463,7 @@ export const DropdownFilterComponent = ({value, onChange, data}) => (
     }
   </select>
 )
+
 
 export const Status = ({params}) => (
   <div>
