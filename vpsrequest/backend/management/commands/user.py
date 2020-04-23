@@ -36,22 +36,25 @@ class Command(BaseCommand):
                 user.is_staff = 0
                 user.save()
 
-            # set staff for users listed in config
-            staff_users_config = self.user_model.objects.filter(username__in=settings.PERMISSIONS_STAFF)
-            for user in staff_users_config:
-                user.is_staff = 1
-                user.save()
-
             # first reset all
             pu = Permission.objects.get(codename='approve_request')
             for user in self.user_model.objects.all():
                 if user.has_perm('backend.approve_request'):
                     user.user_permissions.remove(pu)
 
+            # set staff for users listed in config
+            staff_users_config = self.user_model.objects.filter(username__in=settings.PERMISSIONS_STAFF)
+            for user in staff_users_config:
+                user.is_staff = 1
+                user.save()
+
             # set approve_request for users listed in config
+            # user that can approve is also staff
             approve_user_config = self.user_model.objects.filter(username__in=settings.PERMISSIONS_APPROVE)
             for user in approve_user_config:
+                user.is_staff = 1
                 user.user_permissions.add(pu)
+                user.save()
 
         elif options['operation_create']:
             try:
@@ -69,6 +72,8 @@ class Command(BaseCommand):
                 if options['approverequest']:
                     pu = Permission.objects.get(codename='approve_request')
                     user.user_permissions.add(pu)
+                    user.is_staff = 1
+                    user.save()
 
                 self.stdout.write('User {0} succesfully created'.format(options['username']))
             except Exception as exp:

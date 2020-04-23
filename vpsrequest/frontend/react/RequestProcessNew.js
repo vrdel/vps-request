@@ -18,7 +18,7 @@ import {
   SysAdminFields,
   VMFields,
 } from './RequestElements.js';
-
+import { canApprove } from './Util';
 
 export class ProcessNewRequest extends Component
 {
@@ -158,17 +158,19 @@ export class ProcessNewRequest extends Component
               <Form>
                 <RequestDateField/>
                 <ContactUserFields/>
-                <VMFields listVMOSes={[requestDetails.vm_os]}/>
-                <SysAdminFields/>
-                <HeadFields/>
+                <VMFields listVMOSes={[requestDetails.vm_os]} disabled={true}/>
+                <SysAdminFields disabled={true}/>
+                <HeadFields disabled={true}/>
                 <ProcessFields approved={requestApproved}
                   handleState={this.handleRequestState}
                   handleMsgContact={this.handleMsgContact}
                   handleMsgHead={this.handleMsgHead}
                   stateMsgHead={sendMsgHead}
                   stateMsgContact={sendMsgContact}
+                  canApproveRequest={canApprove(userDetails)}
                 />
-                <SubmitChangeRequest buttonLabel='Spremi promjene'/>
+                <SubmitChangeRequest buttonLabel='Spremi promjene'
+                  disabled={!canApprove(userDetails)}/>
               </Form>
             )}
           />

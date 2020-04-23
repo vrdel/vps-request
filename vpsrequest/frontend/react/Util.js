@@ -11,6 +11,9 @@ export function EmptyIfNull(field) {
 }
 
 export function canApprove(userDetails) {
+  if (userDetails.is_superuser)
+    return true
+
   if (userDetails.perms) {
     let find = userDetails.perms.filter(e => e === 'approve_request')
     if (find.length > 0)

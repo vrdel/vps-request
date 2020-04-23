@@ -64,11 +64,12 @@ export const Icon = props => {
 }
 
 
-export const DropDown = ({field, data=[]}) =>
+export const DropDown = ({field, data=[], ...props}) =>
   <Field component="select"
     name={field.name}
     required={true}
     className="form-control custom-select"
+    {...props}
   >
     {
       data.map((name, i) =>
