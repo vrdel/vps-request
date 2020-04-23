@@ -31,7 +31,7 @@ const types = new Object({
     title: 'Odobreni zahtjevi',
     headerDate: 'Datum odobravanja',
     linkPath: 'odobreni-zahtjevi',
-    linkPathReadOnly: 'pregled-zahtjeva',
+    linkPathReadOnly: 'umirovljen',
     lastColHeader: 'Akcija',
     lastColIcon: <FontAwesomeIcon className="text-success" size="lg" icon={faPencilAlt}/>,
     lastColIconReadOnly: <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
@@ -50,9 +50,9 @@ const types = new Object({
     dateFieldSearch: 'approved_date',
     title: 'Odbijeni zahtjevi',
     headerDate: 'Datum odbijanja',
-    linkPath: 'pregled-zahtjeva',
+    linkPath: 'odbijeni-zahtjevi',
     lastColHeader: 'Vidi',
-    lastColIcon: <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
+    lastColIcon: <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>,
   }
 })
 
@@ -233,7 +233,7 @@ class App extends Component {
                     {...propsPage}>
                     <ApprovedRequestHandler {...props}/>
                   </VPSPage>}/>
-            <ProtectedRoute userDetails={userDetails} exact path="/ui/umirovljeni-zahtjevi/:id"
+            <ProtectedRoute userDetails={userDetails} exact path="/ui/odobreni-zahtjevi/umirovljen/:id"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>
@@ -245,7 +245,7 @@ class App extends Component {
                     {...propsPage}>
                     <RejectedRequests {...props}/>
                   </VPSPage>}/>
-            <ProtectedRoute userDetails={userDetails} exact path="/ui/pregled-zahtjeva/:id"
+            <ProtectedRoute userDetails={userDetails} exact path="/ui/odbijeni-zahtjevi/:id"
               render={(props) =>
                   <VPSPage
                     {...propsPage}>

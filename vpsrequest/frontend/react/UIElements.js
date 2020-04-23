@@ -304,7 +304,7 @@ export const NotifyOk = ({msg='', title='', callback=undefined}) => {
       showIcon: true
     }
   })
-  setTimeout(callback, 2000)
+  setTimeout(callback, 1000)
 }
 
 
@@ -324,7 +324,7 @@ export const NotifyError = ({msg='', title='', callback=undefined}) => {
       showIcon: true
     }
   })
-  setTimeout(callback, 2000)
+  setTimeout(callback, 1000)
 }
 
 

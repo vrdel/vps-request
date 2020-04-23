@@ -145,8 +145,8 @@ export function ListRequests(typeRequest) {
             accessor: r => {
               let linkPath = typeRequest.linkPath
               let lastColIcon = typeRequest.lastColIcon
-              if(r.approved === 3){
-                linkPath = typeRequest.linkPathReadOnly
+              if (r.approved === 3) {
+                linkPath = `${linkPath}/${typeRequest.linkPathReadOnly}`
                 lastColIcon = typeRequest.lastColIconReadOnly
               }
               return (

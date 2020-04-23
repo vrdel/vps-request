@@ -30,8 +30,8 @@ export const CONFIG = {
         },
         '2': {
             'classname': 'text-success',
-            'id': 'IzdatVM',
-            'label': 'Izdat VM',
+            'id': 'IzdanVM',
+            'label': 'Izdan VM',
             'icon': faCheckDouble
         },
         '3': {
@@ -40,6 +40,5 @@ export const CONFIG = {
             'label': 'Umirovljen',
             'icon': faCouch
         },
-        
     }
 }
