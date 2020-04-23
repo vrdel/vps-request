@@ -25,7 +25,7 @@ export function ListRequests(typeRequest) {
         searchContactName: '',
         searchDate: '',
         searchInstitution: '',
-        searchVmHost: ''
+        searchVmFqdn: ''
       }
 
       this.apiListRequests = typeRequest.api
@@ -55,7 +55,7 @@ export function ListRequests(typeRequest) {
 
     render() {
       let {loading, requests, searchDate, searchContactName,
-        searchInstitution, searchVmHost} = this.state
+        searchInstitution, searchVmFqdn} = this.state
 
       if (searchDate)
         requests = requests.filter(
@@ -72,9 +72,9 @@ export function ListRequests(typeRequest) {
           r => r.head_institution.toLowerCase().includes(searchInstitution.toLowerCase())
         )
 
-      if (searchVmHost)
+      if (searchVmFqdn)
         requests = requests.filter(
-          r => r.vm_host.toLowerCase().includes(searchVmHost.toLowerCase())
+          r => r.vm_fqdn.toLowerCase().includes(searchVmFqdn.toLowerCase())
         )
 
       if (loading)
@@ -133,8 +133,8 @@ export function ListRequests(typeRequest) {
             accessor: 'vm_fqdn',
             filterable: true,
             Filter: <FilterField
-              value={this.state.searchVmHost}
-              onChange={event => this.setState({searchVmHost: event.target.value})}
+              value={this.state.searchVmFqdn}
+              onChange={event => this.setState({searchVmFqdn: event.target.value})}
             />,
             maxWidth: 180
           },

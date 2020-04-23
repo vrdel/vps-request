@@ -285,7 +285,7 @@ export const RequestStateDivider = ({state='danger'}) =>
 
   return (
     <div className="m-5">
-      <hr style={{'border-top': `2px dotted ${color[state]}`}}/>
+      <hr style={{'borderTop': `2px dotted ${color[state]}`}}/>
     </div>
   )
 }
