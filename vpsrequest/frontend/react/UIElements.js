@@ -35,6 +35,7 @@ import Autocomplete from 'react-autocomplete';
 import SrceLogo from './logos/pravisrce.png';
 import SrceLogoTiny from './logos/srce-logo-e-mail-sig.png';
 import CloudLogo from './logos/logo_cloud.png';
+import { canApprove } from './Util'
 
 
 import './UIElements.css';
@@ -177,11 +178,11 @@ const NavigationBar = ({history, onLogout, isOpenModal, toggle,
 )
 
 
-const NavigationLinks = ({location, isStaff}) => {
+const NavigationLinks = ({location, isStaff, canApproveRequest}) => {
   var noStaffPages = ['novi-zahtjev', 'stanje-zahtjeva']
   var pages = listPages
 
-  if (!isStaff)
+  if (!isStaff && !canApproveRequest)
     pages = noStaffPages
 
   return (
@@ -220,7 +221,7 @@ export const VPSPage = ({toggleAreYouSure, onLogout, areYouSureModal, userDetail
     </Row>
     <Row className="no-gutters">
       <Col>
-        <NavigationLinksWithRouter isStaff={userDetails.is_staff} />
+        <NavigationLinksWithRouter isStaff={userDetails.is_staff} canApproveRequest={canApprove(userDetails)} />
         {children}
       </Col>
     </Row>

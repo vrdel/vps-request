@@ -21,6 +21,7 @@ import 'react-notifications-component/dist/theme.css'
 import { ViewSingleRequest } from './RequestView';
 import { ApprovedRequestHandler } from './RequestHandler'
 import { CONFIG } from './Config'
+import { canApprove } from './Util'
 
 
 const types = new Object({
@@ -60,7 +61,7 @@ const FreshRequests = ListRequests(types.fresh)
 const RejectedRequests = ListRequests(types.rejected)
 
 const ProtectedRoute = ({userDetails, ...props}) => (
-  userDetails.is_staff || userDetails.is_superuser ?
+  userDetails.is_staff || userDetails.is_superuser || canApprove(userDetails)?
     <Route {...props} />
   :
     <Route component={NotFound} />
@@ -94,7 +95,6 @@ const RedirectAfterLogin = ({userDetails, ...props}) => {
     destination = before_last
 
   localStorage.removeItem('referrer')
-  console.log(destination)
 
   return <Redirect to={destination}/>
 }
