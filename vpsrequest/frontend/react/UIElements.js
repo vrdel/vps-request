@@ -36,7 +36,7 @@ import {
   faCheck,
   faCouch
 } from '@fortawesome/free-solid-svg-icons';
-import { store } from 'react-notifications-component';
+import { NotificationManager } from 'react-notifications';
 import { Field } from 'formik';
 import Autocomplete from 'react-autocomplete';
 import SrceLogo from './logos/pravisrce.png';
@@ -304,43 +304,19 @@ export const LoadingAnim = () => (
 
 
 export const NotifyOk = ({msg='', title='', callback=undefined}) => {
-
-  store.addNotification({
-    title: title,
-    message: msg,
-    type: "success",
-    insert: "top",
-    container: "top-right",
-    animationIn: ["animated", "fadeIn"],
-    animationOut: ["animated", "fadeOut"],
-    dismiss: {
-      click: true,
-      duration: 60000,
-      onScreen: true,
-      showIcon: true
-    }
-  })
-  setTimeout(callback, 1000)
+  NotificationManager.success(msg,
+    title,
+    30000);
+  setTimeout(callback, 1000);
 }
 
 
 export const NotifyError = ({msg='', title='', callback=undefined}) => {
-  store.addNotification({
-    title: title,
-    message: msg,
-    type: "danger",
-    insert: "top",
-    container: "top-right",
-    animationIn: ["animated", "fadeIn"],
-    animationOut: ["animated", "fadeOut"],
-    dismiss: {
-      click: true,
-      duration: 60000,
-      onScreen: true,
-      showIcon: true
-    }
-  })
-  setTimeout(callback, 1000)
+  <button className='btn btn-danger'/>
+    NotificationManager.error(msg,
+      title,
+      30000);
+    setTimeout(callback, 1000);
 }
 
 
