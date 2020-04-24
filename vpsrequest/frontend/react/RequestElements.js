@@ -220,7 +220,7 @@ export const StateFields = ({readOnly, requestApproved}) =>
           </Label>
         </Col>
         <Col md={{size: 7}}>
-          <CustomInput type="checkbox" id="checkApproved" checked={approved} readonly={true} onChange={undefined}/>
+          <CustomInput type="checkbox" id="checkApproved" checked={approved} readOnly={true} onChange={undefined}/>
         </Col>
       </Row>
       <Field name="vm_reason" component={RowRequestField} label="Poruka:" labelFor="vmReason" fieldType="textarea" disabled={readOnly}/>
