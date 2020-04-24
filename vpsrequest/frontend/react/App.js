@@ -3,7 +3,6 @@ import Login from './Login';
 import MyRequests from './RequestsMy';
 import NotFound from './NotFound';
 import React, { Component } from 'react';
-import ReactNotification from 'react-notifications-component'
 import { Backend } from './DataManager';
 import { ListRequests } from './RequestsList';
 import { NewRequest } from './RequestNew';
@@ -17,12 +16,12 @@ import {
   faPencilAlt,
   } from '@fortawesome/free-solid-svg-icons';
 import './App.css';
-import 'react-notifications-component/dist/theme.css'
+import 'react-notifications/lib/notifications.css';
 import { ViewSingleRequest } from './RequestView';
 import { ApprovedRequestHandler } from './RequestHandler'
 import { CONFIG } from './Config'
 import { canApprove } from './Util'
-
+import { NotificationContainer } from 'react-notifications';
 
 const types = new Object({
   approved: {
@@ -195,7 +194,7 @@ class App extends Component {
 
       return (
         <BrowserRouter>
-          <ReactNotification />
+          <NotificationContainer/>
           <Switch>
             <Route exact path="/ui/prijava"
               render={(props) =>

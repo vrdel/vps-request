@@ -25,7 +25,7 @@ export const RowRequestDropDown = ({field, ...propsRest}) =>
       <Label
         for={propsRest.labelFor}
         className="mr-2"
-        {...propsRest}>
+      >
         {propsRest.label}
       </Label>
     </Col>
@@ -34,7 +34,7 @@ export const RowRequestDropDown = ({field, ...propsRest}) =>
         field={field}
         data={propsRest.data}
         id={propsRest.labelFor}
-        {...propsRest}
+        disabled={propsRest.disabled}
       />
       {
         propsRest.infoMsg ?
@@ -202,19 +202,35 @@ export const RequestDateField = () =>
 )
 
 
-export const StateFields = ({readOnly}) =>
-(
-  <React.Fragment>
-    <RequestStateDivider/>
-    <h5 className="mb-3 mt-4">Stanje</h5>
-    <Field name="timestamp" component={RowRequestField} label="Datum promjene:" labelFor="timestamp" fieldType="text" disabled={readOnly} plain={true}/>
-    <Field name="vm_reason" component={RowRequestField} label="Poruka:" labelFor="vmReason" fieldType="textarea" disabled={readOnly}/>
-    <Field name="approvedby" component={RowRequestField} label="Obradio:" labelFor="approvedBy" fieldType="text" disabled={readOnly} plain={true}/>
-    <Field name="vm_admin_remark" component={RowRequestField} label="Napomena:" labelFor="vmAdminRemark" fieldType="textarea" disabled={readOnly}/>
-    <Field name="vm_ip" component={RowRequestField} label="IP adresa:" labelFor="vmIp" fieldType="text" disabled={readOnly}/>
-    <Field name="vm_host" component={RowRequestField} label="Zabbix hostname:" labelFor="vmHost" fieldType="text" disabled={readOnly}/>
-  </React.Fragment>
-)
+export const StateFields = ({readOnly, requestApproved}) =>
+{
+  let approved = [1, 2, 3].indexOf(requestApproved) !== -1 ? true : false
+
+  return (
+    <React.Fragment>
+      <RequestStateDivider/>
+      <h5 className="mb-3 mt-4">Stanje</h5>
+      <Field name="timestamp" component={RowRequestField} label="Datum promjene:" labelFor="timestamp" fieldType="text" disabled={readOnly} plain={true}/>
+      <Row>
+        <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
+          <Label
+            for="checkboxApproved"
+            className="mr-2">
+            Zahtjev odobren:
+          </Label>
+        </Col>
+        <Col md={{size: 7}}>
+          <CustomInput type="checkbox" id="checkApproved" checked={approved} readOnly={true} onChange={undefined}/>
+        </Col>
+      </Row>
+      <Field name="vm_reason" component={RowRequestField} label="Poruka:" labelFor="vmReason" fieldType="textarea" disabled={readOnly}/>
+      <Field name="approvedby" component={RowRequestField} label="Obradio:" labelFor="approvedBy" fieldType="text" disabled={readOnly} plain={true}/>
+      <Field name="vm_admin_remark" component={RowRequestField} label="Napomena:" labelFor="vmAdminRemark" fieldType="textarea" disabled={readOnly}/>
+      <Field name="vm_ip" component={RowRequestField} label="IP adresa:" labelFor="vmIp" fieldType="text" disabled={readOnly}/>
+      <Field name="vm_host" component={RowRequestField} label="Zabbix hostname:" labelFor="vmHost" fieldType="text" disabled={readOnly}/>
+    </React.Fragment>
+  )
+}
 
 
 export const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dismissAlert, stateAcceptConditionsAlert}) =>

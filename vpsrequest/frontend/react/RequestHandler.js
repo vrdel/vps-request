@@ -24,7 +24,7 @@ import {
   Row,
   Button
 } from 'reactstrap';
-import { DateFormatHR } from './Util';
+import { DateFormatHR, EmptyIfNull } from './Util';
 
 
 export class ApprovedRequestHandler extends Component
@@ -124,8 +124,8 @@ export class ApprovedRequestHandler extends Component
         vm_reason: requestDetails.vm_reason,
         vm_remark: requestDetails.vm_remark,
         vm_os: requestDetails.vm_os,
-        vm_ip: requestDetails.vm_ip,
-        vm_host: requestDetails.vm_host,
+        vm_ip: EmptyIfNull(requestDetails.vm_ip),
+        vm_host: EmptyIfNull(requestDetails.vm_host),
         approved: requestDetails.approved,
         sys_firstname: requestDetails.sys_firstname,
         sys_aaieduhr: requestDetails.sys_aaieduhr,
@@ -171,7 +171,7 @@ export class ApprovedRequestHandler extends Component
               let callback = undefined
               if (values.approved !== oldState) {
                 callback = () => this.history.push('/ui/odobreni-zahtjevi')
-              }    
+              }
               this.handleOnSubmit(values, callback)
             }}
             render = {({setFieldValue, handleSubmit}) => (
@@ -181,7 +181,7 @@ export class ApprovedRequestHandler extends Component
                 <VMFields listVMOSes={listVMOSes}/>
                 <SysAdminFields/>
                 <HeadFields/>
-                <StateFields readOnly={false}/>
+                <StateFields readOnly={false} requestApproved={initValues.approved}/>
                 {
                   initValues.approved === 1 ?
                     <SubmitChangeRequest buttonLabel='Izdaj VM'/>

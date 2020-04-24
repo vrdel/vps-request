@@ -30,13 +30,8 @@ import {
   faHandshake,
   faThumbsDown,
   faBatteryHalf,
-  faCog,
-  faTimes,
-  faCheckDouble,
-  faCheck,
-  faCouch
 } from '@fortawesome/free-solid-svg-icons';
-import { store } from 'react-notifications-component';
+import { NotificationManager } from 'react-notifications';
 import { Field } from 'formik';
 import Autocomplete from 'react-autocomplete';
 import SrceLogo from './logos/pravisrce.png';
@@ -56,6 +51,7 @@ linkTitle.set('odobreni-zahtjevi', 'Odobreni zahtjevi');
 linkTitle.set('odbijeni-zahtjevi', 'Odbijeni zahtjevi');
 linkTitle.set('novi-zahtjev', 'Zahtjev za novim VM-om');
 linkTitle.set('stanje-zahtjeva', 'Stanje zahtjeva');
+
 
 export const Icon = props => {
   let linkIcon = new Map();
@@ -86,17 +82,6 @@ export const DropDown = ({field, data=[], ...props}) =>
       )
     }
   </Field>
-
-
-export const SearchField = ({form, field, ...rest}) =>
-  <div className="input-group">
-    <input type="text" placeholder="Search" {...field} {...rest}/>
-    <div className="input-group-append">
-      <span className="input-group-text" id="basic-addon">
-        <FontAwesomeIcon icon={faSearch}/>
-      </span>
-    </div>
-  </div>
 
 
 const doLogout = (history, onLogout) => {
@@ -268,6 +253,7 @@ export const Footer = ({loginPage=false}) => {
   }
 }
 
+
 export const RequestHorizontalRule = () =>
 (
   <div className="m-5">
@@ -304,43 +290,19 @@ export const LoadingAnim = () => (
 
 
 export const NotifyOk = ({msg='', title='', callback=undefined}) => {
-
-  store.addNotification({
-    title: title,
-    message: msg,
-    type: "success",
-    insert: "top",
-    container: "top-right",
-    animationIn: ["animated", "fadeIn"],
-    animationOut: ["animated", "fadeOut"],
-    dismiss: {
-      click: true,
-      duration: 60000,
-      onScreen: true,
-      showIcon: true
-    }
-  })
-  setTimeout(callback, 1000)
+  NotificationManager.success(msg,
+    title,
+    30000);
+  setTimeout(callback, 1000);
 }
 
 
 export const NotifyError = ({msg='', title='', callback=undefined}) => {
-  store.addNotification({
-    title: title,
-    message: msg,
-    type: "danger",
-    insert: "top",
-    container: "top-right",
-    animationIn: ["animated", "fadeIn"],
-    animationOut: ["animated", "fadeOut"],
-    dismiss: {
-      click: true,
-      duration: 60000,
-      onScreen: true,
-      showIcon: true
-    }
-  })
-  setTimeout(callback, 1000)
+  <button className='btn btn-danger'/>
+    NotificationManager.error(msg,
+      title,
+      30000);
+    setTimeout(callback, 1000);
 }
 
 
@@ -383,60 +345,6 @@ export const BaseView = ({title='', isChangeView=false, isHandleNewView=false,
 }
 
 
-function matchItem(item, value) {
-  if (value)
-    return item.toLowerCase().indexOf(value.toLowerCase()) !== -1;
-}
-
-
-export const AutocompleteField = ({lists, onselect_handler, field, val, icon, setFieldValue, req, label, values}) => {
-  let classname = `form-control ${req && 'border-danger'}`;
-
-  return(
-    <Autocomplete
-      inputProps={{className: classname}}
-      getItemValue={(item) => item}
-      items={lists}
-      value={val}
-      renderItem={(item, isHighlighted) =>
-        <div
-          key={lists.indexOf(item)}
-          className={`vpsreq-autocomplete-entries ${isHighlighted ?
-            "vpsreq-autocomplete-entries-highlighted"
-            : ""}`
-        }
-        >
-          {item ? <Icon i={icon}/> : ''} {item}
-        </div>
-      }
-      renderInput={(props) => {
-        if (label)
-          return (
-            <div className='input-group mb-3'>
-              <div className='input-group-prepend'>
-                <span className='input-group-text' id='basic-addon1'>{label}</span>
-              </div>
-              <input {...props} type='text' className={classname} aria-label='label'/>
-            </div>
-          );
-        else
-          return <input {...props}/>;
-      }}
-      onChange={(e) => {setFieldValue(field, e.target.value)}}
-      onSelect={(val) =>  {
-        setFieldValue(field, val)
-        onselect_handler(field, val);
-      }}
-      wrapperStyle={{}}
-      shouldItemRender={matchItem}
-      renderMenu={(items) =>
-        <div className='vpsreq-autocomplete-menu' children={items}/>
-      }
-    />
-  );
-}
-
-
 export const FilterField = ({onChange, value}) => (
   <input
     type='text'
@@ -446,22 +354,6 @@ export const FilterField = ({onChange, value}) => (
     onChange={onChange}
     style={{width: '100%'}}
   />
-)
-
-
-export const DropdownFilterComponent = ({value, onChange, data}) => (
-  <select
-    onChange={onChange}
-    style={{width: '100%'}}
-    value={value}
-  >
-    <option key={0} value=''>Show all</option>
-    {
-      data.map((name, i) =>
-        <option key={i + 1} value={name}>{name}</option>
-      )
-    }
-  </select>
 )
 
 
