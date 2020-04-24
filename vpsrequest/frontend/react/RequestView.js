@@ -25,26 +25,30 @@ const RequestRow = ({...props}) =>
     </Row>
 )
 
-const RetiredRequestDetails = ({values}) =>
+const RequestAdminDetails = ({values}) =>
 {
     if(values.approved === 3)
         return(
             <React.Fragment>
-                <RequestRow label="Odobrio:" value={values.approvedby}/>
-                <RequestRow label="IP adresa:" value={values.vm_ip}/>
-                <RequestRow label="Poruka:" value={values.vm_reason}/>
-                <RequestRow label="Datum umirovljenja:" value={values.vm_dismissed}/>
+              <RequestRow label="Odobrio:" value={values.approvedby}/>
+              <RequestRow label="IP adresa:" value={values.vm_ip}/>
+              <RequestRow label="Poruka:" value={values.vm_reason}/>
+              <RequestRow label="Datum umirovljenja:" value={values.vm_dismissed}/>
             </React.Fragment>
         )
-
-    return null
+    else
+        return(
+          <React.Fragment>
+            <RequestRow label="Poruka:" value={values.vm_reason}/>
+          </React.Fragment>
+        )
 }
 
 const RequestDetails = ({values, userDetails}) =>
 {
     let reqStatus = <Status params={CONFIG['status'][values.approved]}/>
     let adminRemark = null
-    if(userDetails.is_superuser)
+    if(userDetails.is_staff)
       adminRemark = <RequestRow label="Napomena administratora:" value={values.vm_admin_remark}/>
 
     return (
@@ -85,7 +89,7 @@ const RequestDetails = ({values, userDetails}) =>
             <RequestRow label="Status:" value={reqStatus}/>
             <RequestRow label="Datum podnošenja:" value={values.request_date}/>
             
-            <RetiredRequestDetails values={values}/>
+            <RequestAdminDetails values={values}/>
         </React.Fragment>
     )
 }

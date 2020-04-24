@@ -102,7 +102,7 @@ export class MyRequests extends Component
 
             if (r.approved === 3 || r.approved === 0) {
               let path_segment = r.approved === 3 ? 'umirovljen' : 'odbijen'
-              url = `/ui/stanje-zahtjeva/${path_segment}/${r.id}` //'/ui/stanje-zahtjeva/umirovljen/' + r.id
+              url = `/ui/stanje-zahtjeva/${path_segment}/${r.id}`
               icon = <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
             }
             else {
