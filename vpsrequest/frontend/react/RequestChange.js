@@ -141,7 +141,7 @@ export class ChangeRequest extends Component
                 <VMFields listVMOSes={listVMOSes}/>
                 <SysAdminFields/>
                 <HeadFields/>
-                <StateFields readOnly={true} requestApproved={[1, 2, 3].indexOf(initValues.approved) !== -1 ? true : false}/>
+                <StateFields readOnly={true} requestApproved={requestDetails.approved}/>
                 <SubmitChangeRequest buttonLabel='Promijeni zahtjev'/>
               </Form>
             )}

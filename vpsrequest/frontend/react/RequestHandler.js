@@ -171,7 +171,7 @@ export class ApprovedRequestHandler extends Component
               let callback = undefined
               if (values.approved !== oldState) {
                 callback = () => this.history.push('/ui/odobreni-zahtjevi')
-              }    
+              }
               this.handleOnSubmit(values, callback)
             }}
             render = {({setFieldValue, handleSubmit}) => (
@@ -181,7 +181,7 @@ export class ApprovedRequestHandler extends Component
                 <VMFields listVMOSes={listVMOSes}/>
                 <SysAdminFields/>
                 <HeadFields/>
-                <StateFields readOnly={false}/>
+                <StateFields readOnly={false} requestApproved={initValues.approved}/>
                 {
                   initValues.approved === 1 ?
                     <SubmitChangeRequest buttonLabel='Izdaj VM'/>
