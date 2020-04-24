@@ -5,10 +5,11 @@ from dateutil.parser import parse
 import smtplib
 import socket
 import re
+from backend.email.msgbuilder import MsgBuilder
 from django.conf import settings
 
-TESTING_TO = 'dvrcic@srce.hr'
-TESTING_CC = 'dvrcic@srce.hr'
+TESTING_TO = 'hsute@srce.hr'
+TESTING_CC = 'hrvoje.sute@srce.hr'
 
 
 class Notification(object):
@@ -21,70 +22,45 @@ class Notification(object):
         self.request = serializer.data
 
     def composeFreshRequestAdminEmail(self):
-        email_text = None
         to = TESTING_TO
         cc = TESTING_CC
-        email_text = self.prepareMail(settings.ADMIN_FRESH_TEMPLATE, settings.ADMIN_FRESH_SUBJECT, to, cc)
-
-        if email_text:
-            self.send(email_text, to)
+        msgBuilder = MsgBuilder(settings.ADMIN_FRESH_TEMPLATE)
+        msgBuilder.processPlaceholders(self.request)
+        self.send(msgBuilder.body, settings.ADMIN_FRESH_SUBJECT, to, cc)
 
     def composeFreshRequestUserEmail(self):
-        email_text = None
         to = TESTING_TO
-        email_text = self.prepareMail(settings.USER_FRESH_TEMPLATE, settings.USER_FRESH_SUBJECT, to)
-
-        if email_text:
-            self.send(email_text, to)
+        msgBuilder = MsgBuilder(settings.USER_FRESH_TEMPLATE)
+        msgBuilder.processPlaceholders(self.request)
+        self.send(msgBuilder.body, settings.USER_FRESH_SUBJECT, to)
 
     def composeFreshRequestHeadEmail(self):
-        email_text = None
         to = TESTING_TO
-        email_text = self.prepareMail(settings.HEAD_FRESH_TEMPLATE, settings.HEAD_FRESH_SUBJECT, to)
+        msgBuilder = MsgBuilder(settings.HEAD_FRESH_TEMPLATE)
+        msgBuilder.processPlaceholders(self.request)
+        self.send(msgBuilder.body, settings.HEAD_FRESH_SUBJECT, to)
 
-        if email_text:
-            self.send(email_text, to)
+    def sendChangedRequestEmail(self, oldRequest):
+        to = TESTING_TO
+        msgBuilder = MsgBuilder(settings.CHANGED_REQ_TEMPLATE)
+        msgBuilder.findDiffs(self.request, oldRequest)
+        self.send(msgBuilder.body, settings.CHANGED_REQ_SUBJECT, to)
 
-    def prepareMail(self, template, subject, to, cc=None):
-        body = None
-        with open(template, mode='r', encoding='utf-8') as fp:
-            body = fp.readlines()
-
-        if body:
-            body = ''.join(body)
-            placeholders = re.findall(r"(__[A-Z_]+__)", body)
-
-            for ph in placeholders:
-                db_attr = ph.strip('__').lower()
-                if db_attr.startswith('user'):
-                    userAttr = db_attr.split('user_', 1)[1]
-                    body = body.replace(ph, str(self.request['user'][userAttr]))
-                elif 'date' in db_attr:
-                    dt = parse(self.request[db_attr])
-                    body = body.replace(ph, dt.strftime('%d.%m.%Y. %H:%M:%S'))
-                else:
-                    body = body.replace(ph, str(self.request[db_attr]))
-
-            m = MIMEText(body, 'plain', 'utf-8')
-            m['From'] = self.sender
-            m['To'] = to
-            if cc:
-                m['Cc'] = cc
-            m['Subject'] = Header(subject, 'utf-8')
-
-            return m.as_string()
-
-        return None
-
-    def send(self, email_text, to):
+       
+    def send(self, email_text, subject, to, cc = None):
         if not email_text:
             self.logger.error('Could not construct an email')
-
         else:
             try:
+                m = MIMEText(email_text, 'plain', 'utf-8')
+                m['From'] = self.sender
+                m['To'] = to
+                if cc:
+                    m['Cc'] = cc
+                m['Subject'] = Header(subject, 'utf-8')
                 s = smtplib.SMTP(settings.SRCE_SMTP, 25, timeout=120)
                 s.ehlo()
-                s.sendmail(self.sender, [TESTING_TO, self.sender], email_text)
+                s.sendmail(self.sender, [TESTING_TO, self.sender], m.as_string())
                 s.quit()
 
                 return True
