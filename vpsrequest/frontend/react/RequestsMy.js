@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CONFIG } from './Config'
 import {
   faPencilAlt,
-  faSearch, faCog
+  faSearch
   } from '@fortawesome/free-solid-svg-icons';
 import { DateFormatHR } from './Util'
 
@@ -100,8 +100,9 @@ export class MyRequests extends Component
             let url = ''
             let icon = undefined
 
-            if (r.approved === 3) {
-              url = '/ui/stanje-zahtjeva/umirovljen/' + r.id
+            if (r.approved === 3 || r.approved === 0) {
+              let path_segment = r.approved === 3 ? 'umirovljen' : 'odbijen'
+              url = `/ui/stanje-zahtjeva/${path_segment}/${r.id}`
               icon = <FontAwesomeIcon className="text-primary" size="lg" icon={faSearch}/>
             }
             else {
