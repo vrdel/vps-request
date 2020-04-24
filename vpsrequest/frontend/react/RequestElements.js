@@ -25,7 +25,7 @@ export const RowRequestDropDown = ({field, ...propsRest}) =>
       <Label
         for={propsRest.labelFor}
         className="mr-2"
-        {...propsRest}>
+      >
         {propsRest.label}
       </Label>
     </Col>
@@ -34,7 +34,7 @@ export const RowRequestDropDown = ({field, ...propsRest}) =>
         field={field}
         data={propsRest.data}
         id={propsRest.labelFor}
-        {...propsRest}
+        disabled={propsRest.disabled}
       />
       {
         propsRest.infoMsg ?
