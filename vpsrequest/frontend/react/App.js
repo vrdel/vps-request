@@ -269,6 +269,12 @@ class App extends Component {
                     {...propsPage}>
                     <ViewSingleRequest {...props}/>
                   </VPSPage>}/>
+            <Route exact path="/ui/stanje-zahtjeva/odbijen/:id"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}>
+                    <ViewSingleRequest {...props}/>
+                  </VPSPage>}/>
           </Switch>
         </BrowserRouter>
       )
