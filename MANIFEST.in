@@ -2,13 +2,6 @@ include README.md
 include LICENSE
 include setup.py
 
-include bin/*
-
-recursive-include vpsrequest/templates/ *.html
-recursive-include vpsrequest/backend/fixtures/ *.json
-recursive-include vpsrequest/frontend/ *.json
-recursive-include vpsrequest/static/ *
-
 exclude etc/was.*
 exclude etc/*.devel.*
 exclude etc/metadata*

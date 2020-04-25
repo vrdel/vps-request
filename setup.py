@@ -33,13 +33,17 @@ setup(name=NAME,
       ),
       scripts=['bin/vpsreq-db', 'bin/vpsreq-genseckey', 'bin/vpsreq-manage'],
       data_files=[
+          ('bin/', glob.glob('bin/*')),
           ('etc/vpsrequest', ['etc/vpsrequest.conf']),
           ('etc/vpsrequest/email_templates', glob.glob('etc/email_templates/*.tpl')),
           ('etc/apache2/sites-available/', ['apache/vpsrequest.example.com.conf']),
           ('var/log/vpsrequest', ['helpers/empty']),
           ('var/lib/vpsrequest', ['helpers/empty']),
-      ] + get_files('usr/share/', 'vpsrequest/static/'),
+      ] + get_files('share/', 'vpsrequest/static/'),
       include_package_data=True,
-      package_dir={'vpsrequest': 'vpsrequest/'},
-      packages=find_packages()
+      packages=find_packages(),
+      package_data={
+          'vpsrequest': ['templates/*'] + ['backend/fixtures/*'] + ['frontend/*.json'],
+      },
+      package_dir={'vpsrequest': 'vpsrequest/'}
 )
