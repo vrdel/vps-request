@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
 import os
+import glob
 import sys
 
 NAME = 'vpsrequest'
@@ -33,6 +34,7 @@ setup(name=NAME,
       scripts=['bin/vpsreq-db', 'bin/vpsreq-genseckey', 'bin/vpsreq-manage'],
       data_files=[
           ('etc/vpsrequest', ['etc/vpsrequest.conf']),
+          ('etc/vpsrequest/email_templates', glob.glob('etc/email_templates/*.tpl')),
           ('etc/apache2/sites-available/', ['apache/vpsrequest.example.com.conf']),
           ('var/log/vpsrequest', ['helpers/empty']),
           ('var/lib/vpsrequest', ['helpers/empty']),

@@ -2,7 +2,6 @@ include README.md
 include LICENSE
 include setup.py
 
-include etc/*
 include bin/*
 
 recursive-include vpsrequest/templates/ *.html
@@ -14,6 +13,7 @@ exclude etc/was.*
 exclude etc/*.devel.*
 exclude etc/metadata*
 exclude etc/secret_key
+exclude etc/secretkey
 exclude **/*.eslintrc.js
 
 recursive-exclude vpsrequest/frontend/node_modules/* *
