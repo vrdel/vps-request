@@ -39,5 +39,5 @@ setup(name=NAME,
       ] + get_files('usr/share/', 'vpsrequest/static/'),
       include_package_data=True,
       package_dir={'vpsrequest': 'vpsrequest/'},
-      packages=find_packages('vpsrequest/*'),
+      packages=find_packages()
 )
