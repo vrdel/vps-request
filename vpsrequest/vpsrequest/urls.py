@@ -21,7 +21,7 @@ from django.http import HttpResponseRedirect
 from django.conf import settings
 
 urlpatterns = [
-    re_path(r'^$', lambda x: HttpResponseRedirect('/{}/ui/prijava'.format(settings.RELATIVE_PATH))),
+    re_path(r'^$', lambda x: HttpResponseRedirect('{}/ui/prijava'.format(settings.RELATIVE_PATH))),
     re_path(r'^ui', TemplateView.as_view(template_name='index.html')),
     re_path(r'^saml2/', include(('djangosaml2.urls', 'backend'), namespace='saml2')),
     re_path(r'^api/v1/internal/', include('backend.api.internal.urls', namespace='internalapi')),
