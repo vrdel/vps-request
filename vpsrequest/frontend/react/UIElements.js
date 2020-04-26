@@ -37,8 +37,8 @@ import Autocomplete from 'react-autocomplete';
 import SrceLogo from './logos/pravisrce.png';
 import SrceLogoTiny from './logos/srce-logo-e-mail-sig.png';
 import CloudLogo from './logos/logo_cloud.png';
-import { canApprove } from './Util'
-
+import { canApprove } from './Util';
+import { RelativePath } from './Config';
 
 import './UIElements.css';
 
@@ -89,7 +89,7 @@ const doLogout = (history, onLogout) => {
 
   onLogout();
 
-  return fetch('/rest-auth/logout/', {
+  return fetch(`/${RelativePath}/rest-auth/logout/`, {
     method: 'POST',
     mode: 'cors',
     cache: 'no-cache',

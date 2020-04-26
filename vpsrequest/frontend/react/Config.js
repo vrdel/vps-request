@@ -5,10 +5,11 @@ faCheck,
 faCouch
 } from '@fortawesome/free-solid-svg-icons';
 
+export const RelativePath = 'vps'
 
 export const CONFIG = {
-    'vmosUrl': '/api/v1/internal/vmos/',
-    'listReqUrl': '/api/v1/internal/requests/',
+    'vmosUrl': `/${RelativePath}/api/v1/internal/vmos/`,
+    'listReqUrl': `/${RelativePath}/api/v1/internal/requests/`,
     'status': {
         '-1': {
             'classname': 'text-warning',

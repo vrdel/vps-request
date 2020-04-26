@@ -19,7 +19,7 @@ import './App.css';
 import 'react-notifications/lib/notifications.css';
 import { ViewSingleRequest } from './RequestView';
 import { ApprovedRequestHandler } from './RequestHandler'
-import { CONFIG } from './Config'
+import { CONFIG, RelativePath } from './Config'
 import { canApprove } from './Util'
 import { NotificationContainer } from 'react-notifications';
 
@@ -171,7 +171,7 @@ class App extends Component {
 
     if (!isSessionActive) {
       return (
-        <BrowserRouter>
+        <BrowserRouter basename={`/${RelativePath}`}>
           <Switch>
             <Route
               path="/ui/"
@@ -193,7 +193,7 @@ class App extends Component {
       })
 
       return (
-        <BrowserRouter>
+        <BrowserRouter basename={`/${RelativePath}`}>
           <NotificationContainer/>
           <Switch>
             <Route exact path="/ui/prijava"

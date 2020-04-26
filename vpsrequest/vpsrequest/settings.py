@@ -32,7 +32,8 @@ try:
         raise ImproperlyConfigured('Unable to parse config file %s' % CONFIG_FILE)
 
     # General
-    DEBUG = bool(config.getboolean('GENERAL', 'debug'))
+    DEBUG = bool(config.getboolean('GENERAL', 'Debug'))
+    RELATIVE_PATH = config.get('GENERAL', 'RelativePath')
 
     ALLOWED_HOSTS = config.get('SECURITY', 'AllowedHosts')
     HOST_CERT = config.get('SECURITY', 'HostCert')
@@ -41,16 +42,16 @@ try:
 
     SAML_METADATA = config.get('SAML2', 'Metadata')
 
-    DBNAME = config.get('DATABASE', 'name')
-    DBUSER = config.get('DATABASE', 'user')
-    DBPASSWORD = config.get('DATABASE', 'password')
+    DBNAME = config.get('DATABASE', 'Name')
+    DBUSER = config.get('DATABASE', 'User')
+    DBPASSWORD = config.get('DATABASE', 'Password')
 
-    SUPERUSER_NAME = config.get('SUPERUSER', 'name')
-    SUPERUSER_PASS = config.get('SUPERUSER', 'password')
-    SUPERUSER_EMAIL = config.get('SUPERUSER', 'email')
+    SUPERUSER_NAME = config.get('SUPERUSER', 'Name')
+    SUPERUSER_PASS = config.get('SUPERUSER', 'Password')
+    SUPERUSER_EMAIL = config.get('SUPERUSER', 'Email')
 
-    PERMISSIONS_STAFF = config.get('PERMISSIONS', 'staff')
-    PERMISSIONS_APPROVE = config.get('PERMISSIONS', 'approve')
+    PERMISSIONS_STAFF = config.get('PERMISSIONS', 'Staff')
+    PERMISSIONS_APPROVE = config.get('PERMISSIONS', 'Approve')
 
     SRCE_SMTP = config.get('EMAIL', 'SrceSmtp')
     ADMIN_MAIL = config.get('EMAIL', 'AdminMail')
@@ -225,7 +226,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/{}/static/'.format(RELATIVE_PATH)
 STATIC_ROOT = '{}/share/vpsrequest/static/'.format(VENV)
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'frontend/bundles/')]
 
@@ -237,8 +238,8 @@ WEBPACK_LOADER = {
 }
 
 # load SAML settings
-LOGIN_REDIRECT_URL = '/ui/prijava'
-LOGOUT_REDIRECT_URL = '/ui/prijava'
+LOGIN_REDIRECT_URL = '/{}/ui/prijava'.format(RELATIVE_PATH)
+LOGOUT_REDIRECT_URL = '/{}/ui/prijava'.format(RELATIVE_PATH)
 SAML_CONFIG_LOADER = 'backend.saml2.config.get_saml_config'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_SAMESITE = None
