@@ -226,7 +226,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/{}/static/'.format(RELATIVE_PATH)
+STATIC_URL = '{}/static/'.format(RELATIVE_PATH)
 STATIC_ROOT = '{}/share/vpsrequest/static/'.format(VENV)
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'frontend/bundles/')]
 

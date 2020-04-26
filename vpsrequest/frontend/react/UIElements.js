@@ -33,7 +33,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { NotificationManager } from 'react-notifications';
 import { Field } from 'formik';
-import Autocomplete from 'react-autocomplete';
 import SrceLogo from './logos/pravisrce.png';
 import SrceLogoTiny from './logos/srce-logo-e-mail-sig.png';
 import CloudLogo from './logos/logo_cloud.png';
@@ -89,7 +88,7 @@ const doLogout = (history, onLogout) => {
 
   onLogout();
 
-  return fetch(`/${RelativePath}/rest-auth/logout/`, {
+  return fetch(`${RelativePath}/rest-auth/logout/`, {
     method: 'POST',
     mode: 'cors',
     cache: 'no-cache',

@@ -3,7 +3,7 @@ import { RelativePath } from './Config'
 
 export class Backend {
   async isActiveSession() {
-    let response = await fetch(`/${RelativePath}/api/v1/sessionactive`)
+    let response = await fetch(`${RelativePath}/api/v1/sessionactive`)
 
     if (response.ok)
       return response.json()
@@ -12,7 +12,7 @@ export class Backend {
   }
 
   async fetchConfigOptions() {
-    let response = await fetch(`/${RelativePath}/api/v1/configoptions`)
+    let response = await fetch(`${RelativePath}/api/v1/configoptions`)
 
     if (response.ok)
       return response.json()
@@ -24,7 +24,7 @@ export class Backend {
   {
     let cookies = new Cookies();
 
-    let response = await fetch(`/${RelativePath}/rest-auth/login/`, {
+    let response = await fetch(`${RelativePath}/rest-auth/login/`, {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',
