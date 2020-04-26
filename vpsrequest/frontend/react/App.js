@@ -171,7 +171,7 @@ class App extends Component {
 
     if (!isSessionActive) {
       return (
-        <BrowserRouter basename={`/${RelativePath}`}>
+        <BrowserRouter basename={`${RelativePath}`}>
           <Switch>
             <Route
               path="/ui/"
@@ -193,7 +193,7 @@ class App extends Component {
       })
 
       return (
-        <BrowserRouter basename={`/${RelativePath}`}>
+        <BrowserRouter basename={`${RelativePath}`}>
           <NotificationContainer/>
           <Switch>
             <Route exact path="/ui/prijava"

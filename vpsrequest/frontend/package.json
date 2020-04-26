@@ -50,7 +50,6 @@
     "@fortawesome/react-fontawesome": "^0.1.8",
     "bootstrap": "^4.4.1",
     "react": "^16.12.0",
-    "react-autocomplete": "^1.8.1",
     "react-dom": "^16.12.0",
     "react-notifications": "^1.6.0",
     "react-popup": "^0.10.0",
