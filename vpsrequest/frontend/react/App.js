@@ -137,14 +137,10 @@ class App extends Component {
         session = await this.backend.isActiveSession()
 
     if (session.active) {
-      const options = await this.backend.fetchConfigOptions()
-
-      if (options)
-        this.setState({
-          isSessionActive: session.active,
-          userDetails: session.userdetails,
-          configOptions: options,
-        })
+      this.setState({
+        isSessionActive: session.active,
+        userDetails: session.userdetails,
+      })
     }
   }
 
@@ -171,7 +167,7 @@ class App extends Component {
 
     if (!isSessionActive) {
       return (
-        <BrowserRouter basename={`${RelativePath}`}>
+        <BrowserRouter basename={RelativePath}>
           <Switch>
             <Route
               path="/ui/"
@@ -193,7 +189,7 @@ class App extends Component {
       })
 
       return (
-        <BrowserRouter basename={`${RelativePath}`}>
+        <BrowserRouter basename={RelativePath}>
           <NotificationContainer/>
           <Switch>
             <Route exact path="/ui/prijava"

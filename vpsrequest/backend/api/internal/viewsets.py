@@ -2,19 +2,12 @@ from backend import serializers
 from backend import models
 from backend.email.notif import Notification
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.db import IntegrityError
 
 from rest_framework import status
 from rest_framework import viewsets
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.views import APIView
-from rest_framework.exceptions import APIException
-
-from datetime import datetime
 
 
 class VMOSViewset(viewsets.ModelViewSet):

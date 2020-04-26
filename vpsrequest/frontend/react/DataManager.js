@@ -11,15 +11,6 @@ export class Backend {
       return false
   }
 
-  async fetchConfigOptions() {
-    let response = await fetch(`${RelativePath}/api/v1/configoptions`)
-
-    if (response.ok)
-      return response.json()
-    else
-      return false
-  }
-
   async doUserPassLogin(username, password)
   {
     let cookies = new Cookies();
