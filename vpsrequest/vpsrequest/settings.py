@@ -14,6 +14,13 @@ import os
 from configparser import ConfigParser, NoSectionError
 from django.core.exceptions import ImproperlyConfigured
 
+import logging
+
+# logger = logging.getLogger('djangosaml2')
+
+# logger.setLevel(logging.DEBUG)
+# logger.addHandler(logging.handlers.SysLogHandler('/dev/log', logging.handlers.SysLogHandler.LOG_USER))
+# logger.addHandler(logging.StreamHandler())
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -97,12 +104,6 @@ else:
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
                            'authbackend.saml2.backends.SAML2Backend']
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211'
-    }
-}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
