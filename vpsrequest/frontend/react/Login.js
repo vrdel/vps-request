@@ -16,6 +16,7 @@ import './Login.css';
 import {Footer} from './UIElements.js';
 import CloudLogoSmall from './logos/logo_cloud-smaller.png';
 import { Backend } from './DataManager.js';
+import { RelativePath } from './Config'
 
 
 class Login extends Component {
@@ -81,7 +82,7 @@ class Login extends Component {
                     </div>
                     <FormGroup>
                       <Button color="success" type="submit" block>Prijava korisničkim imenom i lozinkom</Button>
-                      <a className="btn btn-success btn-block" role="button" href="/saml2/login">AAI @ EduHR</a>
+                      <a className="btn btn-success btn-block" role="button" href= {`${RelativePath}/saml2/login`}>AAI @ EduHR</a>
                     </FormGroup>
                   </Form>
                 </Formik>
