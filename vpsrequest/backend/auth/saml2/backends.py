@@ -19,6 +19,7 @@ class SAML2Backend(Saml2Backend):
         first_name = self._unpack(attributes['givenName'])
         last_name = self._unpack(attributes['sn'])
         email = self._unpack(attributes['mail'])
+        organization = self._unpack(attributes['o'])
 
         userfound, created = None, None
         try:
@@ -28,7 +29,8 @@ class SAML2Backend(Saml2Backend):
                 get_user_model().objects.get_or_create(username=username,
                                                        first_name=first_name,
                                                        last_name=last_name,
-                                                       email=email)
+                                                       email=email,
+                                                       institution=organization)
 
         if created:
             user.set_unusable_password()
