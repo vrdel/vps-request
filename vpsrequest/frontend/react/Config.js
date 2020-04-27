@@ -5,7 +5,7 @@ faCheck,
 faCouch
 } from '@fortawesome/free-solid-svg-icons';
 
-export const RelativePath = ''
+export const RelativePath = '/zahtjev'
 
 export const CONFIG = {
     'vmosUrl': `${RelativePath}/api/v1/internal/vmos/`,
