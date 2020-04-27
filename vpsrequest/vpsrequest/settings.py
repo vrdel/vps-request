@@ -102,7 +102,7 @@ else:
 
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
-                           'authbackend.saml2.backends.SAML2Backend']
+                           'backend.auth.saml2.backends.SAML2Backend']
 
 
 # Quick-start development settings - unsuitable for production
@@ -243,6 +243,6 @@ WEBPACK_LOADER = {
 # load SAML settings
 LOGIN_REDIRECT_URL = '{}/ui/prijava'.format(RELATIVE_PATH)
 LOGOUT_REDIRECT_URL = '{}/ui/prijava'.format(RELATIVE_PATH)
-SAML_CONFIG_LOADER = 'backend.saml2.config.get_saml_config'
+SAML_CONFIG_LOADER = 'backend.auth.saml2.config.get_saml_config'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_SAMESITE = None
