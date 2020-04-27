@@ -63,15 +63,24 @@ class RequestsViewset(viewsets.ModelViewSet):
     def partial_update(self, request, pk=None):
         sendMsgContact = request.data.pop('sendMsgContact', False)
         sendMsgHead = request.data.pop('sendMsgHead', False)
+        
+        oldReq = models.Request.objects.get(pk=pk)
+        serializer = serializers.RequestsListSerializer(oldReq)
+        oldRequest = serializer.data
 
         ret = super().partial_update(request, pk)
-        request = ret.data
-
-        notification = Notification(request['id'])
-        if sendMsgContact:
-            notification.composeFreshRequestUserEmail()
-        if sendMsgHead:
-            notification.composeFreshRequestHeadEmail()
+        newRequest = ret.data
+        notification = Notification(newRequest['id'])
+        
+        # state transitions mail sending
+        if oldRequest['approved'] == 2 and newRequest['approved'] == 2:
+            notification.sendChangedRequestEmail(oldRequest)
+        elif oldRequest['approved'] == -1 and newRequest['approved'] == -1 and (sendMsgHead or sendMsgContact):
+            notification.sendFixRequestEmail(sendMsgContact, sendMsgHead)
+        elif oldRequest['approved'] == -1 and newRequest['approved'] == 0 and (sendMsgHead or sendMsgContact):
+            notification.sendRejecedRequestEmail(sendMsgContact, sendMsgHead)
+        elif oldRequest['approved'] == -1 and newRequest['approved'] == 1 and (sendMsgHead or sendMsgContact):
+            notification.sendApprovedRequestEmail(sendMsgContact, sendMsgHead)
 
         return ret
 
@@ -79,9 +88,9 @@ class RequestsViewset(viewsets.ModelViewSet):
         response = super().create(request)
         new_request = response.data
         notification = Notification(new_request['id'])
-        notification.composeFreshRequestAdminEmail()
-        notification.composeFreshRequestUserEmail()
-        notification.composeFreshRequestHeadEmail()
+        notification.sendFreshRequestAdminEmail()
+        notification.sendFreshRequestUserEmail()
+        notification.sendFreshRequestHeadEmail()
 
         return response
 

@@ -4,10 +4,9 @@ Razmotrili smo Vaš zahtjev za virtualnim poslužiteljem u cloudu Srca:
 
 http://vps.srce.hr/zahtjev/ui/stanje-zahtjeva/__ID__
 
-te donijeli odluku da se Vaš zahtjev prihvaća.
+te uočili da je potrebno doraditi sljedeće informacije:
 
-Za daljnje tehničke detalje kontaktirat ćemo vas e-mailom na adresu
-podnositelja zahtjeva (__USER_EMAIL__).
+__VM_REASON__
 
 S poštovanjem
 

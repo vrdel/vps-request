@@ -166,7 +166,6 @@ export class ApprovedRequestHandler extends Component
                 values.approved = 3
                 values.vm_dismissed = values.timestamp
               }
-              delete values.retire
 
               let callback = undefined
               if (values.approved !== oldState) {
