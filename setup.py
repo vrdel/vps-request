@@ -35,6 +35,7 @@ setup(name=NAME,
       data_files=[
           ('bin/', glob.glob('bin/*')),
           ('etc/vpsrequest', ['etc/vpsrequest.conf']),
+          ('etc/cron.d/', ['cron/vpsreq-clearsessions']),
           ('etc/vpsrequest/email_templates', glob.glob('etc/email_templates/*.tpl')),
           ('etc/apache2/sites-available/', ['apache/vpsrequest.example.com.conf']),
           ('var/log/vpsrequest', ['helpers/empty']),

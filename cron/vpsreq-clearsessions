@@ -1,0 +1,1 @@
+30 0 * * * root . /data/vps-request/bin/activate; $VIRTUAL_ENV/bin/vpsreq-manage clearsessions

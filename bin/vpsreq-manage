@@ -5,4 +5,4 @@ PYTHON=$(which python)
 DJANGO_SETTINGS="export DJANGO_SETTINGS_MODULE=vpsrequest.settings"
 MANAGEPY=$SITEPACK/vpsrequest/manage.py
 
-$DJANGO_SETTINGS && $MANAGEPY $*
+$DJANGO_SETTINGS && $PYTHON $MANAGEPY $*
