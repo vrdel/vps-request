@@ -105,7 +105,7 @@ const doLogout = (history, onLogout) => {
 export const InfoLink = ({prefix='', suffix='', linkTitle='', linkHref}) => (
   <React.Fragment>
     {prefix}
-    <a href={linkHref}>{!linkTitle ? linkHref : linkTitle}</a>
+    <a href={linkHref} target="_blank" rel="noopener noreferrer">{!linkTitle ? linkHref : linkTitle}</a>
     {suffix}
   </React.Fragment>
 )
