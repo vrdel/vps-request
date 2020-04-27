@@ -16,12 +16,13 @@ def get_saml_config(request):
     config = {
         'xmlsec_binary': '/usr/bin/xmlsec1',
         'entityid': 'https://%s/saml2/metadata/' % hostname,
-        'allow_unknown_attributes': 'true',
+        'allow_unknown_attributes': True,
         'debug': 1,
         'service': {
             'sp': {
                 'name': 'VPS Request',
-                'want_assertions_signed': 'true',
+                'want_assertions_signed': False,
+                'want_response_signed': False,
                 'endpoints': {
                     'assertion_consumer_service': [
                         ('https://%s/saml2/acs/' % hostname,
