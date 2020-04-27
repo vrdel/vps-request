@@ -5,14 +5,20 @@ from django.contrib.auth import get_user_model
 
 
 class SAML2Backend(Saml2Backend):
+    def _unpack(self, attr):
+        if isinstance(attr, list):
+            return attr[0]
+        else:
+            return attr
+
     def authenticate(self, request, session_info=None, attribute_mapping=None,
                      create_unknown_user=True):
         attributes = session_info['ava']
 
-        username = attributes['hrEduPersonUniqueID']
-        first_name = attributes['givenName']
-        last_name = attributes['sn']
-        email = attributes['mail']
+        username = self._unpack(attributes['hrEduPersonUniqueID'])
+        first_name = self._unpack(attributes['givenName'])
+        last_name = self._unpack(attributes['sn'])
+        email = self._unpack(attributes['mail'])
 
         userfound, created = None, None
         try:
