@@ -7,7 +7,7 @@ u usluzi Virtual Private Server (http://www.srce.hr/vps/)
 koju omogućava Sveučilišni računski centar (Srce).
 
 Prije slanja zahtjeva kontaktna osoba Ustanove izjasnila se o
-prihvaćanju Pravilnika usluge (https://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps_05102018.pdf).
+prihvaćanju Pravilnika usluge (https://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps.pdf).
 Prihvaćanjem Pravilnika usluge od strane kontaktne osobe Ustanove smatra
 se da Ustanova i čelnik Ustanove potvrđuju i odgovaraju za istinitost
 podataka iz zahtjeva, da su upoznati s odredbama Pravilnika usluge, te
@@ -15,7 +15,7 @@ da pristaju na korištenje usluge sukladno Pravilniku usluge.
 
 Srce osobne podatke navedene u zahtjevu za virtualnim poslužiteljem obrađuje isključivo radi pružanja
 zatražene usluge, sukladno svojoj politici privatnosti (https://www.srce.hr/politika-privatnosti)
-i Pravilniku usluge (https://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps_05102018.pdf)
+i Pravilniku usluge (https://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps.pdf)
 
 Ukoliko imate primjedbi na poslani zahtjev, molimo Vas da ih javite
 Službi za korisnike (Helpdesk) Srca (http://www.srce.hr/helpdesk/),
