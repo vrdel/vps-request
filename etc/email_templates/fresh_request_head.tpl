@@ -18,8 +18,7 @@ zatražene usluge, sukladno svojoj politici privatnosti (https://www.srce.hr/pol
 i Pravilniku usluge (https://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps.pdf)
 
 Ukoliko imate primjedbi na poslani zahtjev, molimo Vas da ih javite
-Službi za korisnike (Helpdesk) Srca (http://www.srce.hr/helpdesk/),
-poželjno e-mailom na adresu helpdesk@srce.hr.
+timu usluge VPS, e-mailom na adresu vps@srce.hr.
 
 Podaci iz zahtjeva:
 
@@ -58,4 +57,4 @@ Virtual Private Server (VPS)
 http://www.srce.hr/vps
 
 Sveučilište u Zagrebu, Sveučilišni računski centar (Srce), www.srce.unizg.hr
-helpdesk@srce.hr, tel: +385 1 616 5165, fax: +385 1 616 5859
+vps@srce.hr, tel: +385 1 616 5165, fax: +385 1 616 5859
