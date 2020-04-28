@@ -8,8 +8,12 @@ import re
 from backend.email.msgbuilder import MsgBuilder
 from django.conf import settings
 
-TESTING_TO = 'vps-admin-test@srce.hr'
-TESTING_CC = 'vps-test@srce.hr'
+# TESTING_TO = 'dvrcic@srce.hr'
+# TESTING_CC = 'dvrcic@srce.hr'
+# TESTING_TO = 'vps-admin-test@srce.hr'
+# TESTING_CC = 'vps-test@srce.hr'
+TESTING_TO = 'vps-admin@srce.hr'
+TESTING_CC = 'vps-request@srce.hr'
 
 
 class Notification(object):
@@ -40,21 +44,21 @@ class Notification(object):
         msgBuilder.processPlaceholders(self.request)
         self._send(msgBuilder.body, settings.HEAD_FRESH_SUBJECT, to)
 
-    def sendApprovedRequestEmail(self, sendToUser = False, sendToHead = False):
+    def sendApprovedRequestEmail(self, sendToUser=False, sendToHead=False):
         to = self._findTo(sendToUser, sendToHead)
         cc = self.sender
         msgBuilder = MsgBuilder(settings.APPROVED_REQ_TEMPLATE)
         msgBuilder.processPlaceholders(self.request)
         self._send(msgBuilder.body, settings.APPROVED_REQ_SUBJECT, to, cc)
 
-    def sendRejecedRequestEmail(self, sendToUser = False, sendToHead = False):
+    def sendRejecedRequestEmail(self, sendToUser=False, sendToHead=False):
         to = self._findTo(sendToUser, sendToHead)
         cc = self.sender
         msgBuilder = MsgBuilder(settings.REJECTED_REQ_TEMPLATE)
         msgBuilder.processPlaceholders(self.request)
         self._send(msgBuilder.body, settings.REJECTED_REQ_SUBJECT, to, cc)
 
-    def sendFixRequestEmail(self, sendToUser = False, sendToHead = False):
+    def sendFixRequestEmail(self, sendToUser=False, sendToHead=False):
         to = self._findTo(sendToUser, sendToHead)
         cc = self.sender
         msgBuilder = MsgBuilder(settings.FIX_REQ_TEMPLATE)
@@ -67,8 +71,7 @@ class Notification(object):
         msgBuilder.findDiffs(self.request, oldRequest)
         self._send(msgBuilder.body, settings.CHANGED_REQ_SUBJECT, to)
 
-       
-    def _send(self, email_text, subject, to, cc = None):
+    def _send(self, email_text, subject, to, cc=None):
         if not email_text:
             self.logger.error('Could not construct an email')
         else:
