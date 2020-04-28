@@ -44,6 +44,7 @@ class SAML2Backend(Saml2Backend):
             userfound.email = email
             userfound.first_name = first_name
             userfound.last_name = last_name
+            userfound.institution = organization
             userfound.save()
 
             return userfound
