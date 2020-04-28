@@ -142,7 +142,8 @@ export class ChangeRequest extends Component
                 <SysAdminFields/>
                 <HeadFields/>
                 <StateFields readOnly={true} requestApproved={requestDetails.approved}/>
-                <SubmitChangeRequest buttonLabel='Promijeni zahtjev'/>
+                <SubmitChangeRequest buttonLabel='Promijeni zahtjev'
+                  disabled={requestDetails.approved === 1 || requestDetails.approved === 2}/>
               </Form>
             )}
           />
