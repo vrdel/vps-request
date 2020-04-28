@@ -5,7 +5,7 @@ Virtual Private Server od __USER_EMAIL__.
 
 Adresa zahtjeva:
 
-http://vps.srce.hr/ui/novi-zahtjevi/__ID__
+http://vps.srce.hr/zahtjev/ui/novi-zahtjevi/__ID__
 
 
 -- 
