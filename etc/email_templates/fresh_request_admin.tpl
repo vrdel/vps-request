@@ -13,4 +13,4 @@ Virtual Private Server (VPS)
 http://www.srce.hr/vps
 
 Sveučilište u Zagrebu, Sveučilišni računski centar (Srce), www.srce.unizg.hr
-helpdesk@srce.hr, tel: +385 1 616 5165, fax: +385 1 616 5859
+vps@srce.hr, tel: +385 1 616 5165, fax: +385 1 616 5859
