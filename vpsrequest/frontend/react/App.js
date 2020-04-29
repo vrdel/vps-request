@@ -95,7 +95,7 @@ const RedirectAfterLogin = ({userDetails, ...props}) => {
 
   localStorage.removeItem('referrer')
 
-  if (destination.startsWith(RelativePath)) {
+  if (RelativePath && destination.startsWith(RelativePath)) {
     let splitted = destination.split(RelativePath)
     destination = splitted[1]
   }
