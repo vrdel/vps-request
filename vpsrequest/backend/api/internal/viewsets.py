@@ -61,30 +61,52 @@ class RequestsViewset(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def partial_update(self, request, pk=None):
+        changedContact = request.data.pop('changedContact', False)
         sendMsgContact = request.data.pop('sendMsgContact', False)
         sendMsgHead = request.data.pop('sendMsgHead', False)
         user = self.request.user
-        
+
         oldReq = models.Request.objects.get(pk=pk)
+
+        if changedContact:
+            data = request.data
+            user = None
+            user_model = get_user_model()
+            try:
+                user = user_model.objects.get(username=data['aaieduhr'])
+            except user_model.DoesNotExist:
+                user = user_model.objects.create(username=data['aaieduhr'],
+                                                 first_name=data['first_name'],
+                                                 last_name=data['last_name'],
+                                                 email=data['email'],
+                                                 role=data['role'],
+                                                 aaieduhr=data['aaieduhr'],
+                                                 institution=data['institution'],
+                                                 is_staff=False,
+                                                 is_active=True)
+            oldReq.user = user
+            oldReq.save()
+
         serializer = serializers.RequestsListSerializer(oldReq)
         oldRequest = serializer.data
-
         ret = super().partial_update(request, pk)
-        newRequest = ret.data
-        notification = Notification(newRequest['id'])
-        
-        # state transitions mail sending
-        if (oldRequest['approved'] == 2 and newRequest['approved']  > 1) or (oldRequest['approved'] == 1 and newRequest['approved']  == 2):
-            notification.sendChangedRequestEmail(oldRequest)
-        elif oldRequest['approved'] == -1 and newRequest['approved'] == -1:
-            if user.is_staff:
-                notification.sendFixRequestEmail(sendMsgContact, sendMsgHead)
-            else:
+
+        if not changedContact:
+            newRequest = ret.data
+            notification = Notification(newRequest['id'])
+
+            # state transitions mail sending
+            if (oldRequest['approved'] == 2 and newRequest['approved'] > 1) or (oldRequest['approved'] == 1 and newRequest['approved'] == 2):
                 notification.sendChangedRequestEmail(oldRequest)
-        elif oldRequest['approved'] == -1 and newRequest['approved'] == 0:
-            notification.sendRejecedRequestEmail(sendMsgContact, sendMsgHead)
-        elif oldRequest['approved'] == -1 and newRequest['approved'] == 1:
-            notification.sendApprovedRequestEmail(sendMsgContact, sendMsgHead)
+            elif oldRequest['approved'] == -1 and newRequest['approved'] == -1:
+                if user.is_staff:
+                    notification.sendFixRequestEmail(sendMsgContact, sendMsgHead)
+                else:
+                    notification.sendChangedRequestEmail(oldRequest)
+            elif oldRequest['approved'] == -1 and newRequest['approved'] == 0:
+                notification.sendRejecedRequestEmail(sendMsgContact, sendMsgHead)
+            elif oldRequest['approved'] == -1 and newRequest['approved'] == 1:
+                notification.sendApprovedRequestEmail(sendMsgContact, sendMsgHead)
 
         return ret
 

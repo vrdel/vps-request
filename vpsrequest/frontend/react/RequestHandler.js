@@ -116,7 +116,7 @@ export class ApprovedRequestHandler extends Component
         institution: requestDetails.user.institution,
         role: requestDetails.user.role,
         email: requestDetails.user.email,
-        aaieduhr: requestDetails.user.aaieduhr,
+        aaieduhr: EmptyIfNull(requestDetails.user.aaieduhr),
         approvedby: requestDetails.approvedby,
         vm_fqdn: requestDetails.vm_fqdn,
         vm_purpose: requestDetails.vm_purpose,
@@ -160,6 +160,9 @@ export class ApprovedRequestHandler extends Component
               values.approved = 2
               values.timestamp = new Date().toISOString()
               values.request_date = requestDetails.request_date
+
+              if (initValues.aaieduhr !== values.aaieduhr)
+                values.changedContact = values.aaieduhr
 
               if (values.retire) {
                 values.approved = 3
