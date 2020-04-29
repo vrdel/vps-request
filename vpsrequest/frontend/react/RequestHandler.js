@@ -157,25 +157,29 @@ export class ApprovedRequestHandler extends Component
             initialValues={initValues}
             onSubmit={(values, actions) => {
               let oldState = values.approved
+              let callback = undefined
+
               values.approved = 2
               values.timestamp = new Date().toISOString()
               values.request_date = requestDetails.request_date
 
-              if (initValues.aaieduhr !== values.aaieduhr)
+              if (initValues.aaieduhr !== values.aaieduhr) {
                 values.changedContact = values.aaieduhr
+                callback = () => this.history.push('/ui/odobreni-zahtjevi')
+              }
 
               if (values.retire) {
                 values.approved = 3
                 values.vm_dismissed = values.timestamp
               }
 
-              let callback = undefined
               if (values.approved !== oldState) {
                 callback = () => this.history.push('/ui/odobreni-zahtjevi')
               }
+
               this.handleOnSubmit(values, callback)
             }}
-            render = {({setFieldValue, handleSubmit}) => (
+            render = {({setFieldValue, handleSubmit, values}) => (
               <Form onSubmit={handleSubmit}>
                 <RequestDateField/>
                 {
@@ -199,7 +203,18 @@ export class ApprovedRequestHandler extends Component
                         <Col md={{offset: 4}}>
                           <Button className="btn-lg" color="success"
                             id="button-save" type="button"
-                            onClick={() => handleSubmit()}>
+                            onClick={() => {
+                              if (initValues.aaieduhr !== values.aaieduhr) {
+                                this.toggleAreYouSureSetModal(
+                                  "Da li se sigurni da želite zahtjev dodijeliti drugom korisniku?",
+                                  "Dodjeljivanje drugom korisniku",
+                                  () => {
+                                    handleSubmit()
+                                  })
+                              }
+                              else
+                                handleSubmit()
+                            }}>
                               Spremi promjene
                           </Button>
                         </Col>
