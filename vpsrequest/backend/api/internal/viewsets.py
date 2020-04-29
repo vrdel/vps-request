@@ -63,6 +63,7 @@ class RequestsViewset(viewsets.ModelViewSet):
     def partial_update(self, request, pk=None):
         sendMsgContact = request.data.pop('sendMsgContact', False)
         sendMsgHead = request.data.pop('sendMsgHead', False)
+        user = self.request.user
         
         oldReq = models.Request.objects.get(pk=pk)
         serializer = serializers.RequestsListSerializer(oldReq)
@@ -73,13 +74,16 @@ class RequestsViewset(viewsets.ModelViewSet):
         notification = Notification(newRequest['id'])
         
         # state transitions mail sending
-        if oldRequest['approved'] == 2 and newRequest['approved'] == 2:
+        if (oldRequest['approved'] == 2 and newRequest['approved']  > 1) or (oldRequest['approved'] == 1 and newRequest['approved']  == 2):
             notification.sendChangedRequestEmail(oldRequest)
-        elif oldRequest['approved'] == -1 and newRequest['approved'] == -1 and (sendMsgHead or sendMsgContact):
-            notification.sendFixRequestEmail(sendMsgContact, sendMsgHead)
-        elif oldRequest['approved'] == -1 and newRequest['approved'] == 0 and (sendMsgHead or sendMsgContact):
+        elif oldRequest['approved'] == -1 and newRequest['approved'] == -1:
+            if user.is_staff:
+                notification.sendFixRequestEmail(sendMsgContact, sendMsgHead)
+            else:
+                notification.sendChangedRequestEmail(oldRequest)
+        elif oldRequest['approved'] == -1 and newRequest['approved'] == 0:
             notification.sendRejecedRequestEmail(sendMsgContact, sendMsgHead)
-        elif oldRequest['approved'] == -1 and newRequest['approved'] == 1 and (sendMsgHead or sendMsgContact):
+        elif oldRequest['approved'] == -1 and newRequest['approved'] == 1:
             notification.sendApprovedRequestEmail(sendMsgContact, sendMsgHead)
 
         return ret

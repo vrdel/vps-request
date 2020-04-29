@@ -227,7 +227,6 @@ export const StateFields = ({readOnly, requestApproved}) =>
       <Field name="approvedby" component={RowRequestField} label="Obradio:" labelFor="approvedBy" fieldType="text" disabled={readOnly} plain={true}/>
       <Field name="vm_admin_remark" component={RowRequestField} label="Napomena:" labelFor="vmAdminRemark" fieldType="textarea" disabled={readOnly}/>
       <Field name="vm_ip" component={RowRequestField} label="IP adresa:" labelFor="vmIp" fieldType="text" disabled={readOnly} required={true}/>
-      <Field name="vm_host" component={RowRequestField} label="Zabbix hostname:" labelFor="vmHost" fieldType="text" disabled={readOnly}/>
     </React.Fragment>
   )
 }

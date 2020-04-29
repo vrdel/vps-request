@@ -17,7 +17,7 @@ class RequestsCUSerializer(serializers.ModelSerializer):
                   'head_firstname', 'head_lastname', 'head_institution',
                   'head_role', 'head_email', 'vm_purpose', 'vm_os',
                   'vm_remark', 'vm_admin_remark', 'vm_fqdn', 'vm_reason',
-                  'vm_host', 'vm_ip', 'vm_dismissed', 'sys_firstname',
+                  'vm_ip', 'vm_dismissed', 'sys_firstname',
                   'sys_lastname', 'sys_institution', 'sys_role', 'sys_email',
                   'approved', 'approvedby', 'approved_date', 'sys_aaieduhr',
                   'user')
