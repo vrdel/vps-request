@@ -85,12 +85,6 @@ class Request(models.Model):
         null=False
     )
     vm_reason = models.TextField(blank=True, null=True)
-    vm_host = models.CharField(
-        'VM Host',
-        max_length=50,
-        blank=True,
-        null=True
-    )
     vm_ip = models.CharField(
         'VM IP address',
         max_length=16,

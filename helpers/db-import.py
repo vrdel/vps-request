@@ -51,6 +51,7 @@ def main():
         if request['vm_dismissed'] is not None:
             request['approved'] = 3
         request.pop('vm_ready')
+        request.pop('vm_host')
         for (k, v) in request.items():
             if type(v) is str or type(v) is unicode:
                 request[k] = v.replace('\r\n', '\n')
