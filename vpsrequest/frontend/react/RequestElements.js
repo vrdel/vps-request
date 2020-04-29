@@ -112,15 +112,19 @@ export const RowRequestField = ({field, ...propsRest}) =>
 )
 
 
-export const ContactUserFields = () =>
+export const ContactUserFields = ({disabled=true}) =>
 (
   <React.Fragment>
     <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
-    <Field name="first_name" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" disabled={true}/>
-    <Field name="last_name" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" disabled={true}/>
-    <Field name="institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" disabled={true}/>
-    <Field name="role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" disabled={true}/>
-    <Field name="email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" disabled={true}/>
+    <Field name="first_name" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" disabled={disabled}/>
+    <Field name="last_name" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" disabled={disabled}/>
+    <Field name="institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" disabled={disabled}/>
+    <Field name="role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" disabled={disabled}/>
+    <Field name="email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" disabled={disabled}/>
+    {
+      !disabled &&
+        <Field name="aaieduhr" component={RowRequestField} label="AAI@EduHR korisnička oznaka" labelFor="aaieduhr" fieldType="text" disabled={disabled}/>
+    }
   </React.Fragment>
 )
 

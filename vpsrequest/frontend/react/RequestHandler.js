@@ -175,7 +175,12 @@ export class ApprovedRequestHandler extends Component
             render = {({setFieldValue, handleSubmit}) => (
               <Form onSubmit={handleSubmit}>
                 <RequestDateField/>
-                <ContactUserFields/>
+                {
+                  initValues.approved === 2 ?
+                    <ContactUserFields disabled={false}/>
+                  :
+                    <ContactUserFields disabled={true}/>
+                }
                 <VMFields listVMOSes={listVMOSes}/>
                 <SysAdminFields/>
                 <HeadFields/>
