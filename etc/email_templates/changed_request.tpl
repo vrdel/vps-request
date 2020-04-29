@@ -67,7 +67,7 @@ Promjene:
 
 *IP adresa* __VM_IP__
 
-*Zabbix hostname* __VM_HOST__
+*Status* __APPROVED__
 
 
 S poštovanjem

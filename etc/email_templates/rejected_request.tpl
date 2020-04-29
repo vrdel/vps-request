@@ -4,7 +4,9 @@ Razmotrili smo Vaš zahtjev za virtualnim poslužiteljem u cloudu Srca:
 
 http://vps.srce.hr/zahtjev/ui/stanje-zahtjeva/__ID__
 
-te donijeli odluku da se Vaš zahtjev odbija.
+te donijeli odluku da se Vaš zahtjev odbija s obrazloženjem:
+
+__VM_REASON__
 
 S poštovanjem
 

@@ -100,7 +100,6 @@ export class ChangeRequest extends Component
         vm_reason: EmptyIfNull(requestDetails.vm_reason),
         vm_remark: requestDetails.vm_remark,
         vm_os: requestDetails.vm_os,
-        vm_host:  EmptyIfNull(requestDetails.vm_host),
         vm_ip: EmptyIfNull(requestDetails.vm_ip),
         approved: requestDetails.approved,
         sys_firstname: requestDetails.sys_firstname,

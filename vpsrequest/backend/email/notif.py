@@ -10,10 +10,10 @@ from django.conf import settings
 
 # TESTING_TO = 'dvrcic@srce.hr'
 # TESTING_CC = 'dvrcic@srce.hr'
-# TESTING_TO = 'vps-admin-test@srce.hr'
-# TESTING_CC = 'vps-test@srce.hr'
-TESTING_TO = 'vps-admin@srce.hr'
-TESTING_CC = 'vps-request@srce.hr'
+TESTING_TO = 'hrvoje.sute@srce.hr'
+TESTING_CC = 'sute.hrvoje@gmail.com'
+#TESTING_TO = 'vps-admin@srce.hr'
+#TESTING_CC = 'vps-request@srce.hr'
 
 
 class Notification(object):
@@ -103,4 +103,8 @@ class Notification(object):
         if toHead:
             to.append(TESTING_CC)
             #to.append(self.request['head_email'])
-        return to
+        
+        if len(to) > 0:
+            return to
+        else:
+            return [self.sender]

@@ -1,5 +1,6 @@
 import re
 from dateutil.parser import parse
+from backend.api.config import STATUSES
 
 class MsgBuilder(object):
 
@@ -50,6 +51,10 @@ class MsgBuilder(object):
             if newVal == oldVal:
                 self.body = re.sub("\n.+" + ph + "\n", '', self.body)
             else:
+                if db_attr == 'approved':
+                    oldVal = STATUSES[oldVal]
+                    newVal = STATUSES[newVal]
+
                 self.body = self.body.replace(ph, "\n" + str(oldVal) + "\n\t --> \n" + str(newVal))
                 if not has_changes:
                     has_changes = True
