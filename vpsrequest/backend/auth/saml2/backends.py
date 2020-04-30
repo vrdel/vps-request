@@ -16,10 +16,11 @@ class SAML2Backend(Saml2Backend):
         attributes = session_info['ava']
 
         username = self._unpack(attributes['hrEduPersonUniqueID'])
-        first_name = self._unpack(attributes['givenName'])
-        last_name = self._unpack(attributes['sn'])
-        email = self._unpack(attributes['mail'])
-        organization = self._unpack(attributes['o'])
+        first_name = self._unpack(attributes.get('givenName', ''))
+        last_name = self._unpack(attributes.get('sn', ''))
+        email = self._unpack(attributes.get('mail', ''))
+        organization = self._unpack(attributes.get('o', ''))
+        role = self._unpack(attributes.get('hrEduPersonPrimaryAffiliation', ''))
 
         userfound, created = None, None
         try:
@@ -30,12 +31,15 @@ class SAML2Backend(Saml2Backend):
                                                        first_name=first_name,
                                                        last_name=last_name,
                                                        email=email,
-                                                       institution=organization)
+                                                       institution=organization,
+                                                       aaieduhr=username,
+                                                       role=role)
 
         if created:
             user.set_unusable_password()
             user.is_active = True
             user.is_staff = False
+
             user.save()
 
             return user
@@ -45,6 +49,8 @@ class SAML2Backend(Saml2Backend):
             userfound.first_name = first_name
             userfound.last_name = last_name
             userfound.institution = organization
+            userfound.aaieduhr = username
+            userfound.role = role
             userfound.save()
 
             return userfound
