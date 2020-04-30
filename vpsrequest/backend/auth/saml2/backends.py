@@ -16,11 +16,11 @@ class SAML2Backend(Saml2Backend):
         attributes = session_info['ava']
 
         username = self._unpack(attributes['hrEduPersonUniqueID'])
-        first_name = self._unpack(attributes['givenName'])
-        last_name = self._unpack(attributes['sn'])
-        email = self._unpack(attributes['mail'])
-        organization = self._unpack(attributes['o'])
-        role = self._unpack(attributes['hrEduPersonPrimaryAffiliation'])
+        first_name = self._unpack(attributes.get('givenName', ''))
+        last_name = self._unpack(attributes.get('sn', ''))
+        email = self._unpack(attributes.get('mail', ''))
+        organization = self._unpack(attributes.get('o', ''))
+        role = self._unpack(attributes.get('hrEduPersonPrimaryAffiliation', ''))
 
         userfound, created = None, None
         try:
