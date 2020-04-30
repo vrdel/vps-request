@@ -20,7 +20,7 @@ const RequestRow = ({...props}) =>
             </span>
         </Col>
         <Col md={{size: 7}} >
-            <span>{props.value}</span>
+            <span style={{whiteSpace: 'pre-wrap'}}>{props.value}</span>
         </Col>
     </Row>
 )
