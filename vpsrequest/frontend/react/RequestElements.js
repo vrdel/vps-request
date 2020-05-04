@@ -245,7 +245,7 @@ export const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dism
         <CustomInput type="checkbox" id="acceptedConditions" checked={acceptConditions} onChange={handleAcceptConditions}
           label={
             <InfoLink prefix="Prihvaćam "
-              linkHref="http://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps_05102018.pdf"
+              linkHref="https://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps.pdf"
               linkTitle="Pravilnik usluge Virtual Private Server"/>
           }
         />
@@ -273,7 +273,7 @@ export const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dism
             <InfoLink prefix="Srce gore navedene osobne podatke obrađuje isključivo radi pružanja zatražene usluge, sukladno svojoj politici privatnosti ("
               linkHref="https://www.srce.hr/politika-privatnosti"
               suffix=")"/>
-            <InfoLink prefix=" i " linkHref="http://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps_05102018.pdf"
+            <InfoLink prefix=" i " linkHref="https://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps.pdf"
               linkTitle="Pravilniku usluge"/>
           </small>
         </p>
