@@ -60,11 +60,14 @@ const FreshRequests = ListRequests(types.fresh)
 const RejectedRequests = ListRequests(types.rejected)
 
 const ProtectedRoute = ({userDetails, ...props}) => (
-  userDetails.is_staff || userDetails.is_superuser || canApprove(userDetails)?
+  userDetails.is_staff || userDetails.is_superuser || canApprove(userDetails) ?
     <Route {...props} />
   :
     <Route component={NotFound} />
 )
+
+const RedirectAfterLogout = () =>
+  window.location = CONFIG.logoutRedirect
 
 const RedirectAfterLogin = ({userDetails, ...props}) => {
   let last = ''
@@ -130,6 +133,7 @@ class App extends Component {
   onLogout() {
     this.setState({isSessionActive: false})
     localStorage.removeItem('referrer')
+    RedirectAfterLogout()
   }
 
   toggleAreYouSure() {
