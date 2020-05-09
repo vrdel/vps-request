@@ -23,6 +23,8 @@ export class NewRequest extends Component
   constructor(props) {
     super(props)
 
+    this.history = props.history
+
     this.state = {
       loading: false,
       listVMOSes: [],
@@ -75,7 +77,9 @@ export class NewRequest extends Component
     if (response.ok)
       NotifyOk({
         msg: 'Zahtjev uspješno podnesen',
-        title: `Uspješno - HTTP ${response.status}`})
+        title: `Uspješno - HTTP ${response.status}`,
+        callback: () => this.history.push('/ui/stanje-zahtjeva')}
+      )
     else
       NotifyError({
         msg: response.statusText,
@@ -129,9 +133,8 @@ export class NewRequest extends Component
 
               if (!acceptConditions)
                 this.setState({acceptConditionsAlert: true})
-              else {
+              else
                 this.handleOnSubmit(values)
-              }
             }}
             render = {props => (
               <Form>
