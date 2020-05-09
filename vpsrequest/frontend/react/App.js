@@ -8,6 +8,7 @@ import { ListRequests } from './RequestsList';
 import { NewRequest } from './RequestNew';
 import { ProcessNewRequest } from './RequestProcessNew';
 import { ChangeRequest } from './RequestChange';
+import { UIProxy } from './UIProxy';
 import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
 import { VPSPage } from './UIElements';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -179,11 +180,14 @@ class App extends Component {
         <BrowserRouter basename={RelativePath}>
           <Switch>
             <Route
-              path="/ui/"
+              exact path="/ui/prijava"
               render={props =>
                   <Login onLogin={this.onLogin} {...props} />
               }
             />
+            <Route
+              path="/ui/"
+              component={UIProxy}/>
             <Route component={NotFound} />
           </Switch>
         </BrowserRouter>
