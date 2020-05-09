@@ -69,17 +69,17 @@ export class NewRequest extends Component
     this.setState(prevState => ({acceptConditions: !prevState.acceptConditions}))
   }
 
-  handleOnSubmit(data) {
-    this.backend.addObject(this.apiListRequests, data)
-      .then(response => {
-        response.ok
-          ? NotifyOk({
-              msg: 'Zahtjev uspješno podnesen',
-              title: `Uspješno - HTTP ${response.status}`})
-          : NotifyError({
-              msg: response.statusText,
-              title: `Greška - HTTP ${response.status}`})
-      })
+  async handleOnSubmit(data) {
+    const response = await this.backend.addObject(this.apiListRequests, data)
+
+    if (response.ok)
+      NotifyOk({
+        msg: 'Zahtjev uspješno podnesen',
+        title: `Uspješno - HTTP ${response.status}`})
+    else
+      NotifyError({
+        msg: response.statusText,
+        title: `Greška - HTTP ${response.status}`})
   }
 
   render() {
