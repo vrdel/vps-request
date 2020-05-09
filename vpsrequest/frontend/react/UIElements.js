@@ -139,7 +139,9 @@ const NavigationBar = ({history, onLogout, isOpenModal, toggle,
       onYes={() => doLogout(history, onLogout)} />
     <Navbar expand="md" id="vpsreq-nav" className="border rounded d-flex justify-content-between pt-3 pb-3">
       <NavbarBrand className="text-dark">
-        <img src={CloudLogo} id="cloud logo" alt="VPS Cloud Logo"/>
+        <a href="https://www.srce.unizg.hr/cloud/vps" target="_blank" rel="noopener noreferrer">
+          <img src={CloudLogo} id="cloud logo" alt="VPS Cloud Logo"/>
+        </a>
       </NavbarBrand>
       <Nav navbar className="m-1">
         <span className="pl-3 font-weight-bold text-center">
@@ -231,7 +233,9 @@ export const Footer = ({loginPage=false}) => {
   (
     <React.Fragment>
       <div className={`text-center ${border && 'pt-2 pb-2'}`}>
-        <img href="http://www.srce.unizg.hr/" src={img} id="srcelogo" alt="SRCE Logo"/>
+        <a href="https://www.srce.unizg.hr/" target="_blank" rel="noopener noreferrer">
+          <img src={img} id="srcelogo" alt="SRCE Logo"/>
+        </a>
       </div>
     </React.Fragment>
   )
