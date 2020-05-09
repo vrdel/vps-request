@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Cookies from 'universal-cookie';
 import {
   Button,
@@ -18,13 +18,15 @@ import {
   NavbarBrand,
   Spinner,
   Row,
-  UncontrolledTooltip
+  UncontrolledTooltip,
+  Popover,
+  PopoverBody,
+  Badge
 } from 'reactstrap';
 import { Link, withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSignOutAlt,
-  faSearch,
   faFileAlt,
   faFileSignature,
   faHandshake,
@@ -128,48 +130,105 @@ export const ModalAreYouSure = ({isOpen, toggle, title, msg, onYes}) => (
 )
 
 
-const NavigationBar = ({history, onLogout, isOpenModal, toggle,
-  titleModal, msgModal, userDetails}) => (
-  <React.Fragment>
-    <ModalAreYouSure
-      isOpen={isOpenModal}
-      toggle={toggle}
-      title={titleModal}
-      msg={msgModal}
-      onYes={() => doLogout(history, onLogout)} />
-    <Navbar expand="md" id="vpsreq-nav" className="border rounded d-flex justify-content-between pt-3 pb-3">
-      <NavbarBrand className="text-dark">
-        <a href="https://www.srce.unizg.hr/cloud/vps" target="_blank" rel="noopener noreferrer">
-          <img src={CloudLogo} id="cloud logo" alt="VPS Cloud Logo"/>
-        </a>
-      </NavbarBrand>
-      <Nav navbar className="m-1">
-        <span className="pl-3 font-weight-bold text-center">
-          <h3>
-            Zahtjev za virtualnim poslužiteljem (VM) u usluzi Virtual Private Server
-          </h3>
-        </span>
-      </Nav>
-      <Nav navbar >
-        <NavItem className='m-2 text-dark'>
-          <React.Fragment>
-            Dobrodošli,
-            <br/>
-            <strong>{userDetails.first_name}</strong>
-          </React.Fragment>
-        </NavItem>
-        <NavItem className='m-2 text-light'>
-          <Button
-            size="sm"
-            className='btn-danger'
-            onClick={() => toggle()}>
-            <FontAwesomeIcon icon={faSignOutAlt} color="white" />
-          </Button>
-        </NavItem>
-      </Nav>
-    </Navbar>
-  </React.Fragment>
-)
+const UserDetailsPopover = ({userDetails}) =>
+{
+  let approveRequest = canApprove(userDetails)
+
+  return (
+    <React.Fragment>
+      <div className="text-center">
+      {
+        approveRequest ?
+          <Badge color="warning" className="mb-1 mt-1" style={{fontSize: '100%'}} pill>
+            Odobravatelj zahtjeva
+          </Badge>
+        :
+          userDetails.is_staff ?
+            <Badge color="success" className="mb-1 mt-1" style={{fontSize: '100%'}} pill>
+              VPS Administrator
+            </Badge>
+          :
+            <Badge color="primary" className="mb-1 mt-1" style={{fontSize: '100%'}} pill>
+              Korisnik
+            </Badge>
+      }
+      </div>
+      {
+        <div className="text-center mt-1">
+          <b>{userDetails.first_name}{' '}{userDetails.last_name}</b>
+        </div>
+      }
+      {
+        <div className="text-center text-primary mt-1">
+          {userDetails.aaieduhr}
+        </div>
+      }
+    </React.Fragment>
+
+  )
+}
+
+
+const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal,
+  msgModal, userDetails}) =>
+{
+
+  const [popoverOpen, setPopoverOpen] = useState(false)
+
+  return (
+    <React.Fragment>
+      <ModalAreYouSure
+        isOpen={isOpenModal}
+        toggle={toggle}
+        title={titleModal}
+        msg={msgModal}
+        onYes={() => doLogout(history, onLogout)} />
+      <Navbar expand="md" id="vpsreq-nav" className="border rounded d-flex justify-content-between pt-3 pb-3">
+        <NavbarBrand className="text-dark">
+          <a href="https://www.srce.unizg.hr/cloud/vps" target="_blank" rel="noopener noreferrer">
+            <img src={CloudLogo} id="cloud logo" alt="VPS Cloud Logo"/>
+          </a>
+        </NavbarBrand>
+        <Nav navbar className="m-1">
+          <span className="pl-3 font-weight-bold text-center">
+            <h3>
+              Zahtjev za virtualnim poslužiteljem (VM) u usluzi Virtual Private Server
+            </h3>
+          </span>
+        </Nav>
+        <Nav navbar >
+          <NavItem className='m-2 text-dark'>
+            <React.Fragment>
+              Dobrodošli,
+              <br/>
+              <span onMouseEnter={() => setPopoverOpen(true)}
+                onMouseLeave={() => setPopoverOpen(false)}
+                id="userPopover">
+                <Badge href="#" color="light" style={{fontSize: '100%'}}>
+                  <strong>{userDetails.first_name}</strong>
+                </Badge>
+              </span>
+              <Popover placement="bottom" isOpen={popoverOpen}
+                target="userPopover" toggle={() => setPopoverOpen(!popoverOpen)}>
+                <PopoverBody>
+                  <UserDetailsPopover userDetails={userDetails}/>
+                </PopoverBody>
+              </Popover>
+            </React.Fragment>
+          </NavItem>
+          <NavItem className='m-2 text-light'>
+            <Button
+              size="sm"
+              className='btn-danger'
+              onClick={() => toggle()}>
+              <FontAwesomeIcon icon={faSignOutAlt} color="white" />
+            </Button>
+          </NavItem>
+        </Nav>
+      </Navbar>
+    </React.Fragment>
+  )
+}
 
 
 const NavigationLinks = ({location, isStaff, canApproveRequest}) => {
