@@ -15,8 +15,8 @@ export function canApprove(userDetails) {
     return true
 
   if (userDetails.perms) {
-    let find = userDetails.perms.filter(e => e === 'approve_request')
-    if (find.length > 0)
+    let index = userDetails.perms.indexOf('approve_request')
+    if (index !== -1)
       return true
   }
 
