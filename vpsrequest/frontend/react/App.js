@@ -8,6 +8,7 @@ import { ListRequests } from './RequestsList';
 import { NewRequest } from './RequestNew';
 import { ProcessNewRequest } from './RequestProcessNew';
 import { ChangeRequest } from './RequestChange';
+import { UIProxy } from './UIProxy';
 import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
 import { VPSPage } from './UIElements';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -60,7 +61,7 @@ const FreshRequests = ListRequests(types.fresh)
 const RejectedRequests = ListRequests(types.rejected)
 
 const ProtectedRoute = ({userDetails, ...props}) => (
-  userDetails.is_staff || userDetails.is_superuser || canApprove(userDetails)?
+  userDetails.is_staff || userDetails.is_superuser || canApprove(userDetails) ?
     <Route {...props} />
   :
     <Route component={NotFound} />
@@ -175,12 +176,21 @@ class App extends Component {
         <BrowserRouter basename={RelativePath}>
           <Switch>
             <Route
-              path="/ui/"
+              exact path="/ui/proxy"
+              component={UIProxy}
+            />
+            <Route
+              exact path="/ui/login"
               render={props =>
                   <Login onLogin={this.onLogin} {...props} />
               }
             />
-            <Route component={NotFound} />
+            <Route
+              path="/ui/"
+              render={props =>
+                <UIProxy redirect={true} {...props}/>
+              }
+            />
           </Switch>
         </BrowserRouter>
       )
@@ -197,7 +207,14 @@ class App extends Component {
         <BrowserRouter basename={RelativePath}>
           <NotificationContainer/>
           <Switch>
-            <Route exact path="/ui/prijava"
+            <Route
+              exact path="/ui/proxy"
+              render={(props) =>
+                  <RedirectAfterLogin
+                    userDetails={userDetails}
+                    {...props}
+                  />}/>
+            <Route exact path="/ui/login"
               render={(props) =>
                   <RedirectAfterLogin
                     userDetails={userDetails}

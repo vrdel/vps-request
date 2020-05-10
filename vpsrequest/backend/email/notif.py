@@ -8,8 +8,12 @@ import re
 from backend.email.msgbuilder import MsgBuilder
 from django.conf import settings
 
-TESTING_TO = 'dvrcic@srce.hr'
-TESTING_CC = 'dvrcic@srce.hr'
+# TESTING_TO = 'dvrcic@srce.hr'
+# TESTING_CC = 'dvrcic@srce.hr'
+# TESTING_TO = 'hrvoje.sute@srce.hr'
+# TESTING_CC = 'sute.hrvoje@gmail.com'
+TESTING_TO = 'vps-admin@srce.hr'
+TESTING_CC = 'vps-request@srce.hr'
 
 # TESTING_TO = 'hrvoje.sute@srce.hr'
 # TESTING_CC = 'sute.hrvoje@gmail.com'
@@ -26,20 +30,20 @@ class Notification(object):
         self.request = serializer.data
 
     def sendFreshRequestAdminEmail(self):
-        to = TESTING_TO # settings.RMI_CHEF_MAIL
-        cc = TESTING_CC # self.sender
+        to = TESTING_TO  # settings.RMI_CHEF_MAIL
+        cc = TESTING_CC  # self.sender
         msgBuilder = MsgBuilder(settings.ADMIN_FRESH_TEMPLATE)
         msgBuilder.processPlaceholders(self.request)
         self._send(msgBuilder.body, settings.ADMIN_FRESH_SUBJECT, to, cc)
 
     def sendFreshRequestUserEmail(self):
-        to = TESTING_TO # self.request['user']['email']
+        to = TESTING_TO  # self.request['user']['email']
         msgBuilder = MsgBuilder(settings.USER_FRESH_TEMPLATE)
         msgBuilder.processPlaceholders(self.request)
         self._send(msgBuilder.body, settings.USER_FRESH_SUBJECT, to)
 
     def sendFreshRequestHeadEmail(self):
-        to = TESTING_TO # self.request['head_email']
+        to = TESTING_TO  # self.request['head_email']
         msgBuilder = MsgBuilder(settings.HEAD_FRESH_TEMPLATE)
         msgBuilder.processPlaceholders(self.request)
         self._send(msgBuilder.body, settings.HEAD_FRESH_SUBJECT, to)
@@ -94,7 +98,7 @@ class Notification(object):
 
             except (socket.error, smtplib.SMTPException) as e:
                 print(repr(e))
-                return True
+                return False
 
     def _findTo(self, toUser, toHead):
         to = []

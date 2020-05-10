@@ -10,6 +10,7 @@ export const RelativePath = '/zahtjev'
 export const CONFIG = {
     'vmosUrl': `${RelativePath}/api/v1/internal/vmos/`,
     'listReqUrl': `${RelativePath}/api/v1/internal/requests/`,
+    'logoutRedirect': 'https://www.srce.unizg.hr/cloud/vps',
     'status': {
         '-1': {
             'classname': 'text-warning',
