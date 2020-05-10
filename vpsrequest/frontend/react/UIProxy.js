@@ -10,18 +10,27 @@ import './Login.css';
 import CloudLogoBig from './logos/logo_cloud-big.png';
 import { RelativePath } from './Config';
 
-export const UIProxy = ({redirect=false}) =>
+
+export const UIProxy = ({redirect=false, msg=true}) =>
 {
   if (redirect)
-    setTimeout(() => {
-        window.location = `${RelativePath}/saml2/login`
-    }, 10)
+    window.location = `${RelativePath}/saml2/login`
 
   return (
     <Container>
       <Row className="login-first-row">
         <Col sm={{size: 6, offset: 3}}>
           <Card body outline color="secondary">
+            {
+              msg ?
+                <div className="text-center text-dark mb-4">
+                  <h2>
+                    Preusmjeravanje...
+                  </h2>
+                </div>
+              :
+                null
+            }
             <CardBody>
               <div className="text-center pt-2 pb-2">
                 <img src={CloudLogoBig} id="cloud logo" alt="VPS Cloud Logo"/>

@@ -188,7 +188,7 @@ class App extends Component {
             <Route
               path="/ui/"
               render={props =>
-                <UIProxy redirect={true} {...props}/>
+                <UIProxy redirect={true} msg={false} {...props}/>
               }
             />
           </Switch>
