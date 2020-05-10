@@ -15,13 +15,13 @@ export const UIProxy = ({redirect=false}) =>
   if (redirect)
     setTimeout(() => {
         window.location = `${RelativePath}/saml2/login`
-    }, 50)
+    }, 10)
 
   return (
     <Container>
       <Row className="login-first-row">
         <Col sm={{size: 6, offset: 3}}>
-          <Card body outline color="primary">
+          <Card body outline color="secondary">
             <CardBody>
               <div className="text-center pt-2 pb-2">
                 <img src={CloudLogoBig} id="cloud logo" alt="VPS Cloud Logo"/>

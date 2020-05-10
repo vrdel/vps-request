@@ -10,15 +10,14 @@ from django.conf import settings
 
 # TESTING_TO = 'dvrcic@srce.hr'
 # TESTING_CC = 'dvrcic@srce.hr'
-#TESTING_TO = 'hrvoje.sute@srce.hr'
-#TESTING_CC = 'sute.hrvoje@gmail.com'
+# TESTING_TO = 'hrvoje.sute@srce.hr'
+# TESTING_CC = 'sute.hrvoje@gmail.com'
 TESTING_TO = 'vps-admin@srce.hr'
 TESTING_CC = 'vps-request@srce.hr'
 
 
 class Notification(object):
-    def __init__(self, requestID, logger=None):
-        self.logger = logger
+    def __init__(self, requestID):
         self.sender = settings.ADMIN_MAIL
 
         reqData = models.Request.objects.get(pk=requestID)
@@ -26,20 +25,20 @@ class Notification(object):
         self.request = serializer.data
 
     def sendFreshRequestAdminEmail(self):
-        to = TESTING_TO # settings.RMI_CHEF_MAIL
-        cc = TESTING_CC # self.sender
+        to = TESTING_TO  # settings.RMI_CHEF_MAIL
+        cc = TESTING_CC  # self.sender
         msgBuilder = MsgBuilder(settings.ADMIN_FRESH_TEMPLATE)
         msgBuilder.processPlaceholders(self.request)
         self._send(msgBuilder.body, settings.ADMIN_FRESH_SUBJECT, to, cc)
 
     def sendFreshRequestUserEmail(self):
-        to = TESTING_TO # self.request['user']['email']
+        to = TESTING_TO  # self.request['user']['email']
         msgBuilder = MsgBuilder(settings.USER_FRESH_TEMPLATE)
         msgBuilder.processPlaceholders(self.request)
         self._send(msgBuilder.body, settings.USER_FRESH_SUBJECT, to)
 
     def sendFreshRequestHeadEmail(self):
-        to = TESTING_TO # self.request['head_email']
+        to = TESTING_TO  # self.request['head_email']
         msgBuilder = MsgBuilder(settings.HEAD_FRESH_TEMPLATE)
         msgBuilder.processPlaceholders(self.request)
         self._send(msgBuilder.body, settings.HEAD_FRESH_SUBJECT, to)
@@ -66,14 +65,14 @@ class Notification(object):
         self._send(msgBuilder.body, settings.FIX_REQ_SUBJECT, to, cc)
 
     def sendChangedRequestEmail(self, oldRequest):
-        to = TESTING_TO # self.sender
+        to = TESTING_TO  # self.sender
         msgBuilder = MsgBuilder(settings.CHANGED_REQ_TEMPLATE)
         msgBuilder.findDiffs(self.request, oldRequest)
         self._send(msgBuilder.body, settings.CHANGED_REQ_SUBJECT, to)
 
     def _send(self, email_text, subject, to, cc=None):
         if not email_text:
-            self.logger.error('Could not construct an email')
+            print('Could not construct an email')
         else:
             try:
                 m = MIMEText(email_text, 'plain', 'utf-8')
@@ -93,17 +92,18 @@ class Notification(object):
                 return True
 
             except (socket.error, smtplib.SMTPException) as e:
-                self.logger.error(repr(e))
+                print(repr(e))
+                return False
 
     def _findTo(self, toUser, toHead):
         to = []
         if toUser:
             to.append(TESTING_TO)
-            #to.append(self.request['user']['email'])
+            # to.append(self.request['user']['email'])
         if toHead:
             to.append(TESTING_CC)
-            #to.append(self.request['head_email'])
-        
+            # to.append(self.request['head_email'])
+
         if len(to) > 0:
             return to
         else:

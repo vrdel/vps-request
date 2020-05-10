@@ -191,10 +191,9 @@ const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal,
         msg={msgModal}
         onYes={() => doLogout(history, onLogout)} />
       <Navbar expand="md" id="vpsreq-nav" className="border rounded d-flex justify-content-between pt-3 pb-3">
-        <NavbarBrand className="text-dark">
-          <a href="https://www.srce.unizg.hr/cloud/vps" target="_blank" rel="noopener noreferrer">
-            <img src={CloudLogo} id="cloud logo" alt="VPS Cloud Logo"/>
-          </a>
+        <NavbarBrand href="https://www.srce.unizg.hr/cloud/vps"
+          target="_blank" rel="noopener noreferrer" className="text-dark">
+          <img src={CloudLogo} id="cloud logo" alt="VPS Cloud Logo"/>
         </NavbarBrand>
         <Nav navbar className="m-1">
           <span className="pl-3 font-weight-bold text-center">
