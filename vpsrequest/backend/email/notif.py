@@ -77,7 +77,7 @@ class Notification(object):
 
     def _send(self, email_text, subject, to, cc=None):
         if not email_text:
-            print('Could not construct an email')
+            print('MAIL ERROR: Could not construct an email')
         else:
             try:
                 m = MIMEText(email_text, 'plain', 'utf-8')
@@ -94,10 +94,12 @@ class Notification(object):
                 s.sendmail(self.sender, to, m.as_string())
                 s.quit()
 
+                print('MAIL OK: Mail sent to={} cc={}'.format(m['To'], m['Cc']))
+
                 return True
 
             except (socket.error, smtplib.SMTPException) as e:
-                print(repr(e))
+                print('MAIL ERROR: {}'.format(repr(e)))
                 return False
 
     def _findTo(self, toUser, toHead):
