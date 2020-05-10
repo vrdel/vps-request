@@ -67,9 +67,6 @@ const ProtectedRoute = ({userDetails, ...props}) => (
     <Route component={NotFound} />
 )
 
-const RedirectAfterLogout = () =>
-  window.location = CONFIG.logoutRedirect
-
 const RedirectAfterLogin = ({userDetails, ...props}) => {
   let last = ''
   let before_last = ''
@@ -134,7 +131,6 @@ class App extends Component {
   onLogout() {
     this.setState({isSessionActive: false})
     localStorage.removeItem('referrer')
-    RedirectAfterLogout()
   }
 
   toggleAreYouSure() {
@@ -180,15 +176,21 @@ class App extends Component {
         <BrowserRouter basename={RelativePath}>
           <Switch>
             <Route
-              exact path="/ui/prijava"
+              exact path="/ui/proxy"
+              component={UIProxy}
+            />
+            <Route
+              exact path="/ui/login"
               render={props =>
                   <Login onLogin={this.onLogin} {...props} />
               }
             />
             <Route
               path="/ui/"
-              component={UIProxy}/>
-            <Route component={NotFound} />
+              render={props =>
+                <UIProxy redirect={true} {...props}/>
+              }
+            />
           </Switch>
         </BrowserRouter>
       )
@@ -205,7 +207,14 @@ class App extends Component {
         <BrowserRouter basename={RelativePath}>
           <NotificationContainer/>
           <Switch>
-            <Route exact path="/ui/prijava"
+            <Route
+              exact path="/ui/proxy"
+              render={(props) =>
+                  <RedirectAfterLogin
+                    userDetails={userDetails}
+                    {...props}
+                  />}/>
+            <Route exact path="/ui/login"
               render={(props) =>
                   <RedirectAfterLogin
                     userDetails={userDetails}

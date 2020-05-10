@@ -39,7 +39,7 @@ import SrceLogo from './logos/pravisrce.png';
 import SrceLogoTiny from './logos/srce-logo-e-mail-sig.png';
 import CloudLogo from './logos/logo_cloud.png';
 import { canApprove } from './Util';
-import { RelativePath } from './Config';
+import { RelativePath, CONFIG } from './Config';
 
 import './UIElements.css';
 
@@ -85,12 +85,11 @@ export const DropDown = ({field, data=[], ...props}) =>
   </Field>
 
 
-const doLogout = (history, onLogout) => {
+async function doLogout(history, onLogout) {
   let cookies = new Cookies();
 
-  onLogout();
 
-  return fetch(`${RelativePath}/rest-auth/logout/`, {
+  let response = await fetch(`${RelativePath}/rest-auth/logout/`, {
     method: 'POST',
     mode: 'cors',
     cache: 'no-cache',
@@ -100,7 +99,17 @@ const doLogout = (history, onLogout) => {
       'Content-Type': 'application/json',
       'X-CSRFToken': cookies.get('csrftoken'),
       'Referer': 'same-origin'
-    }}).then((response) => history.push('/ui/prijava'));
+    }})
+
+  onLogout()
+
+  history.push('/ui/proxy')
+
+  if (response.ok)
+    setTimeout(() => {
+        window.location = CONFIG.logoutRedirect
+    }, 50)
+
 }
 
 
@@ -130,8 +139,7 @@ export const ModalAreYouSure = ({isOpen, toggle, title, msg, onYes}) => (
 )
 
 
-const UserDetailsPopover = ({userDetails}) =>
-{
+const UserDetailsPopover = ({userDetails}) => {
   let approveRequest = canApprove(userDetails)
 
   return (
@@ -172,7 +180,6 @@ const UserDetailsPopover = ({userDetails}) =>
 const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal,
   msgModal, userDetails}) =>
 {
-
   const [popoverOpen, setPopoverOpen] = useState(false)
 
   return (
@@ -316,16 +323,14 @@ export const Footer = ({loginPage=false}) => {
 }
 
 
-export const RequestHorizontalRule = () =>
-(
+export const RequestHorizontalRule = () => (
   <div className="m-5">
     <hr/>
   </div>
 )
 
 
-export const RequestStateDivider = ({state='danger'}) =>
-{
+export const RequestStateDivider = ({state='danger'}) => {
   let color = {
     success: "#28a745",
     danger: "#dc3545"
