@@ -62,6 +62,7 @@ try:
 
     SRCE_SMTP = config.get('EMAIL', 'SrceSmtp')
     ADMIN_MAIL = config.get('EMAIL', 'AdminMail')
+    RMI_CHEF_MAIL = config.get('EMAIL', 'RMIChefMail')
     ADMIN_FRESH_TEMPLATE = config.get('EMAIL', 'AdminFreshTemplate')
     ADMIN_FRESH_SUBJECT = config.get('EMAIL', 'AdminFreshSubject')
     USER_FRESH_TEMPLATE = config.get('EMAIL', 'UserFreshTemplate')
