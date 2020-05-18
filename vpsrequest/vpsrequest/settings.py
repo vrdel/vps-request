@@ -52,6 +52,7 @@ try:
     DBNAME = config.get('DATABASE', 'Name')
     DBUSER = config.get('DATABASE', 'User')
     DBPASSWORD = config.get('DATABASE', 'Password')
+    DBHOST = config.get('DATABASE', 'Host')
 
     SUPERUSER_NAME = config.get('SUPERUSER', 'Name')
     SUPERUSER_PASS = config.get('SUPERUSER', 'Password')
@@ -186,6 +187,7 @@ WSGI_APPLICATION = 'vpsrequest.wsgi.application'
 
 DATABASES = {
     'default': {
+        'HOST': DBHOST,
         'NAME': DBNAME,
         'ENGINE': 'django.db.backends.mysql',
         'USER': DBUSER,
