@@ -190,7 +190,12 @@ export class ApprovedRequestHandler extends Component
                 }
                 <VMFields listVMOSes={listVMOSes}/>
                 <SysAdminFields/>
-                <HeadFields/>
+                {
+                  initValues.approved === 2 ?
+                    <HeadFields disabled={false} institutionDisabled={false}/>
+                  :
+                    <HeadFields disabled={true} institutionDisabled={true}/>
+                }
                 <StateFields readOnly={false} requestApproved={initValues.approved}/>
                 {
                   initValues.approved === 1 ?

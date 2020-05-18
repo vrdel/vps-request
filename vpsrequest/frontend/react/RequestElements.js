@@ -118,7 +118,7 @@ export const ContactUserFields = ({disabled=true}) =>
     <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
     <Field name="first_name" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" disabled={disabled}/>
     <Field name="last_name" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" disabled={disabled}/>
-    <Field name="institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" disabled={true}/>
+    <Field name="institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" disabled={disabled}/>
     <Field name="role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" disabled={disabled}/>
     <Field name="email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" disabled={disabled}/>
     {
@@ -181,14 +181,14 @@ export const SysAdminFields = ({disabled=false}) => {
 }
 
 
-export const HeadFields = ({disabled=false}) =>
+export const HeadFields = ({disabled=false, institutionDisabled=true}) =>
 (
   <React.Fragment>
     <RequestHorizontalRule/>
     <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
     <Field name="head_firstname" component={RowRequestField} label="Ime:" labelFor="firstName" fieldType="text" required={true} disabled={disabled}/>
     <Field name="head_lastname" component={RowRequestField} label="Prezime:" labelFor="lastName" fieldType="text" required={true} disabled={disabled}/>
-    <Field name="head_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" required={true} disabled={true}/>
+    <Field name="head_institution" component={RowRequestField} label="Ustanova:" labelFor="institution" fieldType="text" required={true} disabled={institutionDisabled}/>
     <Field name="head_role" component={RowRequestField} label="Funkcija:" labelFor="role" fiedType="text" required={true} disabled={disabled}/>
     <Field name="head_email" component={RowRequestField} label="Email:" labelFor="email" fieldType="text" required={true} disabled={disabled}/>
   </React.Fragment>
