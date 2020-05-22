@@ -416,6 +416,7 @@ export const FilterField = ({onChange, value}) => (
     type='text'
     className='text-center'
     placeholder='Pretraži'
+    aria-label='Pretraži'
     value={value}
     onChange={onChange}
     style={{width: '100%'}}
