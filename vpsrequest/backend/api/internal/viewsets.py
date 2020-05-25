@@ -39,6 +39,18 @@ class RequestsViewset(viewsets.ModelViewSet):
         serializer = serializers.RequestsListSerializer(requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    
+    @action(detail=False)
+    def list_approved(self, request):
+        requests = models.Request.objects.filter(approved__gte=1).order_by('-approved_date')
+        serializer = serializers.RequestsListSerializer(requests, many=True)
+
+        output = '<br>'
+        for req in serializer.data:
+            output += req['vm_fqdn'] + ' ' + req['user']['email'] + ' ' + req['sys_email'] + '<br>'
+
+        return Response(output, status=status.HTTP_200_OK, content_type='text/html')
+
     @action(detail=False)
     def rejected(self, request):
         requests = models.Request.objects.filter(approved=0).order_by('-approved_date')
