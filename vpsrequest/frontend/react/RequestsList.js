@@ -149,7 +149,7 @@ export function ListRequests(typeRequest) {
                 lastColIcon = typeRequest.lastColIconReadOnly
               }
               return (
-                <Link to={`/ui/${linkPath}/${r.id}`}>
+                <Link aria-label={`${linkPath}/${r.id}`} to={`/ui/${linkPath}/${r.id}`}>
                   {lastColIcon}
                 </Link>
               )

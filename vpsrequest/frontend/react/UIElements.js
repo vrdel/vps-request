@@ -225,6 +225,7 @@ const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal,
           <NavItem className='m-2 text-light'>
             <Button
               size="sm"
+              aria-label="Izađi"
               className='btn-danger'
               onClick={() => toggle()}>
               <FontAwesomeIcon icon={faSignOutAlt} color="white" />
@@ -416,6 +417,7 @@ export const FilterField = ({onChange, value}) => (
     type='text'
     className='text-center'
     placeholder='Pretraži'
+    aria-label='Pretraži'
     value={value}
     onChange={onChange}
     style={{width: '100%'}}
