@@ -8,6 +8,7 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.renderers import StaticHTMLRenderer
 
 
 class VMOSViewset(viewsets.ModelViewSet):
@@ -131,3 +132,19 @@ class UsersViewset(viewsets.ModelViewSet):
             return get_user_model().objects.all()
         else:
             return get_user_model().objects.filter(id=user.id)
+
+
+class ApprovedVPSViewset(viewsets.ModelViewSet):
+    serializer_class = serializers.RequestsCUSerializer
+    renderer_classes = [StaticHTMLRenderer]
+
+    @action(detail=False)
+    def generate(self, request):
+        requests = models.Request.objects.filter(approved__gte=1).order_by('-approved_date')
+        serializer = serializers.RequestsListSerializer(requests, many=True)
+
+        output = ''
+        for req in serializer.data:
+            output += req['vm_fqdn'] + ' ' + req['user']['email'] + ' ' + req['sys_email'] + '<br>'
+
+        return Response(output)
