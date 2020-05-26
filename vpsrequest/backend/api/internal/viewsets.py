@@ -61,6 +61,18 @@ class RequestsViewset(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @action(detail=False)
+    def stats(self, request):
+        active, retired = None, None
+
+        active = len(models.Request.objects.filter(approved=2))
+        retired = len(models.Request.objects.filter(approved=3))
+
+        return Response({
+            'active': active,
+            'retired': retired
+        }, status=status.HTTP_200_OK)
+
     def partial_update(self, request, pk=None):
         changedContact = request.data.pop('changedContact', False)
         sendMsgContact = request.data.pop('sendMsgContact', False)
