@@ -134,17 +134,3 @@ class UsersViewset(viewsets.ModelViewSet):
             return get_user_model().objects.filter(id=user.id)
 
 
-class ApprovedVPSViewset(viewsets.ModelViewSet):
-    serializer_class = serializers.RequestsCUSerializer
-    renderer_classes = [StaticHTMLRenderer]
-
-    @action(detail=False)
-    def generate(self, request):
-        requests = models.Request.objects.filter(approved__gte=1).order_by('-approved_date')
-        serializer = serializers.RequestsListSerializer(requests, many=True)
-
-        output = ''
-        for req in serializer.data:
-            output += req['vm_fqdn'] + ' ' + req['user']['email'] + ' ' + req['sys_email'] + '<br>'
-
-        return Response(output)
