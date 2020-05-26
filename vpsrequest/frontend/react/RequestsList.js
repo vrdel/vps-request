@@ -12,6 +12,9 @@ import { DateFormatHR } from './Util';
 import 'react-table/react-table.css';
 import './RequestsMy.css';
 import { CONFIG } from './Config'
+import {
+  Badge
+} from 'reactstrap';
 
 
 export function ListRequests(typeRequest) {
@@ -25,7 +28,8 @@ export function ListRequests(typeRequest) {
         searchContactName: '',
         searchDate: '',
         searchInstitution: '',
-        searchVmFqdn: ''
+        searchVmFqdn: '',
+        statsActiveRetired: undefined,
       }
 
       this.apiListRequests = typeRequest.api
@@ -33,6 +37,10 @@ export function ListRequests(typeRequest) {
       this.location = props.location;
       this.backend = new Backend();
       this.initializeComponent = this.initializeComponent.bind(this)
+
+      this.isApprovedList = typeRequest.api.endsWith('approved')
+      if (this.isApprovedList)
+        this.apiStatsRequestsApproved = typeRequest.apiStats
     }
 
     componentDidMount() {
@@ -41,14 +49,19 @@ export function ListRequests(typeRequest) {
     }
 
     async initializeComponent() {
-      const sessionActive = await this.backend.isActiveSession();
+      const sessionActive = await this.backend.isActiveSession()
 
       if (sessionActive.active) {
-        const fetched = await this.backend.fetchData(this.apiListRequests);
+        let fetched_stats = undefined
+        const fetched = await this.backend.fetchData(this.apiListRequests)
+
+        if (this.isApprovedList)
+          fetched_stats = await this.backend.fetchData(this.apiStatsRequestsApproved)
 
         this.setState({
           requests: fetched,
-          loading: false
+          loading: false,
+          statsActiveRetired: fetched_stats
         })
       }
     }
@@ -161,6 +174,11 @@ export function ListRequests(typeRequest) {
           <BaseView
             title={typeRequest.title}
             location={this.location}>
+            {
+              this.isApprovedList &&
+                <Badge href="#" color="dark" style={{fontSize: '100%'}}>
+                </Badge>
+            }
             <ReactTable
               data={requests}
               columns={columns}

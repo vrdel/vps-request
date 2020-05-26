@@ -27,6 +27,7 @@ import { NotificationContainer } from 'react-notifications';
 const types = new Object({
   approved: {
     api: `${CONFIG.listReqUrl}/approved`,
+    apiStats: `${CONFIG.listReqUrl}/stats`,
     dateFieldSearch: 'approved_date',
     title: 'Odobreni zahtjevi',
     headerDate: 'Datum odobravanja',
