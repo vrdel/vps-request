@@ -67,8 +67,8 @@ export function ListRequests(typeRequest) {
     }
 
     render() {
-      let {loading, requests, searchDate, searchContactName,
-        searchInstitution, searchVmFqdn} = this.state
+      let {loading, requests, searchDate, searchContactName, searchInstitution,
+        searchVmFqdn, statsActiveRetired} = this.state
 
       if (searchDate)
         requests = requests.filter(
@@ -176,8 +176,14 @@ export function ListRequests(typeRequest) {
             location={this.location}>
             {
               this.isApprovedList &&
-                <Badge href="#" color="dark" style={{fontSize: '100%'}}>
-                </Badge>
+                <span>
+                  <Badge className="mt-3" color="success" style={{fontSize: '120%'}}>
+                    Aktivni<Badge className="ml-2" color="light">{statsActiveRetired.active}</Badge>
+                  </Badge>
+                  <Badge className="ml-3" color="secondary" style={{fontSize: '120%'}}>
+                    Umirovljeni<Badge className="ml-2" color="light">{statsActiveRetired.retired}</Badge>
+                  </Badge>
+                </span>
             }
             <ReactTable
               data={requests}
