@@ -10,7 +10,8 @@ http://vps.srce.hr/zahtjev/ui/novi-zahtjevi/__ID__
 
 -- 
 Virtual Private Server (VPS)
-http://www.srce.hr/vps
+http://www.srce.unizg.hr/vps
 
-Sveučilište u Zagrebu, Sveučilišni računski centar (Srce), www.srce.unizg.hr
+Sveučilište u Zagrebu, Sveučilišni računski centar (Srce), 
+https://www.srce.unizg.hr
 vps@srce.hr
