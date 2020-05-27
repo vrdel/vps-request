@@ -55,6 +55,26 @@ def main():
         for (k, v) in request.items():
             if type(v) is str or type(v) is unicode:
                 request[k] = v.replace('\r\n', '\n')
+        try:
+            reason_lines = request['vm_reason'].splitlines()
+            if (reason_lines
+                and reason_lines[0].startswith('Adresa zahtjeva')
+                and reason_lines[1].startswith('http://vps.srce.hr/zahtjev/index.php')):
+                reason_lines.pop(0)
+                reason_lines.pop(0)
+                reason_lines.pop(0)
+            if (reason_lines
+                and reason_lines[0].startswith('Adresa zahtjeva')
+                and reason_lines[1] == ''
+                and reason_lines[2].startswith('http://vps.srce.hr/zahtjev/index.php')):
+                reason_lines.pop(0)
+                reason_lines.pop(0)
+                reason_lines.pop(0)
+            request['vm_reason'] = '\n'.join(reason_lines)
+        except Exception as e:
+            print(reason_lines)
+            print(e)
+            raise SystemExit(1)
         num_request += 1
         requests.append(request)
 
