@@ -54,7 +54,8 @@ E-mail: __HEAD_EMAIL__
 -- 
 Tim usluge
 Virtual Private Server (VPS)
-http://www.srce.hr/vps
+https://www.srce.unizg.hr/vps
 
-Sveučilište u Zagrebu, Sveučilišni računski centar (Srce), www.srce.unizg.hr
+Sveučilište u Zagrebu, Sveučilišni računski centar (Srce), 
+https://www.srce.unizg.hr
 vps@srce.hr

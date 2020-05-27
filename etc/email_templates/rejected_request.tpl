@@ -14,5 +14,5 @@ S poštovanjem
 Cloud usluga za trajne potrebe ustanova
 
 Sveučilište u Zagrebu, Sveučilišni računski centar (Srce),
-www.srce.unizg.hr
+https://www.srce.unizg.hr
 cloud-hosting@srce.hr
