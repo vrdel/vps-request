@@ -3,7 +3,7 @@ Poštovani,
 Obavještavamo Vas Kao čelnika ustanove __HEAD_INSTITUTION__
 da je __USER_FIRST_NAME__ __USER_LAST_NAME__ kao kontaktna osoba
 Vaše ustanove podnio/podnijela zahtjev za virtualnim poslužiteljem
-u usluzi Virtual Private Server (http://www.srce.hr/vps/)
+u usluzi Virtual Private Server (https://www.srce.unizg.hr/vps/)
 koju omogućava Sveučilišni računski centar (Srce).
 
 Prije slanja zahtjeva kontaktna osoba Ustanove izjasnila se o
@@ -14,7 +14,7 @@ podataka iz zahtjeva, da su upoznati s odredbama Pravilnika usluge, te
 da pristaju na korištenje usluge sukladno Pravilniku usluge.
 
 Srce osobne podatke navedene u zahtjevu za virtualnim poslužiteljem obrađuje isključivo radi pružanja
-zatražene usluge, sukladno svojoj politici privatnosti (https://www.srce.hr/politika-privatnosti)
+zatražene usluge, sukladno svojoj politici privatnosti (https://www.srce.unizg.hr/politika-privatnosti)
 i Pravilniku usluge (https://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps.pdf)
 
 Ukoliko imate primjedbi na poslani zahtjev, molimo Vas da ih javite
@@ -56,6 +56,6 @@ Tim usluge
 Virtual Private Server (VPS)
 https://www.srce.unizg.hr/vps
 
-Sveučilište u Zagrebu, Sveučilišni računski centar (Srce), 
+Sveučilište u Zagrebu, Sveučilišni računski centar (Srce)
 https://www.srce.unizg.hr
 vps@srce.hr
