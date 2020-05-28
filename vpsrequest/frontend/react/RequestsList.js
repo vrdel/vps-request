@@ -189,8 +189,8 @@ export function ListRequests(typeRequest) {
               data={requests}
               columns={columns}
               className="-highlight mt-4 text-center align-middle"
-              defaultPageSize={50}
-              pageSizeOptions={[25, 50, 100]}
+              defaultPageSize={requests.length}
+              showPagination={false}
               previousText='Prethodni'
               nextText='Sljedeći'
               noDataText='Nema zahtjeva'
