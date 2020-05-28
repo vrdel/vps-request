@@ -68,7 +68,7 @@ export class MyRequests extends Component
           id: 'isApproved',
           Header: 'Status',
           accessor: r => {
-              return (<Status params={CONFIG['status'][r.approved]}/>)
+              return (<Status params={CONFIG['status'][r.approved]} renderToolTip={true}/>)
           },
           maxWidth: 90,
         },

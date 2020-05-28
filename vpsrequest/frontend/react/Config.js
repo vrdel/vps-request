@@ -1,8 +1,9 @@
-import {faCog,
-faTimes,
-faCheckDouble,
-faCheck,
-faCouch
+import {
+  faCog,
+  faTimes,
+  faCheckDouble,
+  faCheck,
+  faCouch
 } from '@fortawesome/free-solid-svg-icons';
 
 export const RelativePath = '/zahtjev'

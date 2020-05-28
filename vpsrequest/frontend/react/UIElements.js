@@ -425,9 +425,15 @@ export const FilterField = ({onChange, value}) => (
 )
 
 
-export const Status = ({params}) => (
+export const Status = ({params, renderToolTip=false}) => (
   <div>
     <FontAwesomeIcon className={params['classname']} size="2x" icon={params['icon']} id={params['id']}/>
-    <UncontrolledTooltip placement="right" target={params['id']}>{params['label']}</UncontrolledTooltip>
+    {
+      renderToolTip &&
+        <UncontrolledTooltip placement="right"
+          target={params['id']}>
+          {params['label']}
+        </UncontrolledTooltip>
+    }
 </div>
 )
