@@ -1,5 +1,8 @@
-wheel:
+wheel-prod:
 	python setup.py bdist_wheel
+
+wheel-devel:
+	python setup.py egg_info --tag-date --tag-build=dev bdist_wheel
 
 sdist:
 	python setup.py sdist
