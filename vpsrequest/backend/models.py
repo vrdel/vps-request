@@ -76,7 +76,7 @@ class Request(models.Model):
         blank=False,
         null=False
     )
-    vm_remark = models.TextField(blank=False, null=False)
+    vm_remark = models.TextField(blank=True, null=True)
     vm_admin_remark = models.TextField(blank=True, null=True)
     vm_fqdn = models.CharField(
         'VM FQDN',
