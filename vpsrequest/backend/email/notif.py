@@ -1,15 +1,15 @@
 from backend import models, serializers
 from email.mime.text import MIMEText
 from email.header import Header
-from dateutil.parser import parse
+from email.utils import formatdate
+import email.utils
 import smtplib
 import socket
-import re
 from backend.email.msgbuilder import MsgBuilder
 from django.conf import settings
 
-TESTING_TO = 'vps-admin@srce.hr'
-TESTING_CC = 'vps-request@srce.hr'
+TESTING_TO = 'dvrcic@srce.hr'
+TESTING_CC = 'dvrcic@gmail.com'
 
 
 class Notification(object):
@@ -80,9 +80,13 @@ class Notification(object):
                 if cc:
                     m['Cc'] = cc
                 m['Subject'] = Header(subject, 'utf-8')
+                m['Date'] = formatdate(localtime=True)
                 s = smtplib.SMTP(settings.SRCE_SMTP, 25, timeout=120)
                 s.ehlo()
-                s.sendmail(self.sender, to, m.as_string())
+                if cc:
+                    s.sendmail(self.sender, [to, cc], m.as_string())
+                else:
+                    s.sendmail(self.sender, to, m.as_string())
                 s.quit()
 
                 print('MAIL OK: Mail sent to={} cc={}'.format(m['To'], m['Cc']))
