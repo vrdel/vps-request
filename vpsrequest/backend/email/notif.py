@@ -8,8 +8,8 @@ import socket
 from backend.email.msgbuilder import MsgBuilder
 from django.conf import settings
 
-TESTING_TO = 'dvrcic@srce.hr'
-TESTING_CC = 'dvrcic@gmail.com'
+# TESTING_TO = 'to@foo'
+# TESTING_CC = 'cc@foo'
 
 
 class Notification(object):
