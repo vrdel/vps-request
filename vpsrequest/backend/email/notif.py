@@ -83,7 +83,9 @@ class Notification(object):
                 m['Date'] = formatdate(localtime=True)
                 s = smtplib.SMTP(settings.SRCE_SMTP, 25, timeout=120)
                 s.ehlo()
-                if cc:
+                if cc and type(to) is list:
+                    s.sendmail(self.sender, to + [cc], m.as_string())
+                elif cc and type(to) is str:
                     s.sendmail(self.sender, [to, cc], m.as_string())
                 else:
                     s.sendmail(self.sender, to, m.as_string())
