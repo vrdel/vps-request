@@ -308,7 +308,7 @@ export const Footer = ({loginPage=false}) => {
 
   if (!loginPage) {
     return (
-      <div id="vpsreq-footer" className="border rounded">
+      <div id="vpsreq-footer" className="border rounded pristupacnost">
         <InnerFooter border={true} img={SrceLogo}/>
       </div>
     )
@@ -399,9 +399,9 @@ export const BaseView = ({title='', isChangeView=false, isHandleNewView=false,
           msg={state.modalMsg}
           onYes={state.modalFunc} />
       }
-      <div id="vpsreq-contentwrap" className="pl-4 pb-4 pr-4 pt-3 border rounded">
+      <div id="vpsreq-contentwrap" className="pl-4 pb-4 pr-4 pt-3 border rounded pristupacnost">
         {
-          <div className={`"shadow-sm p-2 mb-2 rounded " ${bgTitle}`}>
+          <div className={`"shadow-sm p-2 mb-2 rounded ${bgTitle}"`}>
             <h3>{title}</h3>
           </div>
         }

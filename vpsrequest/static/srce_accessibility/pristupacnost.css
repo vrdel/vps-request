@@ -1,0 +1,43 @@
+html[data-highcontrast-applied="true"] .pristupacnost {
+    background-color: black!important;
+    color: white!important;
+}
+
+html[data-highcontrast-applied="true"] .shadow-sm {
+    background-color: black!important;
+}
+
+html[data-highcontrast-applied="true"] .navbar {
+    background-color: black!important;
+}
+
+html[data-highcontrast-applied="true"] .nav-tabs {
+    background-color: black!important;
+    color: white;
+}
+
+html[data-highcontrast-applied="true"] .nav-link {
+    color: white!important;
+}
+
+html[data-highcontrast-applied="true"] .nav-link:hover {
+    color: white!important;
+}
+
+html[data-highcontrast-applied="true"] small {
+    color: white!important;
+}
+
+html[data-highcontrast-applied="true"] .text-dark.nav-item {
+    color: white!important;
+}
+
+html[data-highcontrast-applied="true"] .nav-link.active.bg-info {
+    color: black!important;
+    background-color: white!important;
+}
+
+html[data-highcontrast-applied="true"] img {
+    filter: invert()!important;
+}
+
