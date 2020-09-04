@@ -3,6 +3,7 @@ from backend import models
 from backend.email.notif import Notification
 
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 from rest_framework import status
 from rest_framework import viewsets
@@ -106,30 +107,32 @@ class RequestsViewset(viewsets.ModelViewSet):
 
         if not changedContact:
             newRequest = ret.data
-            notification = Notification(newRequest['id'])
+            if settings.MAIL_SEND:
+                notification = Notification(newRequest['id'])
 
-            # state transitions mail sending
-            if (oldRequest['approved'] == 2 and newRequest['approved'] > 1) or (oldRequest['approved'] == 1 and newRequest['approved'] == 2):
-                notification.sendChangedRequestEmail(oldRequest)
-            elif oldRequest['approved'] == -1 and newRequest['approved'] == -1:
-                if user.is_staff:
-                    notification.sendFixRequestEmail(sendMsgContact, sendMsgHead)
-                else:
+                # state transitions mail sending
+                if (oldRequest['approved'] == 2 and newRequest['approved'] > 1) or (oldRequest['approved'] == 1 and newRequest['approved'] == 2):
                     notification.sendChangedRequestEmail(oldRequest)
-            elif oldRequest['approved'] == -1 and newRequest['approved'] == 0:
-                notification.sendRejecedRequestEmail(sendMsgContact, sendMsgHead)
-            elif oldRequest['approved'] == -1 and newRequest['approved'] == 1:
-                notification.sendApprovedRequestEmail(sendMsgContact, sendMsgHead)
+                elif oldRequest['approved'] == -1 and newRequest['approved'] == -1:
+                    if user.is_staff:
+                        notification.sendFixRequestEmail(sendMsgContact, sendMsgHead)
+                    else:
+                        notification.sendChangedRequestEmail(oldRequest)
+                elif oldRequest['approved'] == -1 and newRequest['approved'] == 0:
+                    notification.sendRejecedRequestEmail(sendMsgContact, sendMsgHead)
+                elif oldRequest['approved'] == -1 and newRequest['approved'] == 1:
+                    notification.sendApprovedRequestEmail(sendMsgContact, sendMsgHead)
 
         return ret
 
     def create(self, request):
         response = super().create(request)
         new_request = response.data
-        notification = Notification(new_request['id'])
-        notification.sendFreshRequestAdminEmail()
-        notification.sendFreshRequestUserEmail()
-        notification.sendFreshRequestHeadEmail()
+        if settings.MAIL_SEND:
+            notification = Notification(new_request['id'])
+            notification.sendFreshRequestAdminEmail()
+            notification.sendFreshRequestUserEmail()
+            notification.sendFreshRequestHeadEmail()
 
         return response
 
