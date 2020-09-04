@@ -27,6 +27,7 @@ export const RowRequestDropDown = ({field, ...propsRest}) =>
         className="mr-2"
       >
         {propsRest.label}
+        <span className="text-danger">*</span> 
       </Label>
     </Col>
     <Col md={{size: 7}}>
@@ -57,6 +58,12 @@ export const RowRequestField = ({field, ...propsRest}) =>
         aria-label={propsRest.labelFor}
         className="mr-2">
         {propsRest.label}
+        {
+          propsRest.required ?
+            <span className="text-danger">*</span>
+            :
+            null
+        }
       </Label>
     </Col>
     <Col md={{size: 7}}>
@@ -153,7 +160,7 @@ export const VMFields = ({listVMOSes, disabled=false}) => {
         required={true}
         disabled={disabled}/>
       <Field name="vm_remark" component={RowRequestField} label="Napomena:"
-        labelFor="vmRemark" fieldType="textarea" required={true}
+        labelFor="vmRemark" fieldType="textarea"
         disabled={disabled}/>
     </React.Fragment>
   )

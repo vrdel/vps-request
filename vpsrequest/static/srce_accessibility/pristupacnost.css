@@ -20,6 +20,10 @@ html[data-highcontrast-applied="true"] .nav-link {
     color: white!important;
 }
 
+html[data-highcontrast-applied="true"] span.text-danger {
+    color: white!important;
+}
+
 html[data-highcontrast-applied="true"] .nav-link:hover {
     color: white!important;
 }
