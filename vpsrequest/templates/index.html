@@ -6,11 +6,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <title>VPS Zahtjev</title>
+    <link rel="stylesheet" href="/zahtjev/static/srce_accessibility/pristupacnost.css"/>
   </head>
   <body class="bodyreact">
     <div id="react"></div>
     {% render_bundle 'main' %}
     {% render_bundle 'runtime' %}
     {% render_bundle 'vendors' %}
-  </body>
+    <script  src="/zahtjev/static/srce_accessibility/accessibility.min-f5b10f4b86518d1b67dadf42c3ffe699.js"></script>
+    <script> 
+      var options = {
+            icon: {
+              circular: true,
+              img: 'accessibility',
+              position: {
+                bottom: { 
+                  size: 50, 
+                  units: 'px'	
+                },
+                right: {
+                  size: 0,
+                  units: 'px'
+                },
+                type: 'fixed'
+              }
+            }
+      }
+      new Accessibility(options);
+    </script>	
+</body>
 </html>

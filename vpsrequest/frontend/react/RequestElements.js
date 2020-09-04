@@ -38,7 +38,7 @@ export const RowRequestDropDown = ({field, ...propsRest}) =>
       />
       {
         propsRest.infoMsg ?
-          <div id="vpsreq-field-infomsg">
+          <div id="vpsreq-field-infomsg" className="pristupacnost">
             {propsRest.infoMsg}
           </div>
           : null
@@ -72,7 +72,7 @@ export const RowRequestField = ({field, ...propsRest}) =>
             {...field}/>
           {
             propsRest.infoMsg ?
-              <div id="vpsreq-field-infomsg">
+              <div id="vpsreq-field-infomsg" className="pristupacnost">
                 {propsRest.infoMsg}
               </div>
               : null
@@ -97,12 +97,12 @@ export const RowRequestField = ({field, ...propsRest}) =>
           }
           {
             propsRest.infoMsg ?
-              <div id="vpsreq-field-infomsg">
+              <div id="vpsreq-field-infomsg" className="pristupacnost">
                 {propsRest.infoMsg}
               </div>
               :
               propsRest.infoMsgComponent ?
-                <div id="vpsreq-field-infomsg">
+                <div id="vpsreq-field-infomsg" className="pristupacnost">
                   {propsRest.infoMsgComponent}
                 </div>
                 : null
