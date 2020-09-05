@@ -93,7 +93,7 @@ const Table = ({ columns, data, showEmpty=false }) => {
     <React.Fragment>
       <Row>
         <Col>
-          <table className="table table-sm table-hover">
+          <table className="mt-4 table table-sm table-hover">
             <thead className="table-active align-middle text-center">
               {headerGroups.map((headerGroup, thi) => (
                 <tr key={thi}>
@@ -141,7 +141,7 @@ const Table = ({ columns, data, showEmpty=false }) => {
       </Row>
       <Row>
         <Col className="d-flex justify-content-center">
-          <Pagination>
+          <Pagination className="mt-5">
             <PaginationItem disabled={!canPreviousPage}>
               <PaginationLink first onClick={() => gotoPage(0)}/>
             </PaginationItem>
