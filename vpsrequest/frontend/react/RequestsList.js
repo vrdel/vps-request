@@ -12,6 +12,7 @@ import {
   Badge
 } from 'reactstrap';
 import { useTable, useFilters } from 'react-table';
+import { useQuery } from 'react-query';
 
 
 const DefaultColumnFilter = ({column: { filterValue, setFilter }}) => {
@@ -124,33 +125,32 @@ const ListRequests = (props) => {
   const location = props.location;
   const backend = new Backend();
   const isApprovedList = props.typeRequest.api.endsWith('approved')
-  const [loading, setLoading] = useState(false);
-  const [requests, setRequests] = useState(null);
-  const [statsActiveRetired, setActiveRetired] = useState(undefined);
   let apiStatsRequestsApproved = undefined;
   if (isApprovedList)
     apiStatsRequestsApproved = props.typeRequest.apiStats
 
-  useEffect(() => {
-    setLoading(true);
-    initializeComponent()
-  }, [])
-
-  const initializeComponent = async () => {
-    const sessionActive = await backend.isActiveSession()
-
-    if (sessionActive.active) {
-      let fetched_stats = undefined
-      const fetched = await backend.fetchData(apiListRequests)
-
-      if (isApprovedList)
-        fetched_stats = await backend.fetchData(apiStatsRequestsApproved)
-
-      setRequests(fetched)
-      setActiveRetired(fetched_stats)
-      setLoading(false);
+  const { data: requests, error: errorRequest, isLoading: loadingRequests } = useQuery(
+    `request_${props.typeRequest.linkPath}`, async () => {
+      const sessionActive = await backend.isActiveSession()
+      let fetched = undefined;
+      if (sessionActive.active) {
+        fetched = await backend.fetchData(apiListRequests)
+        return fetched
+      }
     }
-  }
+  );
+
+  const { data: stats, error: errorStats, isLoading: loadingStats } = useQuery(
+    `stats_${props.typeRequest.linkPath}`, async () => {
+      let fetched = undefined
+      if (isApprovedList)
+        fetched = await backend.fetchData(apiStatsRequestsApproved)
+        return fetched
+    },
+    {
+      enabled: requests
+    }
+  );
 
   const columns = useMemo(() => [
     {
@@ -201,10 +201,10 @@ const ListRequests = (props) => {
     }
   ])
 
-  if (loading)
+  if (loadingRequests || loadingStats)
     return (<LoadingAnim />)
 
-  else if (!loading && requests && isApprovedList && statsActiveRetired) {
+  else if (!loadingRequests && !loadingStats && requests && isApprovedList && stats) {
     return (
       <BaseView
         title={props.typeRequest.title}
@@ -212,10 +212,10 @@ const ListRequests = (props) => {
         {
           <span>
             <Badge className="mt-3" color="success" style={{fontSize: '120%'}}>
-              Aktivni<Badge className="ml-2" color="light">{statsActiveRetired.active}</Badge>
+              Aktivni<Badge className="ml-2" color="light">{stats.active}</Badge>
             </Badge>
             <Badge className="ml-3" color="secondary" style={{fontSize: '120%'}}>
-              Umirovljeni<Badge className="ml-2" color="light">{statsActiveRetired.retired}</Badge>
+              Umirovljeni<Badge className="ml-2" color="light">{stats.retired}</Badge>
             </Badge>
           </span>
         }
@@ -223,7 +223,7 @@ const ListRequests = (props) => {
       </BaseView>
     )
   }
-  else if (!loading && requests && !isApprovedList) {
+  else if (!loadingRequests && requests && !isApprovedList) {
     return (
       <BaseView
         title={props.typeRequest.title}
