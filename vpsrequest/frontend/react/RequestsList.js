@@ -66,7 +66,7 @@ const ListRequests = (props) => {
   const isApprovedList = props.typeRequest.api.endsWith('approved')
   const [loading, setLoading] = useState(false);
   const [requests, setRequests] = useState(null);
-  const [statsActiveRetired, setStateActiveRetired] = useState(undefined);
+  const [statsActiveRetired, setActiveRetired] = useState(undefined);
   let apiStatsRequestsApproved = undefined;
   if (isApprovedList)
     apiStatsRequestsApproved = props.typeRequest.apiStats
@@ -88,7 +88,7 @@ const ListRequests = (props) => {
         fetched_stats = await backend.fetchData(apiStatsRequestsApproved)
 
       setRequests(fetched)
-      setStateActiveRetired(fetched_stats)
+      setActiveRetired(fetched_stats)
     }
   }
 
@@ -150,22 +150,30 @@ const ListRequests = (props) => {
   if (loading)
     return (<LoadingAnim />)
 
-  else if (!loading && requests) {
+  else if (!loading && requests && isApprovedList && statsActiveRetired) {
     return (
       <BaseView
         title={props.typeRequest.title}
         location={location}>
         {
-          isApprovedList &&
-            <span>
-              <Badge className="mt-3" color="success" style={{fontSize: '120%'}}>
-                Aktivni<Badge className="ml-2" color="light">{statsActiveRetired.active}</Badge>
-              </Badge>
-              <Badge className="ml-3" color="secondary" style={{fontSize: '120%'}}>
-                Umirovljeni<Badge className="ml-2" color="light">{statsActiveRetired.retired}</Badge>
-              </Badge>
-            </span>
+          <span>
+            <Badge className="mt-3" color="success" style={{fontSize: '120%'}}>
+              Aktivni<Badge className="ml-2" color="light">{statsActiveRetired.active}</Badge>
+            </Badge>
+            <Badge className="ml-3" color="secondary" style={{fontSize: '120%'}}>
+              Umirovljeni<Badge className="ml-2" color="light">{statsActiveRetired.retired}</Badge>
+            </Badge>
+          </span>
         }
+        <Table columns={columns} data={requests}/>
+      </BaseView>
+    )
+  }
+  else if (!loading && requests && !isApprovedList) {
+    return (
+      <BaseView
+        title={props.typeRequest.title}
+        location={location}>
         <Table columns={columns} data={requests}/>
       </BaseView>
     )
