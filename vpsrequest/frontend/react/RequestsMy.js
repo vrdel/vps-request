@@ -34,7 +34,7 @@ const EmptyTable = ({ columns, data }) => {
   )
 
   return (
-    <table className="table table-bordered table-sm table-hover">
+    <table className="table table-sm table-hover">
       <thead className="table-active align-middle text-center">
         {headerGroups.map((headerGroup, thi) => (
           <tr key={thi}>
@@ -93,7 +93,7 @@ const Table = ({ columns, data, showEmpty=false }) => {
     <React.Fragment>
       <Row>
         <Col>
-          <table className="table table-bordered table-sm table-hover">
+          <table className="table table-sm table-hover">
             <thead className="table-active align-middle text-center">
               {headerGroups.map((headerGroup, thi) => (
                 <tr key={thi}>

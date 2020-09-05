@@ -30,7 +30,7 @@ function Table({ columns, data }) {
 
   // Render the UI for your table
   return (
-    <table className="mt-4 text-center align-middle table table-bordered table-sm table-hover">
+    <table className="mt-4 text-center align-middle table table-sm table-hover">
       <thead className="table-active align-middle text-center align-self-center p-2">
         {headerGroups.map((headerGroup, thi) => (
           <tr key={thi}>
@@ -97,6 +97,7 @@ const ListRequests = (props) => {
       id: 'cardNumber',
       Header: 'r. br.',
       accessor: r => Number(requests.length - requests.indexOf(r)),
+      width: 150,
     },
     {
       id: 'isApproved',
