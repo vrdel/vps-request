@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Backend } from './DataManager';
 import {
   BaseView,
@@ -18,67 +18,50 @@ import {
 import { CONFIG } from './Config'
 
 
-export class NewRequest extends Component
-{
-  constructor(props) {
-    super(props)
+const NewRequest = (props) => {
+  const history = props.history;
+  const backend = new Backend();
+  const apiListVMOSes = CONFIG.vmosUrl;
+  const apiListRequests = CONFIG.listReqUrl;
+  const [loading, setLoading] = useState(false);
+  const [listVMOSes, setListVMOSes] = useState([]);
+  const [acceptConditions, setAcceptConditions] = useState(undefined);
+  const [acceptConditionsAlert, setAcceptConditionsAlert] = useState(false);
+  const [userDetails, setUserDetails] = useState(null);
 
-    this.history = props.history
-
-    this.state = {
-      loading: false,
-      listVMOSes: [],
-      acceptConditions: undefined,
-      acceptConditionsAlert: false,
-      userDetail: undefined,
-    }
-
-    this.apiListVMOSes = CONFIG.vmosUrl
-    this.apiListRequests = CONFIG.listReqUrl
-
-    this.backend = new Backend()
-    this.handleAcceptConditions = this.handleAcceptConditions.bind(this)
-    this.handleOnSubmit = this.handleOnSubmit.bind(this)
-    this.dismissAlert = this.dismissAlert.bind(this)
-    this.initializeComponent = this.initializeComponent.bind(this)
-  }
-
-  async initializeComponent() {
-    const session = await this.backend.isActiveSession()
+  const initializeComponent = async () => {
+    const session = await backend.isActiveSession()
 
     if (session.active) {
-      const vmOSes = await this.backend.fetchData(this.apiListVMOSes)
-
-      this.setState({
-        listVMOSes: vmOSes.map(e => e.vm_os),
-        acceptConditions: false,
-        userDetails: session.userdetails,
-        loading: false
-      })
+      const vmOSes = await backend.fetchData(apiListVMOSes)
+      setListVMOSes(vmOSes.map(e => e.vm_os));
+      setAcceptConditions(false);
+      setUserDetails(session.userdetails)
     }
   }
 
-  componentDidMount() {
-    this.setState({loading: true})
-    this.initializeComponent()
+  useEffect(() => {
+    setLoading(true);
+    initializeComponent();
+    setLoading(false)
+  }, [])
+
+  const dismissAlert = () => {
+    setAcceptConditionsAlert(false);
   }
 
-  dismissAlert() {
-    this.setState({acceptConditionsAlert: false})
+  const handleAcceptConditions = () => {
+    setAcceptConditions(!acceptConditions);
   }
 
-  handleAcceptConditions() {
-    this.setState(prevState => ({acceptConditions: !prevState.acceptConditions}))
-  }
-
-  async handleOnSubmit(data) {
-    const response = await this.backend.addObject(this.apiListRequests, data)
+  const handleOnSubmit = async (data) => {
+    const response = await backend.addObject(apiListRequests, data)
 
     if (response.ok)
       NotifyOk({
         msg: 'Zahtjev uspješno podnesen',
         title: `Uspješno - HTTP ${response.status}`,
-        callback: () => this.history.push('/ui/stanje-zahtjeva')}
+        callback: () => history.push('/ui/stanje-zahtjeva')}
       )
     else
       NotifyError({
@@ -86,75 +69,73 @@ export class NewRequest extends Component
         title: `Greška - HTTP ${response.status}`})
   }
 
-  render() {
-    const {loading, listVMOSes, userDetails, acceptConditions} = this.state
-
-    if (userDetails)
-      var initValues = {
-        location: '',
-        first_name: userDetails.first_name,
-        last_name: userDetails.last_name,
-        institution: userDetails.institution,
-        role: userDetails.role,
-        email: userDetails.email,
-        aaieduhr: userDetails.aaieduhr,
-        vm_fqdn: '',
-        vm_purpose: '',
-        vm_remark:  '',
-        vm_os: '',
-        sys_firstname: '',
-        sys_aaieduhr: '',
-        sys_lastname: '',
-        sys_institution: '',
-        sys_role: '',
-        sys_email: '',
-        head_firstname: '',
-        head_lastname: '',
-        head_institution: userDetails.institution,
-        head_role: '',
-        head_email: ''
-      }
-
-    if (loading)
-      return (<LoadingAnim />)
-
-    else if (!loading && listVMOSes && initValues &&
-      acceptConditions !== undefined) {
-      return (
-        <BaseView
-          title='Novi zahtjev'
-          isChangeView={false}>
-          <Formik
-            initialValues={initValues}
-            onSubmit={(values, actions) => {
-              values.request_date = new Date().toISOString()
-              values.user = userDetails.pk
-              values.approved = -1
-
-              if (!acceptConditions)
-                this.setState({acceptConditionsAlert: true})
-              else
-                this.handleOnSubmit(values)
-            }}
-            render = {props => (
-              <Form>
-                <ContactUserFields />
-                <VMFields listVMOSes={listVMOSes}/>
-                <SysAdminFields/>
-                <HeadFields/>
-                <SubmitNewRequest
-                  acceptConditions={acceptConditions}
-                  handleAcceptConditions={this.handleAcceptConditions}
-                  dismissAlert={this.dismissAlert}
-                  stateAcceptConditionsAlert={this.state.acceptConditionsAlert}/>
-              </Form>
-            )}
-          />
-        </BaseView>
-      )
+  if (userDetails)
+    var initValues = {
+      location: '',
+      first_name: userDetails.first_name,
+      last_name: userDetails.last_name,
+      institution: userDetails.institution,
+      role: userDetails.role,
+      email: userDetails.email,
+      aaieduhr: userDetails.aaieduhr,
+      vm_fqdn: '',
+      vm_purpose: '',
+      vm_remark:  '',
+      vm_os: '',
+      sys_firstname: '',
+      sys_aaieduhr: '',
+      sys_lastname: '',
+      sys_institution: '',
+      sys_role: '',
+      sys_email: '',
+      head_firstname: '',
+      head_lastname: '',
+      head_institution: userDetails.institution,
+      head_role: '',
+      head_email: ''
     }
 
-    else
-      return null
+  if (loading)
+    return (<LoadingAnim />)
+
+  else if (!loading && listVMOSes && initValues &&
+    acceptConditions !== undefined) {
+    return (
+      <BaseView
+        title='Novi zahtjev'
+        isChangeView={false}>
+        <Formik
+          initialValues={initValues}
+          onSubmit={(values, actions) => {
+            values.request_date = new Date().toISOString()
+            values.user = userDetails.pk
+            values.approved = -1
+
+            if (!acceptConditions)
+              setAcceptConditionsAlert(true)
+            else
+              handleOnSubmit(values)
+          }}
+          render = {props => (
+            <Form>
+              <ContactUserFields />
+              <VMFields listVMOSes={listVMOSes}/>
+              <SysAdminFields/>
+              <HeadFields/>
+              <SubmitNewRequest
+                acceptConditions={acceptConditions}
+                handleAcceptConditions={handleAcceptConditions}
+                dismissAlert={dismissAlert}
+                stateAcceptConditionsAlert={acceptConditionsAlert}/>
+            </Form>
+          )}
+        />
+      </BaseView>
+    )
   }
+
+  else
+    return null
 }
+
+export default NewRequest;

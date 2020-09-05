@@ -5,7 +5,7 @@ import NotFound from './NotFound';
 import React, { Component } from 'react';
 import { Backend } from './DataManager';
 import { ListRequests } from './RequestsList';
-import { NewRequest } from './RequestNew';
+import NewRequest from './RequestNew';
 import { ProcessNewRequest } from './RequestProcessNew';
 import { ChangeRequest } from './RequestChange';
 import { UIProxy } from './UIProxy';

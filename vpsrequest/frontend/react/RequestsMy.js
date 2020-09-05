@@ -176,18 +176,18 @@ const MyRequests = (props) => {
   const [requests, setRequests] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
 
+  const initializeComponent = async () => {
+    let sessionActive = await backend.isActiveSession();
+
+    if (sessionActive.active) {
+      let fetched = await backend.fetchData(apiListRequests);
+      setRequests(fetched);
+      setUserDetails(sessionActive.userdetails)
+    }
+  }
+
   useEffect(() => {
     setLoading(true);
-    const initializeComponent = async () => {
-      let sessionActive = await backend.isActiveSession();
-
-      if (sessionActive.active) {
-        let fetched = await backend.fetchData(apiListRequests);
-        setRequests(fetched);
-        setUserDetails(sessionActive.userdetails)
-      }
-    }
-
     initializeComponent();
     setLoading(false);
   }, [])
