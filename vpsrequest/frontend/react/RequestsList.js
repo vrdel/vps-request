@@ -14,11 +14,28 @@ import { CONFIG } from './Config'
 import {
   Badge
 } from 'reactstrap';
-import { useTable } from 'react-table';
+import { useTable, useFilters } from 'react-table';
+
+
+const DefaultColumnFilter = ({column: { filterValue, setFilter }}) => {
+  return (
+    <input className="form-control text-center"
+      type="text"
+      placeholder="Pretraži"
+      value={filterValue || ''}
+      onChange={e => {setFilter(e.target.value || undefined)}}
+    />
+  )
+}
 
 
 function Table({ columns, data }) {
-  // Use the state and functions returned from useTable to build your UI
+  const defaultColumn = useMemo(
+    () => ({
+      Filter: DefaultColumnFilter,
+    }),
+    []
+  )
   const {
     headerGroups,
     rows,
@@ -26,41 +43,64 @@ function Table({ columns, data }) {
   } = useTable({
     columns,
     data,
-  })
+    defaultColumn
+  }, useFilters)
 
-  // Render the UI for your table
   return (
     <table className="mt-4 text-center align-middle table table-sm table-hover">
       <thead className="table-active align-middle text-center align-self-center p-2">
         {headerGroups.map((headerGroup, thi) => (
-          <tr key={thi}>
-            {headerGroup.headers.map((column, tri) => {
-              let width = undefined;
+          <React.Fragment key={thi}>
+            <tr>
+              {headerGroup.headers.map((column, tri) => {
+                let width = undefined;
 
-              if (tri === 0)
-                width = '50px'
-              else if (tri === 1)
-                width = '90px'
-              else if (tri === 2)
-                width = '180px'
-              else if (tri === 3)
-                width = undefined
-              else if (tri === 4)
-                width = '180px'
-              else if (tri === 5)
-                width = undefined
-              else if (tri === 6)
-                width = '70px'
+                if (tri === 0)
+                  width = '50px'
+                else if (tri === 1)
+                  width = '90px'
+                else if (tri === 2)
+                  width = '180px'
+                else if (tri === 3)
+                  width = undefined
+                else if (tri === 4)
+                  width = '180px'
+                else if (tri === 5)
+                  width = undefined
+                else if (tri === 6)
+                  width = '70px'
 
-              return (
-                <th style={{width: width}}
-                  className="align-self-center align-middle"
-                  key={tri}>
-                    {column.render('Header')}
-                </th>
-              )
-            })}
-          </tr>
+                return (
+                  <th style={{width: width}}
+                    className="align-self-center align-middle"
+                    key={tri}>
+                      {column.render('Header')}
+                  </th>
+                )
+              })}
+            </tr>
+            <tr className="p-0 m-0">
+              {headerGroup.headers.map((column, tri) => {
+                if (tri === 0)
+                  return(
+                    <th className="p-1 m-1 align-middle" key={tri + 11}>
+                      <FontAwesomeIcon icon={faSearch}/>
+                    </th>
+                  )
+                else if (tri === 2 || tri === 3 || tri === 4 || tri === 5)
+                  return (
+                    <th className="p-1 m-1" key={tri + 11}>
+                      {column.canFilter ? column.render('Filter') : null}
+                    </th>
+                  )
+                else
+                  return (
+                    <th key={tri + 11}>
+                    </th>
+                  )
+              })}
+            </tr>
+          </React.Fragment>
         ))}
       </thead>
       <tbody>
