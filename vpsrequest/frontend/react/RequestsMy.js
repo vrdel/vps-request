@@ -183,13 +183,13 @@ const MyRequests = (props) => {
       let fetched = await backend.fetchData(apiListRequests);
       setRequests(fetched);
       setUserDetails(sessionActive.userdetails)
+      setLoading(false);
     }
   }
 
   useEffect(() => {
     setLoading(true);
     initializeComponent();
-    setLoading(false);
   }, [])
 
   const columns = useMemo(() => [

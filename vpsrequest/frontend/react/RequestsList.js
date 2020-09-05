@@ -9,7 +9,7 @@ import {
 import { DateFormatHR } from './Util';
 
 // import 'react-table/react-table.css';
-import './RequestsMy.css';
+// import './RequestsMy.css';
 import { CONFIG } from './Config'
 import {
   Badge
@@ -30,12 +30,12 @@ function Table({ columns, data }) {
 
   // Render the UI for your table
   return (
-    <table className="table table-bordered table-sm table-hover">
-      <thead className="table-active align-middle text-center">
+    <table className="mt-4 text-center align-middle table table-bordered table-sm table-hover">
+      <thead className="table-active align-middle text-center align-self-center p-2">
         {headerGroups.map((headerGroup, thi) => (
           <tr key={thi}>
             {headerGroup.headers.map((column, tri) => (
-              <th key={tri}>{column.render('Header')}</th>
+              <th className="align-self-center align-middle" key={tri}>{column.render('Header')}</th>
             ))}
           </tr>
         ))}
@@ -47,9 +47,9 @@ function Table({ columns, data }) {
             <tr key={row_index}>
               {row.cells.map((cell, cell_index) => {
                 if (cell_index === 0)
-                  return <td key={cell_index} className="align-middle text-center table-light">{row_index + 1}</td>
+                  return <td key={cell_index} className="align-middle text-center align-self-center">{row_index + 1}</td>
                 else
-                  return <td key={cell_index} className="align-middle table-light">{cell.render('Cell')}</td>
+                  return <td key={cell_index} className="align-middle align-self-center">{cell.render('Cell')}</td>
               })}
             </tr>
           )
@@ -74,7 +74,6 @@ const ListRequests = (props) => {
   useEffect(() => {
     setLoading(true);
     initializeComponent()
-    setLoading(false);
   }, [])
 
   const initializeComponent = async () => {
@@ -89,6 +88,7 @@ const ListRequests = (props) => {
 
       setRequests(fetched)
       setActiveRetired(fetched_stats)
+      setLoading(false);
     }
   }
 
@@ -97,20 +97,17 @@ const ListRequests = (props) => {
       id: 'cardNumber',
       Header: 'r. br.',
       accessor: r => Number(requests.length - requests.indexOf(r)),
-      maxWidth: 50,
     },
     {
       id: 'isApproved',
       Header: 'Status',
       accessor: r => r.approved,
       Cell: props => <Status params={CONFIG['status'][props.value]}/>,
-      maxWidth: 90,
     },
     {
       id: 'requestDate',
       Header: props.typeRequest.headerDate,
       accessor: r => DateFormatHR(eval(`r.${props.typeRequest.dateFieldSearch}`)),
-      maxWidth: 180
     },
     {
       Header: 'Ustanova',
@@ -120,12 +117,10 @@ const ListRequests = (props) => {
       id: 'contactNameLastName',
       Header: 'Kontaktna osoba',
       accessor: r => `${r.user.first_name} ${r.user.last_name}`,
-      maxWidth: 180
     },
     {
       Header: 'Poslužitelj',
       accessor: 'vm_fqdn',
-      maxWidth: 180
     },
     {
       id: 'edit',

@@ -52,7 +52,6 @@ const ChangeRequest = (props) => {
   useEffect(() => {
     setLoading(true);
     initializeComponent()
-    setLoading(false);
   }, [])
 
   const handleOnSubmit = async (data) => {
