@@ -54,9 +54,14 @@ const Table = ({ columns, data, showEmpty=false }) => {
           [...Array(3)].map((e, ri) => {
             return (
               <tr key={ri}>
-                {[...Array(7)].map((e, ci) => {
-                  return <td style={{height: '45px'}} key={ci} className="align-middle text-center">{''}</td>
-                })}
+                {
+                  ri === 1 && rows.length === 0 ?
+                    <td colSpan={7} style={{height: '45px'}} className="align-middle text-center text-muted">{'Nema zahtjeva'}</td>
+                  :
+                    [...Array(7)].map((e, ci) => {
+                      return <td style={{height: '45px'}} key={ci} className="align-middle text-center">{''}</td>
+                    })
+                }
               </tr>
             )
           })
