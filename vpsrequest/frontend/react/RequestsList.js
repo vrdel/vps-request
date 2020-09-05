@@ -7,9 +7,6 @@ import {
   faSearch,
 } from '@fortawesome/free-solid-svg-icons';
 import { DateFormatHR } from './Util';
-
-// import 'react-table/react-table.css';
-// import './RequestsMy.css';
 import { CONFIG } from './Config'
 import {
   Badge

@@ -18,8 +18,6 @@ import {
   } from '@fortawesome/free-solid-svg-icons';
 import { DateFormatHR } from './Util'
 
-// import 'react-table/react-table.css';
-// import './RequestsMy.css'
 
 const EmptyTable = ({ columns, data }) => {
   const {
