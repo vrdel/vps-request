@@ -68,12 +68,12 @@ function Table({ columns, data }) {
           prepareRow(row)
           return (
             <tr key={row_index}>
-              {row.cells.map((cell, cell_index) => {
-                if (cell_index === 0)
-                  return <td key={cell_index} className="align-middle text-center align-self-center">{row_index + 1}</td>
-                else
-                  return <td key={cell_index} className="align-middle align-self-center">{cell.render('Cell')}</td>
-              })}
+              {row.cells.map((cell, cell_index) =>
+                <td key={cell_index}
+                  className="align-middle align-self-center">
+                    {cell.render('Cell')}
+                </td>
+              )}
             </tr>
           )
         })}
@@ -119,7 +119,7 @@ const ListRequests = (props) => {
     {
       id: 'cardNumber',
       Header: 'r. br.',
-      accessor: r => Number(requests.length - requests.indexOf(r)),
+      accessor: (r, i) => Number(requests.length - i)
     },
     {
       id: 'isApproved',
