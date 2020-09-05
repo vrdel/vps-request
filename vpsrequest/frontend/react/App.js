@@ -7,7 +7,7 @@ import { Backend } from './DataManager';
 import { ListRequests } from './RequestsList';
 import NewRequest from './RequestNew';
 import { ProcessNewRequest } from './RequestProcessNew';
-import { ChangeRequest } from './RequestChange';
+import ChangeRequest from './RequestChange';
 import { UIProxy } from './UIProxy';
 import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
 import { VPSPage } from './UIElements';
