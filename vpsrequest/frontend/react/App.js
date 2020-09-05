@@ -4,7 +4,7 @@ import MyRequests from './RequestsMy';
 import NotFound from './NotFound';
 import React, { Component } from 'react';
 import { Backend } from './DataManager';
-import { ListRequests } from './RequestsList';
+import ListRequests from './RequestsList';
 import NewRequest from './RequestNew';
 import { ProcessNewRequest } from './RequestProcessNew';
 import ChangeRequest from './RequestChange';
@@ -57,9 +57,9 @@ const types = new Object({
   }
 })
 
-const ApprovedRequests = ListRequests(types.approved)
-const FreshRequests = ListRequests(types.fresh)
-const RejectedRequests = ListRequests(types.rejected)
+const ApprovedRequests = (props) => <ListRequests typeRequest={types.approved} {...props}/>
+const FreshRequests = (props) => <ListRequests typeRequest={types.fresh} {...props}/>
+const RejectedRequests = (props) => <ListRequests typeRequest={types.rejected} {...props}/>
 
 const ProtectedRoute = ({userDetails, ...props}) => (
   userDetails.is_staff || userDetails.is_superuser || canApprove(userDetails) ?

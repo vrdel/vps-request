@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Backend } from './DataManager';
 import { BaseView, LoadingAnim, FilterField, Status } from './UIElements';
-import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -15,199 +14,164 @@ import { CONFIG } from './Config'
 import {
   Badge
 } from 'reactstrap';
+import { useTable } from 'react-table';
 
 
-export function ListRequests(typeRequest) {
-  return class extends Component {
-    constructor(props) {
-      super(props);
+function Table({ columns, data }) {
+  // Use the state and functions returned from useTable to build your UI
+  const {
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable({
+    columns,
+    data,
+  })
 
-      this.state = {
-        loading: false,
-        requests: null,
-        searchContactName: '',
-        searchDate: '',
-        searchInstitution: '',
-        searchVmFqdn: '',
-        statsActiveRetired: undefined,
-      }
+  // Render the UI for your table
+  return (
+    <table className="table table-bordered table-sm table-hover">
+      <thead className="table-active align-middle text-center">
+        {headerGroups.map((headerGroup, thi) => (
+          <tr key={thi}>
+            {headerGroup.headers.map((column, tri) => (
+              <th key={tri}>{column.render('Header')}</th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {rows.map((row, row_index) => {
+          prepareRow(row)
+          return (
+            <tr key={row_index}>
+              {row.cells.map((cell, cell_index) => {
+                if (cell_index === 0)
+                  return <td key={cell_index} className="align-middle text-center table-light">{row_index + 1}</td>
+                else
+                  return <td key={cell_index} className="align-middle table-light">{cell.render('Cell')}</td>
+              })}
+            </tr>
+          )
+        })}
+      </tbody>
+    </table>
+  )
+}
 
-      this.apiListRequests = typeRequest.api
+const ListRequests = (props) => {
+  const apiListRequests = props.typeRequest.api
+  const location = props.location;
+  const backend = new Backend();
+  const isApprovedList = props.typeRequest.api.endsWith('approved')
+  const [loading, setLoading] = useState(false);
+  const [requests, setRequests] = useState(null);
+  const [statsActiveRetired, setStateActiveRetired] = useState(undefined);
+  let apiStatsRequestsApproved = undefined;
+  if (isApprovedList)
+    apiStatsRequestsApproved = props.typeRequest.apiStats
 
-      this.location = props.location;
-      this.backend = new Backend();
-      this.initializeComponent = this.initializeComponent.bind(this)
+  useEffect(() => {
+    setLoading(true);
+    initializeComponent()
+    setLoading(false);
+  }, [])
 
-      this.isApprovedList = typeRequest.api.endsWith('approved')
-      if (this.isApprovedList)
-        this.apiStatsRequestsApproved = typeRequest.apiStats
-    }
+  const initializeComponent = async () => {
+    const sessionActive = await backend.isActiveSession()
 
-    componentDidMount() {
-      this.setState({loading: true})
-      this.initializeComponent()
-    }
+    if (sessionActive.active) {
+      let fetched_stats = undefined
+      const fetched = await backend.fetchData(apiListRequests)
 
-    async initializeComponent() {
-      const sessionActive = await this.backend.isActiveSession()
+      if (isApprovedList)
+        fetched_stats = await backend.fetchData(apiStatsRequestsApproved)
 
-      if (sessionActive.active) {
-        let fetched_stats = undefined
-        const fetched = await this.backend.fetchData(this.apiListRequests)
-
-        if (this.isApprovedList)
-          fetched_stats = await this.backend.fetchData(this.apiStatsRequestsApproved)
-
-        this.setState({
-          requests: fetched,
-          loading: false,
-          statsActiveRetired: fetched_stats
-        })
-      }
-    }
-
-    render() {
-      let {loading, requests, searchDate, searchContactName, searchInstitution,
-        searchVmFqdn, statsActiveRetired} = this.state
-
-      if (searchDate)
-        requests = requests.filter(
-          r => DateFormatHR(eval(`r.${typeRequest.dateFieldSearch}`)).indexOf(searchDate) !== -1
-        )
-
-      if (searchContactName)
-        requests = requests.filter(
-          r => `${r.user.first_name} ${r.user.last_name}`.toLowerCase().includes(searchContactName.toLowerCase())
-        )
-
-      if (searchInstitution)
-        requests = requests.filter(
-          r => r.head_institution.toLowerCase().includes(searchInstitution.toLowerCase())
-        )
-
-      if (searchVmFqdn)
-        requests = requests.filter(
-          r => r.vm_fqdn.toLowerCase().includes(searchVmFqdn.toLowerCase())
-        )
-
-      if (loading)
-        return (<LoadingAnim />)
-
-      else if (!loading && requests) {
-        const columns = [
-          {
-            id: 'cardNumber',
-            Header: 'r. br.',
-            accessor: r => Number(requests.length - requests.indexOf(r)),
-            maxWidth: 50,
-            filterable: true,
-            Filter: () => <FontAwesomeIcon size="lg" icon={faSearch}/>
-          },
-          {
-            id: 'isApproved',
-            Header: 'Status',
-            accessor: r => r.approved,
-            Cell: props => <Status params={CONFIG['status'][props.value]}/>,
-            maxWidth: 90,
-          },
-          {
-            id: 'requestDate',
-            Header: typeRequest.headerDate,
-            accessor: r => DateFormatHR(eval(`r.${typeRequest.dateFieldSearch}`)),
-            filterable: true,
-            Filter: <FilterField
-              value={this.state.searchDate}
-              onChange={event => this.setState({searchDate: event.target.value})}
-            />,
-            maxWidth: 180
-          },
-          {
-            Header: 'Ustanova',
-            accessor: 'head_institution',
-            filterable: true,
-            Filter: <FilterField
-              value={this.state.searchInstitution}
-              onChange={event => this.setState({searchInstitution: event.target.value})}
-            />
-          },
-          {
-            id: 'contactNameLastName',
-            Header: 'Kontaktna osoba',
-            accessor: r => `${r.user.first_name} ${r.user.last_name}`,
-            filterable: true,
-            Filter: <FilterField
-              value={this.state.searchContactName}
-              onChange={event => this.setState({searchContactName: event.target.value})}
-            />,
-            maxWidth: 180
-          },
-          {
-            Header: 'Poslužitelj',
-            accessor: 'vm_fqdn',
-            filterable: true,
-            Filter: <FilterField
-              value={this.state.searchVmFqdn}
-              onChange={event => this.setState({searchVmFqdn: event.target.value})}
-            />,
-            maxWidth: 180
-          },
-          {
-            id: 'edit',
-            Header: typeRequest.lastColHeader,
-            accessor: r => {
-              let linkPath = typeRequest.linkPath
-              let lastColIcon = typeRequest.lastColIcon
-              if (r.approved === 3) {
-                linkPath = `${linkPath}/${typeRequest.linkPathReadOnly}`
-                lastColIcon = typeRequest.lastColIconReadOnly
-              }
-              return (
-                <Link aria-label={`${linkPath}/${r.id}`} to={`/ui/${linkPath}/${r.id}`}>
-                  {lastColIcon}
-                </Link>
-              )
-            },
-            maxWidth: 70
-          }
-        ]
-        return (
-          <BaseView
-            title={typeRequest.title}
-            location={this.location}>
-            {
-              this.isApprovedList &&
-                <span>
-                  <Badge className="mt-3" color="success" style={{fontSize: '120%'}}>
-                    Aktivni<Badge className="ml-2" color="light">{statsActiveRetired.active}</Badge>
-                  </Badge>
-                  <Badge className="ml-3" color="secondary" style={{fontSize: '120%'}}>
-                    Umirovljeni<Badge className="ml-2" color="light">{statsActiveRetired.retired}</Badge>
-                  </Badge>
-                </span>
-            }
-            <ReactTable
-              data={requests}
-              columns={columns}
-              className="-highlight mt-4 text-center align-middle"
-              defaultPageSize={requests.length}
-              showPagination={false}
-              previousText='Prethodni'
-              nextText='Sljedeći'
-              noDataText='Nema zahtjeva'
-              pageText='Stranica'
-              ofText='od'
-              rowsText='zahtjeva'
-              getTheadThProps={() => ({className: 'table-active p-2'})}
-              getTheadFilterThProps={() => ({className: 'table-light align-self-center'})}
-              getTdProps={() => ({className: 'pt-2 pb-2 align-self-center'})}
-            />
-          </BaseView>
-        )
-      }
-      else
-        return null
+      setRequests(fetched)
+      setStateActiveRetired(fetched_stats)
     }
   }
+
+  const columns = useMemo(() => [
+    {
+      id: 'cardNumber',
+      Header: 'r. br.',
+      accessor: r => Number(requests.length - requests.indexOf(r)),
+      maxWidth: 50,
+    },
+    {
+      id: 'isApproved',
+      Header: 'Status',
+      accessor: r => r.approved,
+      Cell: props => <Status params={CONFIG['status'][props.value]}/>,
+      maxWidth: 90,
+    },
+    {
+      id: 'requestDate',
+      Header: props.typeRequest.headerDate,
+      accessor: r => DateFormatHR(eval(`r.${props.typeRequest.dateFieldSearch}`)),
+      maxWidth: 180
+    },
+    {
+      Header: 'Ustanova',
+      accessor: 'head_institution',
+    },
+    {
+      id: 'contactNameLastName',
+      Header: 'Kontaktna osoba',
+      accessor: r => `${r.user.first_name} ${r.user.last_name}`,
+      maxWidth: 180
+    },
+    {
+      Header: 'Poslužitelj',
+      accessor: 'vm_fqdn',
+      maxWidth: 180
+    },
+    {
+      id: 'edit',
+      Header: props.typeRequest.lastColHeader,
+      accessor: r => {
+        let linkPath = props.typeRequest.linkPath
+        let lastColIcon = props.typeRequest.lastColIcon
+        if (r.approved === 3) {
+          linkPath = `${linkPath}/${props.typeRequest.linkPathReadOnly}`
+          lastColIcon = props.typeRequest.lastColIconReadOnly
+        }
+        return (
+          <Link aria-label={`${linkPath}/${r.id}`} to={`/ui/${linkPath}/${r.id}`}>
+            {lastColIcon}
+          </Link>
+        )
+      },
+      maxWidth: 70
+    }
+  ])
+
+  if (loading)
+    return (<LoadingAnim />)
+
+  else if (!loading && requests) {
+    return (
+      <BaseView
+        title={props.typeRequest.title}
+        location={location}>
+        {
+          isApprovedList &&
+            <span>
+              <Badge className="mt-3" color="success" style={{fontSize: '120%'}}>
+                Aktivni<Badge className="ml-2" color="light">{statsActiveRetired.active}</Badge>
+              </Badge>
+              <Badge className="ml-3" color="secondary" style={{fontSize: '120%'}}>
+                Umirovljeni<Badge className="ml-2" color="light">{statsActiveRetired.retired}</Badge>
+              </Badge>
+            </span>
+        }
+        <Table columns={columns} data={requests}/>
+      </BaseView>
+    )
+  }
+  else
+    return null
 }
 
 export default ListRequests;

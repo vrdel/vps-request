@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef} from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Backend } from './DataManager';
 import { BaseView, LoadingAnim, Status } from './UIElements';
 import { useTable, usePagination } from 'react-table';
