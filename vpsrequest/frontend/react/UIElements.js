@@ -401,7 +401,7 @@ export const BaseView = ({title='', isChangeView=false, isHandleNewView=false,
       }
       <div id="vpsreq-contentwrap" className="pl-4 pb-4 pr-4 pt-3 border rounded pristupacnost">
         {
-          <div className={`"shadow-sm p-2 mb-2 rounded ${bgTitle}"`}>
+          <div className={`"shadow-sm p-2 mb-2 rounded " ${bgTitle}`}>
             <h3>{title}</h3>
           </div>
         }
