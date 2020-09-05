@@ -84,7 +84,7 @@ const Table = ({ columns, data, showEmpty=false }) => {
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: 5 }
+      initialState: { pageIndex: 0, pageSize: 20 }
     },
     usePagination
   )
@@ -154,7 +154,7 @@ const Table = ({ columns, data, showEmpty=false }) => {
                   setPageSize(Number(e.target.value))
                 }}
               >
-                {[5, 10, 20, 40].map(pageSize => (
+                {[20, 40, 80].map(pageSize => (
                   <option key={pageSize} value={pageSize}>
                     {pageSize} zahtjeva
                   </option>
