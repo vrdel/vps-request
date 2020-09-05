@@ -97,9 +97,27 @@ const Table = ({ columns, data, showEmpty=false }) => {
             <thead className="table-active align-middle text-center">
               {headerGroups.map((headerGroup, thi) => (
                 <tr key={thi}>
-                  {headerGroup.headers.map((column, tri) => (
-                    <th key={tri}>{column.render('Header')}</th>
-                  ))}
+                  {headerGroup.headers.map((column, tri) => {
+                    let width = undefined;
+
+                    if (tri === 0)
+                      width = '50px'
+                    else if (tri === 1)
+                      width = '90px'
+                    else if (tri === 2)
+                      width = '180px'
+                    else if (tri === 6)
+                      width = '70px'
+                    else
+                      width = undefined
+
+                    return (
+                      <th style={{width: width}}
+                        key={tri}>
+                        {column.render('Header')}
+                      </th>
+                    )
+                  })}
                 </tr>
               ))}
             </thead>

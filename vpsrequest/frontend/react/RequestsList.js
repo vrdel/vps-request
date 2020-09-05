@@ -34,9 +34,32 @@ function Table({ columns, data }) {
       <thead className="table-active align-middle text-center align-self-center p-2">
         {headerGroups.map((headerGroup, thi) => (
           <tr key={thi}>
-            {headerGroup.headers.map((column, tri) => (
-              <th className="align-self-center align-middle" key={tri}>{column.render('Header')}</th>
-            ))}
+            {headerGroup.headers.map((column, tri) => {
+              let width = undefined;
+
+              if (tri === 0)
+                width = '50px'
+              else if (tri === 1)
+                width = '90px'
+              else if (tri === 2)
+                width = '180px'
+              else if (tri === 3)
+                width = undefined
+              else if (tri === 4)
+                width = '180px'
+              else if (tri === 5)
+                width = undefined
+              else if (tri === 6)
+                width = '70px'
+
+              return (
+                <th style={{width: width}}
+                  className="align-self-center align-middle"
+                  key={tri}>
+                    {column.render('Header')}
+                </th>
+              )
+            })}
           </tr>
         ))}
       </thead>
@@ -97,7 +120,6 @@ const ListRequests = (props) => {
       id: 'cardNumber',
       Header: 'r. br.',
       accessor: r => Number(requests.length - requests.indexOf(r)),
-      width: 150,
     },
     {
       id: 'isApproved',
@@ -139,7 +161,6 @@ const ListRequests = (props) => {
           </Link>
         )
       },
-      maxWidth: 70
     }
   ])
 
