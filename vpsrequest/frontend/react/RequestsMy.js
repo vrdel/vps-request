@@ -1,8 +1,15 @@
 import React, { useState, useEffect, useMemo, useRef} from 'react';
 import { Backend } from './DataManager';
 import { BaseView, LoadingAnim, Status } from './UIElements';
-import { useTable } from 'react-table';
+import { useTable, usePagination } from 'react-table';
 import { Link } from 'react-router-dom';
+import {
+  Pagination,
+  PaginationItem,
+  PaginationLink,
+  Row,
+  Col
+} from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CONFIG } from './Config'
 import {
@@ -14,16 +21,17 @@ import { DateFormatHR } from './Util'
 // import 'react-table/react-table.css';
 // import './RequestsMy.css'
 
-const Table = ({ columns, data, showEmpty=false }) => {
+const EmptyTable = ({ columns, data }) => {
   const {
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({
-    columns,
-    data,
-  })
-  let lastRowProps = undefined;
+  } = useTable(
+    {
+      columns,
+      data,
+    },
+  )
 
   return (
     <table className="table table-bordered table-sm table-hover">
@@ -37,20 +45,7 @@ const Table = ({ columns, data, showEmpty=false }) => {
         ))}
       </thead>
       <tbody>
-        {rows.map((row, row_index) => {
-          prepareRow(row)
-          return (
-            <tr key={row_index}>
-              {row.cells.map((cell, cell_index) => {
-                if (cell_index === 0)
-                  return <td key={cell_index} className="align-middle text-center">{row_index + 1}</td>
-                else
-                  return <td key={cell_index} className="align-middle text-center">{cell.render('Cell')}</td>
-              })}
-            </tr>
-          )
-        })}
-        { showEmpty &&
+        {
           [...Array(3)].map((e, ri) => {
             return (
               <tr key={ri}>
@@ -71,13 +66,115 @@ const Table = ({ columns, data, showEmpty=false }) => {
   )
 }
 
+const Table = ({ columns, data, showEmpty=false }) => {
+  const {
+    headerGroups,
+    prepareRow,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
+  } = useTable(
+    {
+      columns,
+      data,
+      initialState: { pageIndex: 0, pageSize: 5 }
+    },
+    usePagination
+  )
+
+  return (
+    <React.Fragment>
+      <Row>
+        <Col>
+          <table className="table table-bordered table-sm table-hover">
+            <thead className="table-active align-middle text-center">
+              {headerGroups.map((headerGroup, thi) => (
+                <tr key={thi}>
+                  {headerGroup.headers.map((column, tri) => (
+                    <th key={tri}>{column.render('Header')}</th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {page.map((row, row_index) => {
+                prepareRow(row)
+                return (
+                  <tr key={row_index}>
+                    {row.cells.map((cell, cell_index) => {
+                      if (cell_index === 0)
+                        return <td key={cell_index} className="align-middle text-center">{row_index + 1}</td>
+                      else
+                        return <td key={cell_index} className="align-middle text-center">{cell.render('Cell')}</td>
+                    })}
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </Col>
+      </Row>
+      <Row>
+        <Col className="d-flex justify-content-center">
+          <Pagination>
+            <PaginationItem disabled={!canPreviousPage}>
+              <PaginationLink first onClick={() => gotoPage(0)}/>
+            </PaginationItem>
+            <PaginationItem disabled={!canPreviousPage}>
+              <PaginationLink previous onClick={() => previousPage()}/>
+            </PaginationItem>
+            {
+              [...Array(pageCount)].map((e, i) =>
+                <PaginationItem active={ pageIndex === i ? true : false } key={i}>
+                  <PaginationLink onClick={() => gotoPage(i)}>
+                    { i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              )
+            }
+            <PaginationItem disabled={!canNextPage}>
+              <PaginationLink next onClick={() => nextPage()}/>
+            </PaginationItem>
+            <PaginationItem disabled={!canNextPage}>
+              <PaginationLink last onClick={() => gotoPage(pageCount - 1)}/>
+            </PaginationItem>
+            <PaginationItem className="pl-2">
+              <select
+                style={{width: '180px'}}
+                className="custom-select text-primary"
+                value={pageSize}
+                onChange={e => {
+                  setPageSize(Number(e.target.value))
+                }}
+              >
+                {[5, 10, 20, 40].map(pageSize => (
+                  <option key={pageSize} value={pageSize}>
+                    {pageSize} zahtjeva
+                  </option>
+                ))}
+              </select>
+            </PaginationItem>
+          </Pagination>
+        </Col>
+      </Row>
+    </React.Fragment>
+  )
+}
+
 const MyRequests = (props) => {
-    const location = props.location;
-    const backend = new Backend();
-    const apiListRequests = `${CONFIG.listReqUrl}/mine`
-    const [loading, setLoading] = useState(false);
-    const [requests, setRequests] = useState(null);
-    const [userDetails, setUserDetails] = useState(null);
+  const location = props.location;
+  const backend = new Backend();
+  const apiListRequests = `${CONFIG.listReqUrl}/mine`
+  const [loading, setLoading] = useState(false);
+  const [requests, setRequests] = useState(null);
+  const [userDetails, setUserDetails] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -167,7 +264,12 @@ const MyRequests = (props) => {
       <BaseView
         title='Stanje zahtjeva'
         location={location}>
-        <Table columns={columns} data={requests} showEmpty={true}/>
+        {
+          requests.length > 0 ?
+            <Table columns={columns} data={requests}/>
+          :
+            <EmptyTable columns={columns} data={[]} />
+        }
       </BaseView>
     )
   }
