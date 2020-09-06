@@ -201,13 +201,9 @@ const MyRequests = (props) => {
   );
 
   const { data: requests, error: errorRequest, isLoading: loadingRequests } = useQuery(
-    `stanje-zahtjeva`, async () => {
-      const sessionActive = await backend.isActiveSession()
-      let fetched = undefined;
-      if (sessionActive.active) {
-        fetched = await backend.fetchData(apiListRequests)
-        return fetched
-      }
+    `stanje-zahtjeva-requests`, async () => {
+      const fetched = await backend.fetchData(apiListRequests)
+      return fetched
     },
     {
       enabled: userDetails

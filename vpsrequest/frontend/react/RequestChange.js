@@ -18,6 +18,7 @@ import {
 } from './RequestElements.js';
 import { CONFIG } from './Config'
 import { DateFormatHR, EmptyIfNull } from './Util';
+import { useQuery } from 'react-query';
 
 
 const ChangeRequest = (props) => {
@@ -27,32 +28,39 @@ const ChangeRequest = (props) => {
   const apiListRequests = CONFIG.listReqUrl
   const backend = new Backend()
   const [loading, setLoading] = useState(false);
-  const [listVMOSes, setListVMOSes] = useState([]);
-  const [requestDetails, setRequestDetails] = useState(undefined);
-  const [userDetails, setUserDetails] = useState(null);
 
   const isRequestApproved = (value) => {
     return value === 1 ? true : false
   }
 
-  const initializeComponent = async () => {
-    const session = await backend.isActiveSession()
-
-    if (session.active) {
-      const vmOSes = await backend.fetchData(apiListVMOSes)
-      const requestData = await backend.fetchData(`${apiListRequests}/${requestID}`)
-
-      setListVMOSes(vmOSes.map(e => e.vm_os))
-      setUserDetails(session.userdetails)
-      setRequestDetails(requestData)
-      setLoading(false)
+  const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
+    `stanje-zahtjeva-userdetails-${requestID}`, async () => {
+      const sessionActive = await backend.isActiveSession()
+      if (sessionActive.active) {
+        return sessionActive.userdetails
+      }
     }
-  }
+  );
 
-  useEffect(() => {
-    setLoading(true);
-    initializeComponent()
-  }, [])
+  const { data: requestDetails, error: errorRequest, isLoading: loadingRequests } = useQuery(
+    `stanje-zahtjeva-requests-${requestID}`, async () => {
+      const fetched = await backend.fetchData(`${apiListRequests}/${requestID}`)
+      return fetched
+    },
+    {
+      enabled: userDetails
+    }
+  );
+
+  const { data: listVMOSes, error: errorVMOSes, isLoading: loadingVMOSes} = useQuery(
+    `stanje-zahtjeva-requests-vmoses`, async () => {
+      const fetched = await backend.fetchData(apiListVMOSes)
+      return fetched.map(e => e.vm_os)
+    },
+    {
+      enabled: userDetails
+    }
+  );
 
   const handleOnSubmit = async (data) => {
     let response = await backend.changeObject(`${apiListRequests}/${requestID}/`, data)
@@ -66,6 +74,7 @@ const ChangeRequest = (props) => {
         msg: response.statusText,
         title: `Greška - HTTP ${response.status}`})
   }
+
 
   if (userDetails && requestDetails)
     var initValues = {
