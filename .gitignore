@@ -132,3 +132,4 @@ docker/pysitepkg
 vpsrequest/frontend/node_modules/
 etc/security
 mnt
+vpsrequest/frontend/.eslintrc.js
