@@ -8,7 +8,8 @@ import {
   PaginationItem,
   PaginationLink,
   Row,
-  Col
+  Col,
+  Table
 } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CONFIG } from './Config'
@@ -17,6 +18,7 @@ import {
   faSearch
   } from '@fortawesome/free-solid-svg-icons';
 import { DateFormatHR } from './Util'
+import { useQuery } from 'react-query';
 
 
 const EmptyTable = ({ columns, data }) => {
@@ -32,7 +34,7 @@ const EmptyTable = ({ columns, data }) => {
   )
 
   return (
-    <table className="table table-sm table-hover">
+    <Table hover size="sm">
       <thead className="table-active align-middle text-center">
         {headerGroups.map((headerGroup, thi) => (
           <tr key={thi}>
@@ -60,11 +62,11 @@ const EmptyTable = ({ columns, data }) => {
           })
         }
       </tbody>
-    </table>
+    </Table>
   )
 }
 
-const Table = ({ columns, data, showEmpty=false }) => {
+const RequestsTable = ({ columns, data, showEmpty=false }) => {
   const {
     headerGroups,
     prepareRow,
@@ -188,31 +190,35 @@ const MyRequests = (props) => {
   const location = props.location;
   const backend = new Backend();
   const apiListRequests = `${CONFIG.listReqUrl}/mine`
-  const [loading, setLoading] = useState(false);
-  const [requests, setRequests] = useState(null);
-  const [userDetails, setUserDetails] = useState(null);
 
-  const initializeComponent = async () => {
-    let sessionActive = await backend.isActiveSession();
-
-    if (sessionActive.active) {
-      let fetched = await backend.fetchData(apiListRequests);
-      setRequests(fetched);
-      setUserDetails(sessionActive.userdetails)
-      setLoading(false);
+  const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
+    `stanje-zahtjeva-userdetails`, async () => {
+      const sessionActive = await backend.isActiveSession()
+      if (sessionActive.active) {
+        return sessionActive.userdetails
+      }
     }
-  }
+  );
 
-  useEffect(() => {
-    setLoading(true);
-    initializeComponent();
-  }, [])
+  const { data: requests, error: errorRequest, isLoading: loadingRequests } = useQuery(
+    `stanje-zahtjeva`, async () => {
+      const sessionActive = await backend.isActiveSession()
+      let fetched = undefined;
+      if (sessionActive.active) {
+        fetched = await backend.fetchData(apiListRequests)
+        return fetched
+      }
+    },
+    {
+      enabled: userDetails
+    }
+  );
 
   const columns = useMemo(() => [
     {
       id: 'cardNumber',
       Header: 'r. br.',
-      accessor: r => Number(requests.indexOf(r) + 1),
+      accessor: (r, i) => i + 1,
       maxWidth: 50,
       maxHeight: 32,
     },
@@ -272,17 +278,17 @@ const MyRequests = (props) => {
     }
   ])
 
-  if (loading)
+  if (loadingRequests || loadingUserDetails)
     return (<LoadingAnim />)
 
-  else if (!loading && requests && userDetails) {
+  else if (!loadingRequests && requests) {
     return (
       <BaseView
         title='Stanje zahtjeva'
         location={location}>
         {
           requests.length > 0 ?
-            <Table columns={columns} data={requests}/>
+            <RequestsTable columns={columns} data={requests}/>
           :
             <EmptyTable columns={columns} data={[]} />
         }
