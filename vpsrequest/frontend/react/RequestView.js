@@ -88,7 +88,6 @@ const RequestDetails = ({values, userDetails}) =>
             {adminRemark}
             <RequestRow label="Status:" value={reqStatus}/>
             <RequestRow label="Datum podnošenja:" value={values.request_date}/>
-            
             <RequestAdminDetails values={values}/>
         </React.Fragment>
     )

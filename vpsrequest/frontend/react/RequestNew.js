@@ -37,13 +37,13 @@ const NewRequest = (props) => {
       setListVMOSes(vmOSes.map(e => e.vm_os));
       setAcceptConditions(false);
       setUserDetails(session.userdetails)
+      setLoading(false)
     }
   }
 
   useEffect(() => {
     setLoading(true);
     initializeComponent();
-    setLoading(false)
   }, [])
 
   const dismissAlert = () => {
