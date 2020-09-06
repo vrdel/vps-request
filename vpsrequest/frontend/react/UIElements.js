@@ -350,7 +350,7 @@ export const LoadingAnim = () => (
       <h4 className="text-dark">Učitavanje podataka...</h4>
     </CardHeader>
     <CardBody>
-      <Spinner style={{ width: '45rem', height: '45rem' }} type="grow" color="info" />
+      <Spinner style={{ width: '10rem', height: '10rem' }} type="grow" color="info" />
     </CardBody>
   </Card>
 )
