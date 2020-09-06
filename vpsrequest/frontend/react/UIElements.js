@@ -412,19 +412,6 @@ export const BaseView = ({title='', isChangeView=false, isHandleNewView=false,
 }
 
 
-export const FilterField = ({onChange, value}) => (
-  <input
-    type='text'
-    className='text-center'
-    placeholder='Pretraži'
-    aria-label='Pretraži'
-    value={value}
-    onChange={onChange}
-    style={{width: '100%'}}
-  />
-)
-
-
 export const Status = ({params, renderToolTip=false}) => (
   <div>
     <FontAwesomeIcon className={params['classname']} size="2x" icon={params['icon']} id={params['id']}/>

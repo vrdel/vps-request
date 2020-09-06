@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Backend } from './DataManager';
-import { BaseView, LoadingAnim, FilterField, Status } from './UIElements';
+import { BaseView, LoadingAnim, Status } from './UIElements';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -9,7 +9,9 @@ import {
 import { DateFormatHR } from './Util';
 import { CONFIG } from './Config'
 import {
-  Badge
+  Input,
+  Badge,
+  Table
 } from 'reactstrap';
 import { useTable, useFilters } from 'react-table';
 import { useQuery } from 'react-query';
@@ -17,8 +19,9 @@ import { useQuery } from 'react-query';
 
 const DefaultColumnFilter = ({column: { filterValue, setFilter }}) => {
   return (
-    <input className="form-control text-center"
+    <Input className="text-center"
       type="text"
+      aria-label='Pretraži'
       placeholder="Pretraži"
       value={filterValue || ''}
       onChange={e => {setFilter(e.target.value || undefined)}}
@@ -27,13 +30,12 @@ const DefaultColumnFilter = ({column: { filterValue, setFilter }}) => {
 }
 
 
-function Table({ columns, data }) {
+function RequestsTable({ columns, data }) {
   const defaultColumn = useMemo(
     () => ({
       Filter: DefaultColumnFilter,
-    }),
-    []
-  )
+    }),[])
+
   const {
     headerGroups,
     rows,
@@ -45,7 +47,7 @@ function Table({ columns, data }) {
   }, useFilters)
 
   return (
-    <table className="mt-4 text-center align-middle table table-sm table-hover">
+    <Table hover size="sm" className="mt-4 text-center align-middle">
       <thead className="table-active align-middle text-center align-self-center p-2">
         {headerGroups.map((headerGroup, thi) => (
           <React.Fragment key={thi}>
@@ -116,7 +118,7 @@ function Table({ columns, data }) {
           )
         })}
       </tbody>
-    </table>
+    </Table>
   )
 }
 
@@ -219,7 +221,7 @@ const ListRequests = (props) => {
             </Badge>
           </span>
         }
-        <Table columns={columns} data={requests}/>
+        <RequestsTable columns={columns} data={requests}/>
       </BaseView>
     )
   }
@@ -228,7 +230,7 @@ const ListRequests = (props) => {
       <BaseView
         title={props.typeRequest.title}
         location={location}>
-        <Table columns={columns} data={requests}/>
+        <RequestsTable columns={columns} data={requests}/>
       </BaseView>
     )
   }
