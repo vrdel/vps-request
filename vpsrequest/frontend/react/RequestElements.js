@@ -27,7 +27,7 @@ export const RowRequestDropDown = ({field, ...propsRest}) =>
         className="mr-2"
       >
         {propsRest.label}
-        <span className="text-danger">*</span> 
+        <span className="ml-1 text-danger">*</span>
       </Label>
     </Col>
     <Col md={{size: 7}}>
@@ -60,14 +60,14 @@ export const RowRequestField = ({field, ...propsRest}) =>
         {propsRest.label}
         {
           propsRest.required ?
-            <span className="text-danger">*</span>
+            <span className="ml-1 text-danger">*</span>
             :
             null
         }
       </Label>
     </Col>
     <Col md={{size: 7}}>
-    {
+      {
       propsRest.fieldType === 'textarea' ?
         <div>
           <textarea
@@ -93,7 +93,7 @@ export const RowRequestField = ({field, ...propsRest}) =>
                 {field.value}
               </span>
             :
-            <input
+              <input
               id={propsRest.labelFor}
               aria-label={propsRest.labelFor}
               type={propsRest.fieldType}
@@ -139,8 +139,8 @@ export const ContactUserFields = ({disabled=true}) =>
 
 
 export const VMFields = ({listVMOSes, disabled=false}) => {
-  let infoVMOS = "* Čelnik ustanove odgovara za posjedovanje i aktiviranje valjane licence za gore odabrani operacijski sustav."
-  let infoPurpose = "* Potrebno je detaljno obrazložiti namjenu virtualnog poslužitelja. Zahtjev može biti odbijen ukoliko Srce procijeni da navedena namjena virtualnog poslužitelja nije primjerena namjeni usluge, ili ne predstavlja trajne potrebe ustanove za poslužiteljskim kapacitetima.";
+  let infoVMOS = "Čelnik ustanove odgovara za posjedovanje i aktiviranje valjane licence za gore odabrani operacijski sustav."
+  let infoPurpose = "Potrebno je detaljno obrazložiti namjenu virtualnog poslužitelja. Zahtjev može biti odbijen ukoliko Srce procijeni da navedena namjena virtualnog poslužitelja nije primjerena namjeni usluge, ili ne predstavlja trajne potrebe ustanove za poslužiteljskim kapacitetima.";
 
   return (
     <React.Fragment>
@@ -168,7 +168,7 @@ export const VMFields = ({listVMOSes, disabled=false}) => {
 
 
 export const SysAdminFields = ({disabled=false}) => {
-  let infoAAI = "* Sistem-inženjer jedini ima pravo pristupa na XenOrchestra sučelje dostupno na adresi "
+  let infoAAI = "Sistem-inženjer jedini ima pravo pristupa na XenOrchestra sučelje dostupno na adresi "
   return (
     <React.Fragment>
       <RequestHorizontalRule/>
@@ -280,7 +280,7 @@ export const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dism
 
         <p className="text-muted text-center">
           <small>
-          Srce gore navedene osobne podatke obrađuje isključivo radi pružanja zatražene usluge, sukladno 
+          Srce gore navedene osobne podatke obrađuje isključivo radi pružanja zatražene usluge, sukladno
             <InfoLink prefix=" svojoj "
               linkHref="https://www.srce.hr/politika-privatnosti"
               linkTitle="politici privatnosti"/>
