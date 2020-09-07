@@ -61,6 +61,7 @@ try:
     PERMISSIONS_STAFF = config.get('PERMISSIONS', 'Staff')
     PERMISSIONS_APPROVE = config.get('PERMISSIONS', 'Approve')
 
+    MAIL_SEND = config.getboolean('EMAIL', 'Send')
     SRCE_SMTP = config.get('EMAIL', 'SrceSmtp')
     ADMIN_MAIL = config.get('EMAIL', 'AdminMail')
     RMI_CHEF_MAIL = config.get('EMAIL', 'RMIChefMail')

@@ -3,13 +3,10 @@
 IMAGE="ipanema:5000/vps-request"
 VENV=/data/vps-request
 WORKDIR=$HOME/my_work/srce/git.vps-request/vps-request/
+SHELL="/bin/bash"
 
-if [ -z "$1" ]
-then
-	IMG="$IMAGE"
-else
-	IMG="$IMAGE:$1"
-fi
+test -z $1 && IMG="$IMAGE" || IMG="$1"
+test -z $2 && SH="$SHELL" || SH="$2"
 
 docker run --net vrdel-net --ip 172.18.0.10 --privileged --rm --name vps-request -ti \
 	-p 80:80 -p 443:443 -p 3306:3306 -p 8000:8000 \
@@ -25,6 +22,7 @@ docker run --net vrdel-net --ip 172.18.0.10 --privileged --rm --name vps-request
 -v $WORKDIR/docker/syncsite.sh:/home/user/syncsite.sh \
 -v $WORKDIR/docker/pysitepkg:/home/user/pysitepkg \
 -v $WORKDIR/vpsrequest/:$VENV/lib64/python3.5/site-packages/vpsrequest \
+-v $WORKDIR/vpsrequest/:$VENV/lib64/python3.7/site-packages/vpsrequest \
 -v $WORKDIR/vpsrequest/static:$VENV/share/vpsrequest/static \
 -v $WORKDIR/apache/vpsrequest.example.com.conf:/etc/apache2/sites-available/vpsrequest.example.com.conf \
 -v $WORKDIR/bin/vpsreq-db:$VENV/bin/vpsreq-db \
@@ -32,4 +30,4 @@ docker run --net vrdel-net --ip 172.18.0.10 --privileged --rm --name vps-request
 -v $WORKDIR/bin/vpsreq-genseckey:$VENV/bin/vpsreq-genseckey \
 -v $WORKDIR/etc/:$VENV/etc/vpsrequest/ \
 $IMG \
-/bin/bash
+$SH

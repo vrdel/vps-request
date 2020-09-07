@@ -78,8 +78,8 @@ export const DropDown = ({field, data=[], ...props}) =>
     {
       data.map((name, i) =>
         i === 0 ?
-        <option key={i} hidden>{name}</option> :
-        <option key={i} value={name}>{name}</option>
+          <option key={i} hidden>{name}</option> :
+          <option key={i} value={name}>{name}</option>
       )
     }
   </Field>
@@ -145,7 +145,7 @@ const UserDetailsPopover = ({userDetails}) => {
   return (
     <React.Fragment>
       <div className="text-center">
-      {
+        {
         approveRequest ?
           <Badge color="warning" className="mb-1 mt-1" style={{fontSize: '100%'}} pill>
             Odobravatelj zahtjeva
@@ -207,8 +207,7 @@ const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal,
             <React.Fragment>
               Dobrodošli,
               <br/>
-              <span onMouseEnter={() => setPopoverOpen(true)}
-                onMouseLeave={() => setPopoverOpen(false)}
+              <span onClick ={() => setPopoverOpen(!popoverOpen)}
                 id="userPopover">
                 <Badge href="#" color="light" style={{fontSize: '100%'}}>
                   <strong>{userDetails.first_name}</strong>
@@ -225,7 +224,7 @@ const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal,
           <NavItem className='m-2 text-light'>
             <Button
               size="sm"
-              aria-label="Izađi"
+              aria-label="Odjava"
               className='btn-danger'
               onClick={() => toggle()}>
               <FontAwesomeIcon icon={faSignOutAlt} color="white" />
@@ -350,7 +349,7 @@ export const LoadingAnim = () => (
       <h4 className="text-dark">Učitavanje podataka...</h4>
     </CardHeader>
     <CardBody>
-      <Spinner style={{ width: '45rem', height: '45rem' }} type="grow" color="info" />
+      <Spinner style={{ width: '10rem', height: '10rem' }} type="grow" color="info" />
     </CardBody>
   </Card>
 )
@@ -401,7 +400,7 @@ export const BaseView = ({title='', isChangeView=false, isHandleNewView=false,
       }
       <div id="vpsreq-contentwrap" className="pl-4 pb-4 pr-4 pt-3 border rounded pristupacnost">
         {
-          <div className={`"shadow-sm p-2 mb-2 rounded ${bgTitle}"`}>
+          <div className={`"shadow-sm p-2 mb-2 rounded " ${bgTitle}`}>
             <h3>{title}</h3>
           </div>
         }
@@ -410,19 +409,6 @@ export const BaseView = ({title='', isChangeView=false, isHandleNewView=false,
     </React.Fragment>
   )
 }
-
-
-export const FilterField = ({onChange, value}) => (
-  <input
-    type='text'
-    className='text-center'
-    placeholder='Pretraži'
-    aria-label='Pretraži'
-    value={value}
-    onChange={onChange}
-    style={{width: '100%'}}
-  />
-)
 
 
 export const Status = ({params, renderToolTip=false}) => (
@@ -435,5 +421,5 @@ export const Status = ({params, renderToolTip=false}) => (
           {params['label']}
         </UncontrolledTooltip>
     }
-</div>
+  </div>
 )

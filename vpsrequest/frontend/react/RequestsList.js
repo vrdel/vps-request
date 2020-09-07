@@ -1,213 +1,249 @@
-import React, { Component } from 'react';
+import React, { useMemo } from 'react';
 import { Backend } from './DataManager';
-import { BaseView, LoadingAnim, FilterField, Status } from './UIElements';
-import ReactTable from 'react-table';
+import { BaseView, LoadingAnim, Status } from './UIElements';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSearch,
 } from '@fortawesome/free-solid-svg-icons';
 import { DateFormatHR } from './Util';
-
-import 'react-table/react-table.css';
-import './RequestsMy.css';
 import { CONFIG } from './Config'
 import {
-  Badge
+  Input,
+  Badge,
+  Table
 } from 'reactstrap';
+import { useTable, useFilters } from 'react-table';
+import { useQuery } from 'react-query';
 
 
-export function ListRequests(typeRequest) {
-  return class extends Component {
-    constructor(props) {
-      super(props);
+const DefaultColumnFilter = ({column: { filterValue, setFilter }}) => {
+  return (
+    <Input className="text-center"
+      type="text"
+      aria-label='Pretraži'
+      placeholder="Pretraži"
+      value={filterValue || ''}
+      onChange={e => {setFilter(e.target.value || undefined)}}
+    />
+  )
+}
 
-      this.state = {
-        loading: false,
-        requests: null,
-        searchContactName: '',
-        searchDate: '',
-        searchInstitution: '',
-        searchVmFqdn: '',
-        statsActiveRetired: undefined,
-      }
 
-      this.apiListRequests = typeRequest.api
+function RequestsTable({ columns, data }) {
+  const defaultColumn = useMemo(
+    () => ({
+      Filter: DefaultColumnFilter,
+    }),[])
 
-      this.location = props.location;
-      this.backend = new Backend();
-      this.initializeComponent = this.initializeComponent.bind(this)
+  const {
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable({
+    columns,
+    data,
+    defaultColumn
+  }, useFilters)
 
-      this.isApprovedList = typeRequest.api.endsWith('approved')
-      if (this.isApprovedList)
-        this.apiStatsRequestsApproved = typeRequest.apiStats
-    }
+  return (
+    <Table responsive hover size="sm" className="mt-4 text-center align-middle">
+      <thead className="table-active align-middle text-center align-self-center p-2">
+        {headerGroups.map((headerGroup, thi) => (
+          <React.Fragment key={thi}>
+            <tr>
+              {headerGroup.headers.map((column, tri) => {
+                let width = undefined;
 
-    componentDidMount() {
-      this.setState({loading: true})
-      this.initializeComponent()
-    }
+                if (tri === 0)
+                  width = '50px'
+                else if (tri === 1)
+                  width = '90px'
+                else if (tri === 2)
+                  width = '180px'
+                else if (tri === 3)
+                  width = undefined
+                else if (tri === 4)
+                  width = '180px'
+                else if (tri === 5)
+                  width = undefined
+                else if (tri === 6)
+                  width = '70px'
 
-    async initializeComponent() {
-      const sessionActive = await this.backend.isActiveSession()
+                return (
+                  <th style={{width: width}}
+                    className="align-self-center align-middle"
+                    key={tri}>
+                    {column.render('Header')}
+                  </th>
+                )
+              })}
+            </tr>
+            <tr className="p-0 m-0">
+              {headerGroup.headers.map((column, tri) => {
+                if (tri === 0)
+                  return(
+                    <th className="p-1 m-1 align-middle" key={tri + 11}>
+                      <FontAwesomeIcon icon={faSearch}/>
+                    </th>
+                  )
+                else if (tri === 2 || tri === 3 || tri === 4 || tri === 5)
+                  return (
+                    <th className="p-1 m-1" key={tri + 11}>
+                      {column.canFilter ? column.render('Filter') : null}
+                    </th>
+                  )
+                else
+                  return (
+                    <th key={tri + 11}>
+                    </th>
+                  )
+              })}
+            </tr>
+          </React.Fragment>
+        ))}
+      </thead>
+      <tbody>
+        {rows.map((row, row_index) => {
+          prepareRow(row)
+          return (
+            <tr key={row_index}>
+              {row.cells.map((cell, cell_index) =>
+                <td key={cell_index}
+                  className="align-middle align-self-center">
+                  {cell.render('Cell')}
+                </td>
+              )}
+            </tr>
+          )
+        })}
+      </tbody>
+    </Table>
+  )
+}
 
+const ListRequests = (props) => {
+  const apiListRequests = props.typeRequest.api
+  const location = props.location;
+  const backend = new Backend();
+  const isApprovedList = props.typeRequest.api.endsWith('approved')
+  let apiStatsRequestsApproved = undefined;
+  if (isApprovedList)
+    apiStatsRequestsApproved = props.typeRequest.apiStats
+
+  const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
+    `session-userdetails`, async () => {
+      const sessionActive = await backend.isActiveSession()
       if (sessionActive.active) {
-        let fetched_stats = undefined
-        const fetched = await this.backend.fetchData(this.apiListRequests)
-
-        if (this.isApprovedList)
-          fetched_stats = await this.backend.fetchData(this.apiStatsRequestsApproved)
-
-        this.setState({
-          requests: fetched,
-          loading: false,
-          statsActiveRetired: fetched_stats
-        })
+        return sessionActive.userdetails
       }
     }
+  );
 
-    render() {
-      let {loading, requests, searchDate, searchContactName, searchInstitution,
-        searchVmFqdn, statsActiveRetired} = this.state
+  const { data: requests, error: errorRequest, isLoading: loadingRequests } = useQuery(
+    `request_${props.typeRequest.linkPath}`, async () => {
+      const fetched = await backend.fetchData(apiListRequests)
+      return fetched
+    },
+    {
+      enabled: userDetails
+    }
+  );
 
-      if (searchDate)
-        requests = requests.filter(
-          r => DateFormatHR(eval(`r.${typeRequest.dateFieldSearch}`)).indexOf(searchDate) !== -1
-        )
+  const { data: stats, error: errorStats, isLoading: loadingStats } = useQuery(
+    `stats_${props.typeRequest.linkPath}`, async () => {
+      let fetched = undefined
+      if (isApprovedList)
+        fetched = await backend.fetchData(apiStatsRequestsApproved)
+        return fetched
+    },
+    {
+      enabled: requests
+    }
+  );
 
-      if (searchContactName)
-        requests = requests.filter(
-          r => `${r.user.first_name} ${r.user.last_name}`.toLowerCase().includes(searchContactName.toLowerCase())
-        )
-
-      if (searchInstitution)
-        requests = requests.filter(
-          r => r.head_institution.toLowerCase().includes(searchInstitution.toLowerCase())
-        )
-
-      if (searchVmFqdn)
-        requests = requests.filter(
-          r => r.vm_fqdn.toLowerCase().includes(searchVmFqdn.toLowerCase())
-        )
-
-      if (loading)
-        return (<LoadingAnim />)
-
-      else if (!loading && requests) {
-        const columns = [
-          {
-            id: 'cardNumber',
-            Header: 'r. br.',
-            accessor: r => Number(requests.length - requests.indexOf(r)),
-            maxWidth: 50,
-            filterable: true,
-            Filter: () => <FontAwesomeIcon size="lg" icon={faSearch}/>
-          },
-          {
-            id: 'isApproved',
-            Header: 'Status',
-            accessor: r => r.approved,
-            Cell: props => <Status params={CONFIG['status'][props.value]}/>,
-            maxWidth: 90,
-          },
-          {
-            id: 'requestDate',
-            Header: typeRequest.headerDate,
-            accessor: r => DateFormatHR(eval(`r.${typeRequest.dateFieldSearch}`)),
-            filterable: true,
-            Filter: <FilterField
-              value={this.state.searchDate}
-              onChange={event => this.setState({searchDate: event.target.value})}
-            />,
-            maxWidth: 180
-          },
-          {
-            Header: 'Ustanova',
-            accessor: 'head_institution',
-            filterable: true,
-            Filter: <FilterField
-              value={this.state.searchInstitution}
-              onChange={event => this.setState({searchInstitution: event.target.value})}
-            />
-          },
-          {
-            id: 'contactNameLastName',
-            Header: 'Kontaktna osoba',
-            accessor: r => `${r.user.first_name} ${r.user.last_name}`,
-            filterable: true,
-            Filter: <FilterField
-              value={this.state.searchContactName}
-              onChange={event => this.setState({searchContactName: event.target.value})}
-            />,
-            maxWidth: 180
-          },
-          {
-            Header: 'Poslužitelj',
-            accessor: 'vm_fqdn',
-            filterable: true,
-            Filter: <FilterField
-              value={this.state.searchVmFqdn}
-              onChange={event => this.setState({searchVmFqdn: event.target.value})}
-            />,
-            maxWidth: 180
-          },
-          {
-            id: 'edit',
-            Header: typeRequest.lastColHeader,
-            accessor: r => {
-              let linkPath = typeRequest.linkPath
-              let lastColIcon = typeRequest.lastColIcon
-              if (r.approved === 3) {
-                linkPath = `${linkPath}/${typeRequest.linkPathReadOnly}`
-                lastColIcon = typeRequest.lastColIconReadOnly
-              }
-              return (
-                <Link aria-label={`${linkPath}/${r.id}`} to={`/ui/${linkPath}/${r.id}`}>
-                  {lastColIcon}
-                </Link>
-              )
-            },
-            maxWidth: 70
-          }
-        ]
+  const columns = useMemo(() => [
+    {
+      id: 'cardNumber',
+      Header: 'r. br.',
+      accessor: (r, i) => Number(requests.length - i)
+    },
+    {
+      id: 'isApproved',
+      Header: 'Status',
+      accessor: r => r.approved,
+      Cell: props => <Status params={CONFIG['status'][props.value]}/>,
+    },
+    {
+      id: 'requestDate',
+      Header: props.typeRequest.headerDate,
+      accessor: r => DateFormatHR(eval(`r.${props.typeRequest.dateFieldSearch}`)),
+    },
+    {
+      Header: 'Ustanova',
+      accessor: 'head_institution',
+    },
+    {
+      id: 'contactNameLastName',
+      Header: 'Kontaktna osoba',
+      accessor: r => `${r.user.first_name} ${r.user.last_name}`,
+    },
+    {
+      Header: 'Poslužitelj',
+      accessor: 'vm_fqdn',
+    },
+    {
+      id: 'edit',
+      Header: props.typeRequest.lastColHeader,
+      accessor: r => {
+        let linkPath = props.typeRequest.linkPath
+        let lastColIcon = props.typeRequest.lastColIcon
+        if (r.approved === 3) {
+          linkPath = `${linkPath}/${props.typeRequest.linkPathReadOnly}`
+          lastColIcon = props.typeRequest.lastColIconReadOnly
+        }
         return (
-          <BaseView
-            title={typeRequest.title}
-            location={this.location}>
-            {
-              this.isApprovedList &&
-                <span>
-                  <Badge className="mt-3" color="success" style={{fontSize: '120%'}}>
-                    Aktivni<Badge className="ml-2" color="light">{statsActiveRetired.active}</Badge>
-                  </Badge>
-                  <Badge className="ml-3" color="secondary" style={{fontSize: '120%'}}>
-                    Umirovljeni<Badge className="ml-2" color="light">{statsActiveRetired.retired}</Badge>
-                  </Badge>
-                </span>
-            }
-            <ReactTable
-              data={requests}
-              columns={columns}
-              className="-highlight mt-4 text-center align-middle"
-              defaultPageSize={requests.length}
-              showPagination={false}
-              previousText='Prethodni'
-              nextText='Sljedeći'
-              noDataText='Nema zahtjeva'
-              pageText='Stranica'
-              ofText='od'
-              rowsText='zahtjeva'
-              getTheadThProps={() => ({className: 'table-active p-2'})}
-              getTheadFilterThProps={() => ({className: 'table-light align-self-center'})}
-              getTdProps={() => ({className: 'pt-2 pb-2 align-self-center'})}
-            />
-          </BaseView>
+          <Link aria-label={`${linkPath}/${r.id}`} to={`/ui/${linkPath}/${r.id}`}>
+            {lastColIcon}
+          </Link>
         )
-      }
-      else
-        return null
+      },
     }
+  ])
+
+  if (loadingRequests || loadingStats)
+    return (<LoadingAnim />)
+
+  else if (!loadingRequests && !loadingStats && requests && isApprovedList && stats) {
+    return (
+      <BaseView
+        title={props.typeRequest.title}
+        location={location}>
+        {
+          <span>
+            <Badge className="mt-3" color="success" style={{fontSize: '120%'}}>
+              Aktivni<Badge className="ml-2" color="light">{stats.active}</Badge>
+            </Badge>
+            <Badge className="ml-3" color="secondary" style={{fontSize: '120%'}}>
+              Umirovljeni<Badge className="ml-2" color="light">{stats.retired}</Badge>
+            </Badge>
+          </span>
+        }
+        <RequestsTable columns={columns} data={requests}/>
+      </BaseView>
+    )
   }
+  else if (!loadingRequests && requests && !isApprovedList) {
+    return (
+      <BaseView
+        title={props.typeRequest.title}
+        location={location}>
+        <RequestsTable columns={columns} data={requests}/>
+      </BaseView>
+    )
+  }
+  else
+    return null
 }
 
 export default ListRequests;

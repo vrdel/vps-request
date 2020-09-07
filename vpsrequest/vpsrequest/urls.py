@@ -19,6 +19,7 @@ from django.conf.urls import include
 from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect
 from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     re_path(r'^$', lambda x: HttpResponseRedirect('{}/saml2/login'.format(settings.RELATIVE_PATH))),
@@ -27,4 +28,5 @@ urlpatterns = [
     re_path(r'^api/v1/internal/', include('backend.api.internal.urls', namespace='internalapi')),
     re_path(r'^api/v1/', include('backend.api.urls', namespace='api')),
     re_path(r'^rest-auth/', include('rest_auth.urls'))
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
