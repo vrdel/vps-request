@@ -28,7 +28,7 @@ const NewRequest = (props) => {
   const [acceptConditionsAlert, setAcceptConditionsAlert] = useState(false);
 
   const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
-    `novi-zahtjev-userdetails`, async () => {
+    `session-userdetails`, async () => {
       const sessionActive = await backend.isActiveSession()
       if (sessionActive.active) {
         return sessionActive.userdetails

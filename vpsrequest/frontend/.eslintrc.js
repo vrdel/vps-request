@@ -28,7 +28,7 @@ module.exports = {
         "react/display-name": [0, { "ignoreTranspilerName": false }],
         "react/jsx-indent": [2, 2, {checkAttributes: true}],
         "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
-        "react-hooks/exhaustive-deps": "warn" // Checks effect dependencies
-
+        "react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
+        "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
     }
 };

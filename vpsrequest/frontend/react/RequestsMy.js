@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Backend } from './DataManager';
 import { BaseView, LoadingAnim, Status } from './UIElements';
 import { useTable, usePagination } from 'react-table';
@@ -66,7 +66,7 @@ const EmptyTable = ({ columns, data }) => {
   )
 }
 
-const RequestsTable = ({ columns, data, showEmpty=false }) => {
+const RequestsTable = ({ columns, data }) => {
   const {
     headerGroups,
     prepareRow,
@@ -192,7 +192,7 @@ const MyRequests = (props) => {
   const apiListRequests = `${CONFIG.listReqUrl}/mine`
 
   const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
-    `stanje-zahtjeva-userdetails`, async () => {
+    `session-userdetails`, async () => {
       const sessionActive = await backend.isActiveSession()
       if (sessionActive.active) {
         return sessionActive.userdetails

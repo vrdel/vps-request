@@ -74,7 +74,7 @@ function RequestsTable({ columns, data }) {
                   <th style={{width: width}}
                     className="align-self-center align-middle"
                     key={tri}>
-                      {column.render('Header')}
+                    {column.render('Header')}
                   </th>
                 )
               })}
@@ -111,7 +111,7 @@ function RequestsTable({ columns, data }) {
               {row.cells.map((cell, cell_index) =>
                 <td key={cell_index}
                   className="align-middle align-self-center">
-                    {cell.render('Cell')}
+                  {cell.render('Cell')}
                 </td>
               )}
             </tr>
@@ -131,14 +131,22 @@ const ListRequests = (props) => {
   if (isApprovedList)
     apiStatsRequestsApproved = props.typeRequest.apiStats
 
+  const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
+    `session-userdetails`, async () => {
+      const sessionActive = await backend.isActiveSession()
+      if (sessionActive.active) {
+        return sessionActive.userdetails
+      }
+    }
+  );
+
   const { data: requests, error: errorRequest, isLoading: loadingRequests } = useQuery(
     `request_${props.typeRequest.linkPath}`, async () => {
-      const sessionActive = await backend.isActiveSession()
-      let fetched = undefined;
-      if (sessionActive.active) {
-        fetched = await backend.fetchData(apiListRequests)
-        return fetched
-      }
+      const fetched = await backend.fetchData(apiListRequests)
+      return fetched
+    },
+    {
+      enabled: userDetails
     }
   );
 

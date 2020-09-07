@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   BaseView,
   LoadingAnim,
@@ -27,14 +27,9 @@ const ChangeRequest = (props) => {
   const apiListVMOSes = CONFIG.vmosUrl
   const apiListRequests = CONFIG.listReqUrl
   const backend = new Backend()
-  const [loading, setLoading] = useState(false);
-
-  const isRequestApproved = (value) => {
-    return value === 1 ? true : false
-  }
 
   const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
-    `stanje-zahtjeva-userdetails-${requestID}`, async () => {
+    `session-userdetails`, async () => {
       const sessionActive = await backend.isActiveSession()
       if (sessionActive.active) {
         return sessionActive.userdetails
@@ -110,10 +105,10 @@ const ChangeRequest = (props) => {
         requestDetails.timestamp : requestDetails.request_date)
     }
 
-  if (loading)
+  if (loadingUserDetails || loadingRequests || loadingVMOSes)
     return (<LoadingAnim />)
 
-  else if (!loading && listVMOSes && initValues) {
+  else if (!loadingVMOSes && listVMOSes && requestDetails && initValues) {
     return (
       <BaseView
         title='Promijeni zahtjev'
