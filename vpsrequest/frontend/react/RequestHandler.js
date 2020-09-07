@@ -6,7 +6,6 @@ import {
   RequestHorizontalRule,
   NotifyError,
   NotifyOk,
-  ModalAreYouSure
 } from './UIElements';
 import { Formik, Form } from 'formik';
 import {
