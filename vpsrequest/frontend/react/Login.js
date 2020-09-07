@@ -55,7 +55,7 @@ class Login extends Component {
               <CardHeader
                 id='vpsreq-loginheader'
                 className="d-sm-inline-flex align-items-center justify-content-around">
-                <img src={CloudLogoSmall} id="cloud logo" alt="VPS Cloud Logo"/>
+                <img src={CloudLogoSmall} id="cloud logo" alt="O usluzi VPS"/>
                 <h4 className="text-dark"><strong>VPS Zahtjev</strong></h4>
               </CardHeader>
               <CardBody>
