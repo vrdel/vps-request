@@ -78,8 +78,8 @@ export const DropDown = ({field, data=[], ...props}) =>
     {
       data.map((name, i) =>
         i === 0 ?
-        <option key={i} hidden>{name}</option> :
-        <option key={i} value={name}>{name}</option>
+          <option key={i} hidden>{name}</option> :
+          <option key={i} value={name}>{name}</option>
       )
     }
   </Field>
@@ -145,7 +145,7 @@ const UserDetailsPopover = ({userDetails}) => {
   return (
     <React.Fragment>
       <div className="text-center">
-      {
+        {
         approveRequest ?
           <Badge color="warning" className="mb-1 mt-1" style={{fontSize: '100%'}} pill>
             Odobravatelj zahtjeva
@@ -207,8 +207,7 @@ const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal,
             <React.Fragment>
               Dobrodošli,
               <br/>
-              <span onMouseEnter={() => setPopoverOpen(true)}
-                onMouseLeave={() => setPopoverOpen(false)}
+              <span onClick ={() => setPopoverOpen(!popoverOpen)}
                 id="userPopover">
                 <Badge href="#" color="light" style={{fontSize: '100%'}}>
                   <strong>{userDetails.first_name}</strong>
@@ -225,7 +224,7 @@ const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal,
           <NavItem className='m-2 text-light'>
             <Button
               size="sm"
-              aria-label="Izađi"
+              aria-label="Odjava"
               className='btn-danger'
               onClick={() => toggle()}>
               <FontAwesomeIcon icon={faSignOutAlt} color="white" />
@@ -422,5 +421,5 @@ export const Status = ({params, renderToolTip=false}) => (
           {params['label']}
         </UncontrolledTooltip>
     }
-</div>
+  </div>
 )
