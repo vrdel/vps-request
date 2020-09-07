@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import {Backend} from './DataManager';
 import { BaseView, LoadingAnim, RequestHorizontalRule, Status } from './UIElements';
@@ -12,85 +11,85 @@ import { CONFIG } from './Config'
 
 const RequestRow = ({...props}) =>
 (
-    <Row className="form-group align-items-center">
-        <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
-            <span
-                className="mr-2">
-                {props.label}
-            </span>
-        </Col>
-        <Col md={{size: 7}} >
-            <span style={{whiteSpace: 'pre-wrap'}}>{props.value}</span>
-        </Col>
-    </Row>
+  <Row className="form-group align-items-center">
+    <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
+      <span
+        className="mr-2">
+        {props.label}
+      </span>
+    </Col>
+    <Col md={{size: 7}} >
+      <span style={{whiteSpace: 'pre-wrap'}}>{props.value}</span>
+    </Col>
+  </Row>
 )
 
 const RequestAdminDetails = ({values}) =>
 {
-    if(values.approved === 3)
-        return(
-            <React.Fragment>
-              <RequestRow label="Odobrio:" value={values.approvedby}/>
-              <RequestRow label="IP adresa:" value={values.vm_ip}/>
-              <RequestRow label="Poruka:" value={values.vm_reason}/>
-              <RequestRow label="Datum umirovljenja:" value={values.vm_dismissed}/>
-            </React.Fragment>
-        )
-    else
-        return(
-          <React.Fragment>
-            <RequestRow label="Poruka:" value={values.vm_reason}/>
-          </React.Fragment>
-        )
+  if(values.approved === 3)
+    return(
+      <React.Fragment>
+        <RequestRow label="Odobrio:" value={values.approvedby}/>
+        <RequestRow label="IP adresa:" value={values.vm_ip}/>
+        <RequestRow label="Poruka:" value={values.vm_reason}/>
+        <RequestRow label="Datum umirovljenja:" value={values.vm_dismissed}/>
+      </React.Fragment>
+    )
+  else
+    return(
+      <React.Fragment>
+        <RequestRow label="Poruka:" value={values.vm_reason}/>
+      </React.Fragment>
+    )
 }
 
 const RequestDetails = ({values, userDetails}) =>
 {
-    let reqStatus = <Status params={CONFIG['status'][values.approved]}/>
-    let adminRemark = null
-    if(userDetails.is_staff)
-      adminRemark = <RequestRow label="Napomena administratora:" value={values.vm_admin_remark}/>
+  let reqStatus = <Status params={CONFIG['status'][values.approved]}/>
+  let adminRemark = null
+  if(userDetails.is_staff)
+    adminRemark = <RequestRow label="Napomena administratora:" value={values.vm_admin_remark}/>
 
-    return (
-        <React.Fragment>
-            <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
-            <RequestRow label="Ime:" value={values.first_name}/>
-            <RequestRow label="Prezime:" value={values.last_name}/>
-            <RequestRow label="Ustanova:" value={values.institution}/>
-            <RequestRow label="Funkcija:" value={values.role}/>
-            <RequestRow label="Email:" value={values.email}/>
-            <RequestHorizontalRule/>
+  return (
+    <React.Fragment>
+      <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
+      <RequestRow label="Ime:" value={values.first_name}/>
+      <RequestRow label="Prezime:" value={values.last_name}/>
+      <RequestRow label="Ustanova:" value={values.institution}/>
+      <RequestRow label="Funkcija:" value={values.role}/>
+      <RequestRow label="Email:" value={values.email}/>
+      <RequestHorizontalRule/>
 
-            <h5 className="mb-3 mt-4">Zahtjevani resursi</h5>
-            <RequestRow label="Namjena:" value={values.vm_purpose}/>
-            <RequestRow label="Puno ime poslužitelja (FQDN):" value={values.vm_fqdn}/>
-            <RequestRow label="Operacijski sustav:" value={values.vm_os}/>
-            <RequestRow label="Napomena:" value={values.vm_remark}/>
-            <RequestHorizontalRule/>
+      <h5 className="mb-3 mt-4">Zahtjevani resursi</h5>
+      <RequestRow label="Namjena:" value={values.vm_purpose}/>
+      <RequestRow label="Puno ime poslužitelja (FQDN):" value={values.vm_fqdn}/>
+      <RequestRow label="Operacijski sustav:" value={values.vm_os}/>
+      <RequestRow label="Napomena:" value={values.vm_remark}/>
+      <RequestHorizontalRule/>
 
-            <h5 className="mb-3 mt-4">Sistem-inženjer virtualnog poslužitelja</h5>
-            <RequestRow label="Ime:" value={values.sys_firstname}/>
-            <RequestRow label="Prezime:" value={values.sys_lastname}/>
-            <RequestRow label="Ustanova:" value={values.sys_institution}/>
-            <RequestRow label="Funkcija:" value={values.sys_role}/>
-            <RequestRow label="Email:" value={values.sys_email}/>
-            <RequestRow label="AAI@EduHr korisnička oznaka:" value={values.sys_aaieduhr}/>
-            <RequestHorizontalRule/>
+      <h5 className="mb-3 mt-4">Sistem-inženjer virtualnog poslužitelja</h5>
+      <RequestRow label="Ime:" value={values.sys_firstname}/>
+      <RequestRow label="Prezime:" value={values.sys_lastname}/>
+      <RequestRow label="Ustanova:" value={values.sys_institution}/>
+      <RequestRow label="Funkcija:" value={values.sys_role}/>
+      <RequestRow label="Email:" value={values.sys_email}/>
+      <RequestRow label="AAI@EduHr korisnička oznaka:" value={values.sys_aaieduhr}/>
+      <RequestHorizontalRule/>
 
-            <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
-            <RequestRow label="Ime:" value={values.head_firstname}/>
-            <RequestRow label="Prezime:" value={values.head_lastname}/>
-            <RequestRow label="Ustanova:" value={values.head_institution}/>
-            <RequestRow label="Funkcija:" value={values.head_role}/>
-            <RequestRow label="Email:" value={values.head_email}/>
-            <RequestHorizontalRule/>
+      <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
+      <RequestRow label="Ime:" value={values.head_firstname}/>
+      <RequestRow label="Prezime:" value={values.head_lastname}/>
+      <RequestRow label="Ustanova:" value={values.head_institution}/>
+      <RequestRow label="Funkcija:" value={values.head_role}/>
+      <RequestRow label="Email:" value={values.head_email}/>
+      <RequestHorizontalRule/>
 
-            {adminRemark}
-            <RequestRow label="Status:" value={reqStatus}/>
-            <RequestRow label="Datum podnošenja:" value={values.request_date}/>
-            <RequestAdminDetails values={values}/>
-        </React.Fragment>
-    )
+      {adminRemark}
+      <RequestRow label="Status:" value={reqStatus}/>
+      <RequestRow label="Datum podnošenja:" value={values.request_date}/>
+      <RequestAdminDetails values={values}/>
+    </React.Fragment>
+  )
 }
 
 
@@ -177,7 +176,7 @@ export class ViewSingleRequest extends Component
       return (
         <BaseView
           title='Detalji zahtjeva'>
-              <RequestDetails values={initValues} userDetails={userDetails}/>
+          <RequestDetails values={initValues} userDetails={userDetails}/>
         </BaseView>
       )
     }
