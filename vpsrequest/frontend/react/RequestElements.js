@@ -256,7 +256,7 @@ export const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dism
           label={
             <InfoLink prefix="Prihvaćam "
               linkHref="https://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps.pdf"
-              linkTitle="Pravilnik usluge Virtual Private Server"/>
+              linkTitle="Pravilnik usluge Virtual Private Server, PDF, 8.642 KB"/>
           }
         />
       </Col>
@@ -280,11 +280,12 @@ export const SubmitNewRequest = ({acceptConditions, handleAcceptConditions, dism
 
         <p className="text-muted text-center">
           <small>
-            <InfoLink prefix="Srce gore navedene osobne podatke obrađuje isključivo radi pružanja zatražene usluge, sukladno svojoj politici privatnosti ("
+          Srce gore navedene osobne podatke obrađuje isključivo radi pružanja zatražene usluge, sukladno 
+            <InfoLink prefix=" svojoj "
               linkHref="https://www.srce.hr/politika-privatnosti"
-              suffix=")"/>
+              linkTitle="politici privatnosti"/>
             <InfoLink prefix=" i " linkHref="https://www.srce.unizg.hr/files/srce/docs/cloud/pravilnik_usluge_vps.pdf"
-              linkTitle="Pravilniku usluge"/>
+              linkTitle="Pravilniku usluge, PDF, 8.642 KB"/>
           </small>
         </p>
       </Col>

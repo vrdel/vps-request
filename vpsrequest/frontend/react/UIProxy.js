@@ -33,7 +33,7 @@ export const UIProxy = ({redirect=false, msg=true}) =>
             }
             <CardBody>
               <div className="text-center pt-2 pb-2">
-                <img src={CloudLogoBig} id="cloud logo" alt="VPS Cloud Logo"/>
+                <img src={CloudLogoBig} id="cloud logo" alt="O usluzi VPS"/>
               </div>
               <div className="text-center mt-5">
                 <a href="https://www.srce.unizg.hr/cloud/vps">
