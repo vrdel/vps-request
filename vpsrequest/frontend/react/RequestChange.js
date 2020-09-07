@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BaseView,
   LoadingAnim,
@@ -18,58 +18,49 @@ import {
 } from './RequestElements.js';
 import { CONFIG } from './Config'
 import { DateFormatHR, EmptyIfNull } from './Util';
-import { useQuery } from 'react-query';
 
 
 const ChangeRequest = (props) => {
-  const {params} = props.match
-  const requestID = params.id
-  const apiListVMOSes = CONFIG.vmosUrl
-  const apiListRequests = CONFIG.listReqUrl
-  const backend = new Backend()
+  const {params} = props.match;
+  const requestID = params.id;
+  const apiListVMOSes = CONFIG.vmosUrl;
+  const apiListRequests = CONFIG.listReqUrl;
+  const backend = new Backend();
+  const [loading, setLoading] = useState(false);
+  const [userDetails, setUserDetails] = useState(undefined);
+  const [requestDetails, setRequestDetails] = useState(undefined);
+  const [listVMOSes, setListVMOSes] = useState(undefined);
 
-  const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
-    `session-userdetails`, async () => {
-      const sessionActive = await backend.isActiveSession()
-      if (sessionActive.active) {
-        return sessionActive.userdetails
-      }
-    }
-  );
+  const initializeComponent = async () => {
+    const session = await backend.isActiveSession();
 
-  const { data: requestDetails, error: errorRequest, isLoading: loadingRequests } = useQuery(
-    `stanje-zahtjeva-requests-${requestID}`, async () => {
-      const fetched = await backend.fetchData(`${apiListRequests}/${requestID}`)
-      return fetched
-    },
-    {
-      enabled: userDetails
+    if (session.active) {
+      const vmOSes = await backend.fetchData(apiListVMOSes);
+      const requestData = await backend.fetchData(`${apiListRequests}/${requestID}`);
+      setRequestDetails(requestData);
+      setUserDetails(session.userdetails);
+      setListVMOSes(vmOSes.map(e => e.vm_os));
+      setLoading(false);
     }
-  );
+  }
 
-  const { data: listVMOSes, error: errorVMOSes, isLoading: loadingVMOSes} = useQuery(
-    `stanje-zahtjeva-requests-vmoses`, async () => {
-      const fetched = await backend.fetchData(apiListVMOSes)
-      return fetched.map(e => e.vm_os)
-    },
-    {
-      enabled: userDetails
-    }
-  );
+  useEffect(() => {
+    setLoading(true);
+    initializeComponent();
+  }, [])
 
   const handleOnSubmit = async (data) => {
-    let response = await backend.changeObject(`${apiListRequests}/${requestID}/`, data)
+    let response = await backend.changeObject(`${apiListRequests}/${requestID}/`, data);
 
     if (response.ok)
       NotifyOk({
         msg: 'Zahtjev uspješno promijenjen',
-        title: `Uspješno - HTTP ${response.status}`})
+        title: `Uspješno - HTTP ${response.status}`});
     else
       NotifyError({
         msg: response.statusText,
-        title: `Greška - HTTP ${response.status}`})
+        title: `Greška - HTTP ${response.status}`});
   }
-
 
   if (userDetails && requestDetails)
     var initValues = {
@@ -103,12 +94,12 @@ const ChangeRequest = (props) => {
       request_date: DateFormatHR(requestDetails.request_date),
       timestamp: DateFormatHR(requestDetails.timestamp ?
         requestDetails.timestamp : requestDetails.request_date)
-    }
+    };
 
-  if (loadingUserDetails || loadingRequests || loadingVMOSes)
+  if (loading)
     return (<LoadingAnim />)
 
-  else if (!loadingVMOSes && listVMOSes && requestDetails && initValues) {
+  else if (!loading && listVMOSes && requestDetails && initValues) {
     return (
       <BaseView
         title='Promijeni zahtjev'
