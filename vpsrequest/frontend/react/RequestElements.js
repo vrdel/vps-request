@@ -24,7 +24,7 @@ export const RowRequestDropDown = ({field, ...propsRest}) =>
     <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
       <Label
         for={propsRest.labelFor}
-        className="mr-2"
+        className="mr-2 text-right"
       >
         {propsRest.label}
         <span className="ml-1 text-danger">*</span>
@@ -56,7 +56,7 @@ export const RowRequestField = ({field, ...propsRest}) =>
       <Label
         htmlFor={propsRest.labelFor}
         aria-label={propsRest.labelFor}
-        className="mr-2">
+        className="mr-2 text-right">
         {propsRest.label}
         {
           propsRest.required ?
