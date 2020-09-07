@@ -47,7 +47,7 @@ function RequestsTable({ columns, data }) {
   }, useFilters)
 
   return (
-    <Table hover size="sm" className="mt-4 text-center align-middle">
+    <Table responsive hover size="sm" className="mt-4 text-center align-middle">
       <thead className="table-active align-middle text-center align-self-center p-2">
         {headerGroups.map((headerGroup, thi) => (
           <React.Fragment key={thi}>

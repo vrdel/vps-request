@@ -34,7 +34,7 @@ const EmptyTable = ({ columns, data }) => {
   )
 
   return (
-    <Table hover size="sm">
+    <Table responsive hover size="sm">
       <thead className="table-active align-middle text-center">
         {headerGroups.map((headerGroup, thi) => (
           <tr key={thi}>
@@ -93,7 +93,7 @@ const RequestsTable = ({ columns, data }) => {
     <React.Fragment>
       <Row>
         <Col>
-          <table className="mt-4 table table-sm table-hover">
+          <Table responsive hover size="sm" className="mt-4">
             <thead className="table-active align-middle text-center">
               {headerGroups.map((headerGroup, thi) => (
                 <tr key={thi}>
@@ -136,7 +136,7 @@ const RequestsTable = ({ columns, data }) => {
                 )
               })}
             </tbody>
-          </table>
+          </Table>
         </Col>
       </Row>
       <Row>
