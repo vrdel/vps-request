@@ -36,13 +36,13 @@ export const ApprovedRequestHandler = (props) => {
   const [loading, setLoading] = useState(false)
   const [areYouSureModal, setAreYouSureModal] = useState(false)
   const [modalTitle, setModalTitle] = useState(undefined)
-  const [modalFunc, setModalFunc] = useState(undefined)
   const [modalMsg, setModalMsg] = useState(undefined)
-  const [error, setError] = useState(null)
   const [onYes, setOnYes] = useState('')
   const [requestDetails, setRequestDetails] = useState(undefined);
   const [userDetails, setUserDetails] = useState(undefined);
   const [listVMOSes, setListVMOSes] = useState(undefined);
+  // TODO: refactor with formik 2
+  const [formikValues, setFormikValues] = useState({})
 
 
   const initializeComponent = async () => {
@@ -64,17 +64,6 @@ export const ApprovedRequestHandler = (props) => {
     initializeComponent();
   }, [])
 
-  const toggleAreYouSureSetModal = (msg, title, onYes) => {
-    setAreYouSureModal(!areYouSureModal)
-    setModalFunc(onYes)
-    setModalTitle(title)
-    setModalMsg(msg)
-  }
-
-  const toggleAreYouSure = () => {
-    setAreYouSureModal(!areYouSureModal)
-  }
-
   const handleOnSubmit = async (data, callback=undefined) => {
     let response = await backend.changeObject(`${apiListRequests}/${requestID}/`, data)
 
@@ -87,6 +76,25 @@ export const ApprovedRequestHandler = (props) => {
       NotifyError({
         msg: response.statusText,
         title: `Greška - HTTP ${response.status}`})
+  }
+
+  const onYesCallback = () => {
+    let callback = undefined
+
+    formikValues.timestamp = new Date().toISOString()
+    formikValues.request_date = requestDetails.request_date
+
+    if (onYes === 'aaireassign') {
+      formikValues.changedContact = formikValues.aaieduhr
+      callback = () => history.push('/ui/odobreni-zahtjevi')
+      handleOnSubmit(formikValues, callback);
+    }
+    else if (onYes === 'retire') {
+      formikValues.approved = 3
+      formikValues.vm_dismissed = formikValues.timestamp
+      callback = () => history.push('/ui/odobreni-zahtjevi')
+      handleOnSubmit(formikValues, callback);
+    }
   }
 
   if (userDetails && requestDetails)
@@ -125,43 +133,20 @@ export const ApprovedRequestHandler = (props) => {
   if (loading)
     return (<LoadingAnim />)
 
+
   else if (!loading && listVMOSes && initValues) {
     return (
       <BaseView
         title='Obradi zahtjev'
         modal={true}
-        toggle={toggleAreYouSure}
-        state={{areYouSureModal, modalFunc, modalTitle, modalMsg}}
+        toggle={() => setAreYouSureModal(!areYouSureModal)}
+        state={{areYouSureModal, 'modalFunc': onYesCallback, modalTitle, modalMsg}}
         isHandleApprovedView={initValues.approved === 1}
         isIssuedVMView={initValues.approved !== 1}>
         <Formik
           initialValues={initValues}
-          onSubmit={(values, actions) => {
-            let oldState = values.approved
-            let callback = undefined
-
-            values.approved = 2
-            values.timestamp = new Date().toISOString()
-            values.request_date = requestDetails.request_date
-
-            if (initValues.aaieduhr !== values.aaieduhr) {
-              values.changedContact = values.aaieduhr
-              callback = () => history.push('/ui/odobreni-zahtjevi')
-            }
-
-            if (values.retire) {
-              values.approved = 3
-              values.vm_dismissed = values.timestamp
-            }
-
-            if (values.approved !== oldState) {
-              callback = () => history.push('/ui/odobreni-zahtjevi')
-            }
-
-            handleOnSubmit(values, callback)
-          }}
-          render = {({setFieldValue, handleSubmit, values}) => (
-            <Form onSubmit={handleSubmit}>
+          render = {props => (
+            <Form>
               <RequestDateField/>
               {
                 initValues.approved === 2 ?
@@ -190,15 +175,19 @@ export const ApprovedRequestHandler = (props) => {
                         <Button className="btn-lg" color="success"
                           id="button-save" type="button"
                           onClick={() => {
-                            if (initValues.aaieduhr !== values.aaieduhr) {
-                              toggleAreYouSureSetModal(
-                                "Da li se sigurni da želite zahtjev dodijeliti drugom korisniku?",
-                                "Dodjeljivanje drugom korisniku",
-                                () => {handleSubmit()}
-                              )
+                            if (initValues.aaieduhr !== props.values.aaieduhr) {
+                              setAreYouSureModal(!areYouSureModal);
+                              setModalTitle("Dodjeljivanje drugom korisniku");
+                              setModalMsg("Da li se sigurni da želite zahtjev dodijeliti drugom korisniku?");
+                              setOnYes('aaireassign')
+                              setFormikValues(props.values)
                             }
-                            else
-                              handleSubmit()
+                            else {
+                              props.values.approved = 2
+                              props.values.timestamp = new Date().toISOString()
+                              props.values.request_date = requestDetails.request_date
+                              handleOnSubmit(props.values, undefined)
+                            }
                           }}>
                             Spremi promjene
                         </Button>
@@ -207,13 +196,12 @@ export const ApprovedRequestHandler = (props) => {
                         <Button className="btn-lg" color="secondary"
                           id="button-retire" type="button"
                           onClick={() => {
-                            toggleAreYouSureSetModal(
-                              "Želite li umiroviti server (naknadne promjene nisu više moguće)?",
-                              "Mirovina",
-                              () => {
-                                setFieldValue('retire', true, false)
-                                handleSubmit()
-                              })}}>
+                            setAreYouSureModal(!areYouSureModal);
+                            setModalTitle("Mirovina");
+                            setModalMsg("Želite li umiroviti server (naknadne promjene nisu više moguće)?");
+                            setOnYes('retire')
+                            setFormikValues(props.values)
+                          }}>
                           Umirovi
                         </Button>
                       </Col>
