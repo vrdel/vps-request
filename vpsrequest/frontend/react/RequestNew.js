@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Backend } from './DataManager';
 import {
   BaseView,
@@ -16,6 +16,7 @@ import {
   SubmitNewRequest
 } from './RequestElements.js';
 import { CONFIG } from './Config'
+import { useQuery } from 'react-query';
 
 
 const NewRequest = (props) => {
@@ -23,28 +24,27 @@ const NewRequest = (props) => {
   const backend = new Backend();
   const apiListVMOSes = CONFIG.vmosUrl;
   const apiListRequests = CONFIG.listReqUrl;
-  const [loading, setLoading] = useState(false);
-  const [listVMOSes, setListVMOSes] = useState([]);
-  const [acceptConditions, setAcceptConditions] = useState(undefined);
+  const [acceptConditions, setAcceptConditions] = useState(false);
   const [acceptConditionsAlert, setAcceptConditionsAlert] = useState(false);
-  const [userDetails, setUserDetails] = useState(null);
 
-  const initializeComponent = async () => {
-    const session = await backend.isActiveSession()
-
-    if (session.active) {
-      const vmOSes = await backend.fetchData(apiListVMOSes)
-      setListVMOSes(vmOSes.map(e => e.vm_os));
-      setAcceptConditions(false);
-      setUserDetails(session.userdetails)
-      setLoading(false)
+  const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
+    `novi-zahtjev-userdetails`, async () => {
+      const sessionActive = await backend.isActiveSession()
+      if (sessionActive.active) {
+        return sessionActive.userdetails
+      }
     }
-  }
+  );
 
-  useEffect(() => {
-    setLoading(true);
-    initializeComponent();
-  }, [])
+  const { data: listVMOSes, error: errorVMOSes, isLoading: loadingVMOSes} = useQuery(
+    `novi-zahtjev`, async () => {
+      const fetched = await backend.fetchData(apiListVMOSes)
+      return fetched.map(e => e.vm_os)
+    },
+    {
+      enabled: userDetails
+    }
+  );
 
   const dismissAlert = () => {
     setAcceptConditionsAlert(false);
@@ -95,10 +95,10 @@ const NewRequest = (props) => {
       head_email: ''
     }
 
-  if (loading)
+  if (loadingUserDetails || loadingVMOSes)
     return (<LoadingAnim />)
 
-  else if (!loading && listVMOSes && initValues &&
+  else if (!loadingVMOSes && listVMOSes && initValues &&
     acceptConditions !== undefined) {
     return (
       <BaseView
