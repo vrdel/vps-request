@@ -144,6 +144,21 @@ export const ApprovedRequestHandler = (props) => {
         isIssuedVMView={initValues.approved !== 1}>
         <Formik
           initialValues={initValues}
+          onSubmit={(values, actions) => {
+            // this one is called on "Izdaj VM"
+            let wasApproved = values.approved
+            let callback = undefined
+
+            values.approved = 2
+            values.timestamp = new Date().toISOString()
+            values.request_date = requestDetails.request_date
+
+            if (values.approved !== wasApproved) {
+              callback = () => history.push('/ui/odobreni-zahtjevi')
+            }
+
+            handleOnSubmit(values, callback)
+          }}
           render = {props => (
             <Form>
               <RequestDateField/>
