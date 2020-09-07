@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {Backend} from './DataManager';
 import { BaseView, LoadingAnim, RequestHorizontalRule, Status } from './UIElements';
 import { DateFormatHR } from './Util';
@@ -7,6 +7,7 @@ import {
     Row,
     } from 'reactstrap';
 import { CONFIG } from './Config'
+import { useQuery } from 'react-query';
 
 
 const RequestRow = ({...props}) =>
@@ -93,95 +94,78 @@ const RequestDetails = ({values, userDetails}) =>
 }
 
 
-export class ViewSingleRequest extends Component
-{
-  constructor(props) {
-    super(props)
+export const ViewSingleRequest = (props) => {
+  let {params} = props.match
+  const requestID = params.id
+  const apiListRequests = CONFIG.listReqUrl
+  const backend = new Backend()
 
-    this.state = {
-      loading: false,
-      requestDetails: undefined,
-      userDetail: undefined,
-    }
-
-    let {params} = this.props.match
-    this.requestID = params.id
-
-    this.apiListRequests = CONFIG.listReqUrl
-
-    this.backend = new Backend()
-    this.initializeComponent = this.initializeComponent.bind(this)
-  }
-
-  async initializeComponent() {
-    const session = await this.backend.isActiveSession()
-
-    if (session.active) {
-      const requestData = await this.backend.fetchData(`${this.apiListRequests}/${this.requestID}/handlenew/`)
-
-      this.setState({
-        userDetails: session.userdetails,
-        requestDetails: requestData,
-        loading: false
-      })
-    }
-  }
-
-  componentDidMount() {
-    this.setState({loading: true})
-    this.initializeComponent()
-  }
-
-  render() {
-    const {loading, userDetails, requestDetails} = this.state
-
-    if (userDetails && requestDetails)
-      var initValues = {
-        location: '',
-        first_name: requestDetails.user.first_name,
-        last_name: requestDetails.user.last_name,
-        institution: requestDetails.user.institution,
-        role: requestDetails.user.role,
-        email: requestDetails.user.email,
-        aaieduhr: requestDetails.user.aaieduhr,
-        approvedby: requestDetails.approvedby,
-        vm_fqdn: requestDetails.vm_fqdn,
-        vm_purpose: requestDetails.vm_purpose,
-        vm_admin_remark: requestDetails.vm_admin_remark,
-        vm_reason: requestDetails.vm_reason,
-        vm_remark: requestDetails.vm_remark,
-        vm_os: requestDetails.vm_os,
-        vm_ip: requestDetails.vm_ip,
-        approved: requestDetails.approved,
-        sys_firstname: requestDetails.sys_firstname,
-        sys_aaieduhr: requestDetails.sys_aaieduhr,
-        sys_lastname: requestDetails.sys_lastname,
-        sys_institution: requestDetails.sys_institution,
-        sys_role: requestDetails.sys_role,
-        sys_email: requestDetails.sys_email,
-        head_firstname: requestDetails.head_firstname,
-        head_lastname: requestDetails.head_lastname,
-        head_institution: requestDetails.head_institution,
-        head_role: requestDetails.head_role,
-        head_email: requestDetails.head_email,
-        request_date: DateFormatHR(requestDetails.request_date),
-        timestamp: DateFormatHR(requestDetails.timestamp),
-        vm_dismissed: DateFormatHR(requestDetails.vm_dismissed)
+  const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
+    `session-userdetails`, async () => {
+      const sessionActive = await backend.isActiveSession()
+      if (sessionActive.active) {
+        return sessionActive.userdetails
       }
+    }
+  );
 
-    if (loading)
-      return (<LoadingAnim />)
+  const { data: requestDetails, error: errorRequest, isLoading: loadingRequests } = useQuery(
+    `stanje-zahtjeva-requests-${requestID}`, async () => {
+      const fetched = await backend.fetchData(`${apiListRequests}/${requestID}/handlenew`)
+      return fetched
+    },
+    {
+      enabled: userDetails
+    }
+  );
 
-    else if (!loading && initValues) {
-      return (
-        <BaseView
-          title='Detalji zahtjeva'>
-          <RequestDetails values={initValues} userDetails={userDetails}/>
-        </BaseView>
-      )
+
+  if (userDetails && requestDetails)
+    var initValues = {
+      location: '',
+      first_name: requestDetails.user.first_name,
+      last_name: requestDetails.user.last_name,
+      institution: requestDetails.user.institution,
+      role: requestDetails.user.role,
+      email: requestDetails.user.email,
+      aaieduhr: requestDetails.user.aaieduhr,
+      approvedby: requestDetails.approvedby,
+      vm_fqdn: requestDetails.vm_fqdn,
+      vm_purpose: requestDetails.vm_purpose,
+      vm_admin_remark: requestDetails.vm_admin_remark,
+      vm_reason: requestDetails.vm_reason,
+      vm_remark: requestDetails.vm_remark,
+      vm_os: requestDetails.vm_os,
+      vm_ip: requestDetails.vm_ip,
+      approved: requestDetails.approved,
+      sys_firstname: requestDetails.sys_firstname,
+      sys_aaieduhr: requestDetails.sys_aaieduhr,
+      sys_lastname: requestDetails.sys_lastname,
+      sys_institution: requestDetails.sys_institution,
+      sys_role: requestDetails.sys_role,
+      sys_email: requestDetails.sys_email,
+      head_firstname: requestDetails.head_firstname,
+      head_lastname: requestDetails.head_lastname,
+      head_institution: requestDetails.head_institution,
+      head_role: requestDetails.head_role,
+      head_email: requestDetails.head_email,
+      request_date: DateFormatHR(requestDetails.request_date),
+      timestamp: DateFormatHR(requestDetails.timestamp),
+      vm_dismissed: DateFormatHR(requestDetails.vm_dismissed)
     }
 
-    else
-      return null
+  if (loadingUserDetails || loadingRequests)
+    return (<LoadingAnim />)
+
+  else if (!loadingUserDetails && initValues) {
+    return (
+      <BaseView
+        title='Detalji zahtjeva'>
+        <RequestDetails values={initValues} userDetails={userDetails}/>
+      </BaseView>
+    )
   }
+
+  else
+    return null
 }
