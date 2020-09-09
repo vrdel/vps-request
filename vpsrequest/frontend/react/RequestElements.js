@@ -124,7 +124,7 @@ export const RowRequestField = ({field, ...propsRest}) =>
 export const ContactUserFields = ({disabled=true}) =>
 (
   <React.Fragment>
-    <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
+    <h4 className="mb-3 mt-4">Kontaktna osoba Ustanove</h4>
     <Field name="first_name" component={RowRequestField} label="Ime:" labelFor="firstNameContact" fieldType="text" disabled={disabled}/>
     <Field name="last_name" component={RowRequestField} label="Prezime:" labelFor="lastNameContact" fieldType="text" disabled={disabled}/>
     <Field name="institution" component={RowRequestField} label="Ustanova:" labelFor="institutionContact" fieldType="text" disabled={disabled}/>
@@ -145,7 +145,7 @@ export const VMFields = ({listVMOSes, disabled=false}) => {
   return (
     <React.Fragment>
       <RequestHorizontalRule/>
-      <h5 className="mb-3 mt-4">Zahtijevani resursi</h5>
+      <h4 className="mb-3 mt-4">Zahtijevani resursi</h4>
       <Field name="vm_purpose" component={RowRequestField} label="Namjena:"
         labelFor="vmPurpose" fieldType="textarea" infoMsg={infoPurpose}
         required={true} disabled={disabled}/>
@@ -172,7 +172,7 @@ export const SysAdminFields = ({disabled=false}) => {
   return (
     <React.Fragment>
       <RequestHorizontalRule/>
-      <h5 className="mb-3 mt-4">Sistem-inženjer virtualnog poslužitelja</h5>
+      <h4 className="mb-3 mt-4">Sistem-inženjer virtualnog poslužitelja</h4>
       <Field name="sys_firstname" component={RowRequestField} label="Ime:" labelFor="firstNameSys" fieldType="text" required={true} disabled={disabled}/>
       <Field name="sys_lastname" component={RowRequestField} label="Prezime:" labelFor="lastNameSys" fieldType="text" required={true} disabled={disabled}/>
       <Field name="sys_institution" component={RowRequestField} label="Ustanova:" labelFor="institutionSys" fieldType="text" required={true} disabled={disabled}/>
@@ -194,7 +194,7 @@ export const HeadFields = ({disabled=false, institutionDisabled=true}) =>
 (
   <React.Fragment>
     <RequestHorizontalRule/>
-    <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
+    <h4 className="mb-3 mt-4">Čelnik ustanove</h4>
     <Field name="head_firstname" component={RowRequestField} label="Ime:" labelFor="firstNameHead" fieldType="text" required={true} disabled={disabled}/>
     <Field name="head_lastname" component={RowRequestField} label="Prezime:" labelFor="lastNameHead" fieldType="text" required={true} disabled={disabled}/>
     <Field name="head_institution" component={RowRequestField} label="Ustanova:" labelFor="institutionHead" fieldType="text" required={true} disabled={institutionDisabled}/>
@@ -222,7 +222,7 @@ export const StateFields = ({readOnly, requestApproved}) =>
   return (
     <React.Fragment>
       <RequestStateDivider/>
-      <h5 className="mb-3 mt-4">Stanje</h5>
+      <h4 className="mb-3 mt-4">Stanje</h4>
       <Field name="timestamp" component={RowRequestField} label="Datum promjene:" labelFor="timestamp" fieldType="text" disabled={readOnly} plain={true}/>
       <Row>
         <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
@@ -326,7 +326,7 @@ export const ProcessFields = ({approved, handleState, handleMsgContact, handleMs
 (
   <React.Fragment>
     <RequestStateDivider/>
-    <h5 className="mb-3 mt-4">Obrada</h5>
+    <h4 className="mb-3 mt-4">Obrada</h4>
     <Field name="vm_admin_remark" component={RowRequestField}
       label="Napomena:"
       labelFor="vmAdminRemark"

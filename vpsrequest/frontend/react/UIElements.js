@@ -197,9 +197,9 @@ const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal,
         </NavbarBrand>
         <Nav navbar className="m-1">
           <span className="pl-3 font-weight-bold text-center">
-            <h3>
+            <h2>
               Zahtjev za virtualnim poslužiteljem (VM) u usluzi Virtual Private Server
-            </h3>
+            </h2>
           </span>
         </Nav>
         <Nav navbar >
