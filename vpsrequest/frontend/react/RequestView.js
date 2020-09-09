@@ -53,7 +53,7 @@ const RequestDetails = ({values, userDetails}) =>
 
   return (
     <React.Fragment>
-      <h5 className="mb-3 mt-4">Kontaktna osoba Ustanove</h5>
+      <h4 className="mb-3 mt-4">Kontaktna osoba Ustanove</h4><br/>
       <RequestRow label="Ime:" value={values.first_name}/>
       <RequestRow label="Prezime:" value={values.last_name}/>
       <RequestRow label="Ustanova:" value={values.institution}/>
@@ -61,14 +61,14 @@ const RequestDetails = ({values, userDetails}) =>
       <RequestRow label="Email:" value={values.email}/>
       <RequestHorizontalRule/>
 
-      <h5 className="mb-3 mt-4">Zahtjevani resursi</h5>
+      <h4 className="mb-3 mt-4">Zahtjevani resursi</h4><br/>
       <RequestRow label="Namjena:" value={values.vm_purpose}/>
       <RequestRow label="Puno ime poslužitelja (FQDN):" value={values.vm_fqdn}/>
       <RequestRow label="Operacijski sustav:" value={values.vm_os}/>
       <RequestRow label="Napomena:" value={values.vm_remark}/>
       <RequestHorizontalRule/>
 
-      <h5 className="mb-3 mt-4">Sistem-inženjer virtualnog poslužitelja</h5>
+      <h4 className="mb-3 mt-4">Sistem-inženjer virtualnog poslužitelja</h4><br/>
       <RequestRow label="Ime:" value={values.sys_firstname}/>
       <RequestRow label="Prezime:" value={values.sys_lastname}/>
       <RequestRow label="Ustanova:" value={values.sys_institution}/>
@@ -77,7 +77,7 @@ const RequestDetails = ({values, userDetails}) =>
       <RequestRow label="AAI@EduHr korisnička oznaka:" value={values.sys_aaieduhr}/>
       <RequestHorizontalRule/>
 
-      <h5 className="mb-3 mt-4">Čelnik ustanove</h5>
+      <h4 className="mb-3 mt-4">Čelnik ustanove</h4><br/>
       <RequestRow label="Ime:" value={values.head_firstname}/>
       <RequestRow label="Prezime:" value={values.head_lastname}/>
       <RequestRow label="Ustanova:" value={values.head_institution}/>
