@@ -83,20 +83,20 @@ function RequestsTable({ columns, data }) {
               {headerGroup.headers.map((column, tri) => {
                 if (tri === 0)
                   return(
-                    <th className="p-1 m-1 align-middle" key={tri + 11}>
+                    <td className="p-1 m-1 align-middle" key={tri + 11}>
                       <FontAwesomeIcon icon={faSearch}/>
-                    </th>
+                    </td>
                   )
                 else if (tri === 2 || tri === 3 || tri === 4 || tri === 5)
                   return (
-                    <th className="p-1 m-1" key={tri + 11}>
+                    <td className="p-1 m-1" key={tri + 11}>
                       {column.canFilter ? column.render('Filter') : null}
-                    </th>
+                    </td>
                   )
                 else
                   return (
-                    <th key={tri + 11}>
-                    </th>
+                    <td key={tri + 11}>
+                    </td>
                   )
               })}
             </tr>
@@ -121,6 +121,7 @@ function RequestsTable({ columns, data }) {
     </Table>
   )
 }
+
 
 const ListRequests = (props) => {
   const apiListRequests = props.typeRequest.api
