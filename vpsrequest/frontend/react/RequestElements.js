@@ -208,7 +208,7 @@ export const RequestDateField = () =>
 (
   <React.Fragment>
     <div className="mt-5">
-      <Field name="request_date" component={RowRequestField} label="Datum podnošenja:" labelFor="dateRequest" fieldType="text" disabled={true} required={true} plain={true}/>
+      <Field name="request_date" component={RowRequestField} label="Datum podnošenja:" labelFor="dateRequest" fieldType="text" disabled={true} required={false} plain={true}/>
     </div>
     <RequestHorizontalRule/>
   </React.Fragment>
