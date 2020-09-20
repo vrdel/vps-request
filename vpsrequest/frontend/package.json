@@ -17,6 +17,7 @@
   "homepage": "https://github.com/vrdel/vps-request",
   "devDependencies": {
     "@babel/core": "^7.8.3",
+    "@babel/helper-compilation-targets": "^7.10.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-react": "^7.8.3",
