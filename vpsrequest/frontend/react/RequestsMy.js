@@ -93,7 +93,7 @@ const RequestsTable = ({ columns, data }) => {
     <React.Fragment>
       <Row>
         <Col>
-          <Table responsive hover size="sm" className="mt-4">
+          <Table aria-label='Stanje zahtjeva' responsive hover size="sm" className="mt-4">
             <thead className="table-active align-middle text-center">
               {headerGroups.map((headerGroup, thi) => (
                 <tr key={thi}>
