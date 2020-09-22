@@ -268,7 +268,7 @@ const MyRequests = (props) => {
         }
 
         return (
-          <Link to={url}>
+          <Link aria-label={url} to={url}>
             {icon}
           </Link>
         )
