@@ -66,6 +66,7 @@ const EmptyTable = ({ columns, data }) => {
   )
 }
 
+
 const RequestsTable = ({ columns, data }) => {
   const {
     headerGroups,
@@ -143,10 +144,10 @@ const RequestsTable = ({ columns, data }) => {
         <Col className="d-flex justify-content-center">
           <Pagination className="mt-5">
             <PaginationItem disabled={!canPreviousPage}>
-              <PaginationLink first onClick={() => gotoPage(0)}/>
+              <PaginationLink aria-label="Prva stranica" first onClick={() => gotoPage(0)}/>
             </PaginationItem>
             <PaginationItem disabled={!canPreviousPage}>
-              <PaginationLink previous onClick={() => previousPage()}/>
+              <PaginationLink aria-label="Prethodna" previous onClick={() => previousPage()}/>
             </PaginationItem>
             {
               [...Array(pageCount)].map((e, i) =>
@@ -158,22 +159,23 @@ const RequestsTable = ({ columns, data }) => {
               )
             }
             <PaginationItem disabled={!canNextPage}>
-              <PaginationLink next onClick={() => nextPage()}/>
+              <PaginationLink aria-label="Sljedeca" next onClick={() => nextPage()}/>
             </PaginationItem>
             <PaginationItem disabled={!canNextPage}>
-              <PaginationLink last onClick={() => gotoPage(pageCount - 1)}/>
+              <PaginationLink aria-label="Posljednja stranica" last onClick={() => gotoPage(pageCount - 1)}/>
             </PaginationItem>
             <PaginationItem className="pl-2">
               <select
                 style={{width: '180px'}}
                 className="custom-select text-primary"
+                aria-label="Broj zahtjeva"
                 value={pageSize}
                 onChange={e => {
                   setPageSize(Number(e.target.value))
                 }}
               >
                 {[20, 40, 80].map(pageSize => (
-                  <option key={pageSize} value={pageSize}>
+                  <option label={`${pageSize} zahtjeva`} key={pageSize} value={pageSize}>
                     {pageSize} zahtjeva
                   </option>
                 ))}
@@ -185,6 +187,7 @@ const RequestsTable = ({ columns, data }) => {
     </React.Fragment>
   )
 }
+
 
 const MyRequests = (props) => {
   const location = props.location;
