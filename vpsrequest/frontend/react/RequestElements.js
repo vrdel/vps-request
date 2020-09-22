@@ -234,7 +234,7 @@ export const StateFields = ({readOnly, requestApproved}) =>
           </Label>
         </Col>
         <Col md={{size: 7}}>
-          <CustomInput type="checkbox" id="checkApproved" aria-label="checkboxApproved" checked={approved} readOnly={true} onChange={undefined}/>
+          <CustomInput type="checkbox" id="checkApproved" label="checkboxApproved" aria-label="checkboxApproved" checked={approved} readOnly={true} onChange={undefined}/>
         </Col>
       </Row>
       <Field name="vm_reason" component={RowRequestField} label="Poruka:" labelFor="vmReason" fieldType="textarea" disabled={readOnly}/>
@@ -354,14 +354,16 @@ export const ProcessFields = ({approved, handleState, handleMsgContact, handleMs
             checked={approved === 1}
             id="requestStateEnabled"
             onChange={() => handleState(1)}
-            label="Zahtjev odobren"/>
+            label="Zahtjev odobren"
+            aria-label="Zahtjev odobren"/>
         </FormGroup>
         <FormGroup check>
           <CustomInput className="font-weight-bold m-2" type="radio" name="radioRequestState"
             checked={approved === 0}
             id="requestStateDenied"
             onChange={() => handleState(0)}
-            label="Zahtjev nije odobren"/>
+            label="Zahtjev nije odobren"
+            aria-label="Zahtjev nije odobren"/>
         </FormGroup>
       </Col>
     </Row>
