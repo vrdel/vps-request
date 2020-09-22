@@ -45,3 +45,16 @@ html[data-highcontrast-applied="true"] img {
     filter: invert()!important;
 }
 
+html[data-highcontrast-applied="true"] h3 {
+    color: black;
+}
+
+html[data-highcontrast-applied="true"] table {
+    background-color: black!important;
+    color: white;
+}
+
+html[data-highcontrast-applied="true"] select {
+    background-color: black!important;
+    color: white!important;
+}
