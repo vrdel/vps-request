@@ -227,14 +227,14 @@ export const StateFields = ({readOnly, requestApproved}) =>
       <Row>
         <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
           <Label
-            htmlFor="checkboxApproved"
+            for="checkboxApproved"
             aria-label="checkboxApproved"
             className="mr-2">
             Zahtjev odobren:
           </Label>
         </Col>
         <Col md={{size: 7}}>
-          <CustomInput type="checkbox" id="checkApproved" label="checkboxApproved" aria-label="checkboxApproved" checked={approved} readOnly={true} onChange={undefined}/>
+          <input type="checkbox" id="checkApproved" aria-label="checkApproved" checked={approved} readOnly={true} onChange={undefined}/>
         </Col>
       </Row>
       <Field name="vm_reason" component={RowRequestField} label="Poruka:" labelFor="vmReason" fieldType="textarea" disabled={readOnly}/>
