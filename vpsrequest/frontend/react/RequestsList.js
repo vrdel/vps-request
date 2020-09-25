@@ -108,11 +108,22 @@ function RequestsTable({ columns, data }) {
           prepareRow(row)
           return (
             <tr key={row_index}>
-              {row.cells.map((cell, cell_index) =>
-                <td key={cell_index}
-                  className="align-middle align-self-center">
-                  {cell.render('Cell')}
-                </td>
+              {row.cells.map((cell, cell_index) => {
+                if (cell_index === 0)
+                  return (
+                    <td key={cell_index}
+                      className="align-middle align-self-center">
+                        {rows.length - row_index}
+                    </td>
+                  )
+                else
+                  return (
+                    <td key={cell_index}
+                      className="align-middle align-self-center">
+                      {cell.render('Cell')}
+                    </td>
+                  )
+              }
               )}
             </tr>
           )
@@ -167,7 +178,7 @@ const ListRequests = (props) => {
     {
       id: 'cardNumber',
       Header: 'r. br.',
-      accessor: (r, i) => Number(requests.length - i)
+      accessor: null
     },
     {
       id: 'isApproved',
