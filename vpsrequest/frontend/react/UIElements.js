@@ -297,7 +297,7 @@ export const Footer = ({loginPage=false}) => {
   const InnerFooter = ({border=false, img=undefined}) =>
   (
     <React.Fragment>
-      <div className={`text-center ${border && 'pt-2 pb-2'}`}>
+      <div className={`text-center ${border && 'pt-1 pb-2'}`}>
         <a href="https://www.srce.unizg.hr/" target="_blank" rel="noopener noreferrer">
           <img src={img} id="srcelogo" alt="SRCE Logo"/>
         </a>
@@ -307,7 +307,12 @@ export const Footer = ({loginPage=false}) => {
 
   if (!loginPage) {
     return (
-      <div id="vpsreq-footer" className="border rounded pristupacnost">
+      <div id="vpsreq-footer" className="align-self-center border rounded pristupacnost">
+        <div className="text-center mt-2">
+          <Link to="/ui/izjava-pristupacnost">
+            Izjava o pristupačnosti
+          </Link>
+        </div>
         <InnerFooter border={true} img={SrceLogo}/>
       </div>
     )
