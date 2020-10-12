@@ -23,6 +23,7 @@ import { ApprovedRequestHandler } from './RequestHandler'
 import { CONFIG, RelativePath } from './Config'
 import { canApprove } from './Util'
 import { NotificationContainer } from 'react-notifications';
+import { StatementAccessibility } from './StatementAcessibility.js';
 
 const types = new Object({
   approved: {
@@ -292,6 +293,12 @@ class App extends Component {
                   <VPSPage
                     {...propsPage}>
                     <ViewSingleRequest {...props}/>
+                  </VPSPage>}/>
+            <Route exact path="/ui/izjava-pristupacnost"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}>
+                    <StatementAccessibility {...props}/>
                   </VPSPage>}/>
           </Switch>
         </BrowserRouter>
