@@ -88,7 +88,7 @@ export const StatementAccessibility = (props) => (
         odgovorima na upit, obavijest o neusklađenostima ili smatra da Srce nije
         udovoljilo zahtjevu za pristupačnim informacijama, korisnici se mogu
         obratiti Povjereniku za informiranje putem telefona broj +385 1 4609 041
-        ili putem e-pošte: <a data-ext-link-init="true" href="mailto:pristupacnost@srce.hr" rel="nofollow" target="_blank">pristupacnost@srce.hr</a>.
+        ili putem e-pošte: <a data-ext-link-init="true" href="mailto:pristupacnost@pristupinfo.hr" rel="nofollow" target="_blank">pristupacnost@pristupinfo.hr</a>.
       </p>
   </BaseView>
 )
