@@ -40,6 +40,7 @@ import SrceLogoTiny from './logos/srce-logo-e-mail-sig.png';
 import CloudLogo from './logos/logo_cloud.png';
 import { canApprove } from './Util';
 import { RelativePath, CONFIG } from './Config';
+import { Helmet } from "react-helmet";
 
 import './UIElements.css';
 
@@ -265,8 +266,11 @@ const NavigationLinks = ({location, isStaff, canApproveRequest}) => {
 
 const NavigationBarWithRouter = withRouter(NavigationBar);
 const NavigationLinksWithRouter = withRouter(NavigationLinks);
-export const VPSPage = ({toggleAreYouSure, onLogout, areYouSureModal, userDetails, children}) => (
+const VPSPageBase = ({location, toggleAreYouSure, onLogout, areYouSureModal, userDetails, children}) => (
   <Container>
+    <Helmet>
+      <title>{`${linkTitle.get(location.pathname.split('/')[2])} | VPS Zahtjev`}</title>
+    </Helmet>
     <Row>
       <Col>
         <NavigationBarWithRouter
@@ -291,6 +295,7 @@ export const VPSPage = ({toggleAreYouSure, onLogout, areYouSureModal, userDetail
     </Row>
   </Container>
 )
+export const VPSPage = withRouter(VPSPageBase);
 
 
 export const Footer = ({loginPage=false}) => {
