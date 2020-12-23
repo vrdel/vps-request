@@ -117,17 +117,19 @@ const NewRequest = (props) => {
               handleOnSubmit(values)
           }}
         >
-          <Form>
-            <ContactUserFields />
-            <VMFields listVMOSes={listVMOSes}/>
-            <SysAdminFields/>
-            <HeadFields/>
-            <SubmitNewRequest
-              acceptConditions={acceptConditions}
-              handleAcceptConditions={handleAcceptConditions}
-              dismissAlert={dismissAlert}
-              stateAcceptConditionsAlert={acceptConditionsAlert}/>
-          </Form>
+          {props => (
+            <Form>
+              <ContactUserFields />
+              <VMFields listVMOSes={listVMOSes}/>
+              <SysAdminFields/>
+              <HeadFields/>
+              <SubmitNewRequest
+                acceptConditions={acceptConditions}
+                handleAcceptConditions={handleAcceptConditions}
+                dismissAlert={dismissAlert}
+                stateAcceptConditionsAlert={acceptConditionsAlert}/>
+            </Form>
+          )}
         </Formik>
       </BaseView>
     )

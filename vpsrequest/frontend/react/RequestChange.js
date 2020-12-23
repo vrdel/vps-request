@@ -112,16 +112,18 @@ const ChangeRequest = (props) => {
             handleOnSubmit(values)
           }}
         >
-          <Form>
-            <RequestDateField/>
-            <ContactUserFields/>
-            <VMFields listVMOSes={listVMOSes}/>
-            <SysAdminFields/>
-            <HeadFields/>
-            <StateFields readOnly={true} requestApproved={requestDetails.approved}/>
-            <SubmitChangeRequest buttonLabel='Promijeni zahtjev'
-              disabled={requestDetails.approved === 1 || requestDetails.approved === 2}/>
-          </Form>
+          {props => (
+            <Form>
+              <RequestDateField/>
+              <ContactUserFields/>
+              <VMFields listVMOSes={listVMOSes}/>
+              <SysAdminFields/>
+              <HeadFields/>
+              <StateFields readOnly={true} requestApproved={requestDetails.approved}/>
+              <SubmitChangeRequest buttonLabel='Promijeni zahtjev'
+                disabled={requestDetails.approved === 1 || requestDetails.approved === 2}/>
+            </Form>
+          )}
         </Formik>
       </BaseView>
     )
