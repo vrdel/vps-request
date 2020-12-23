@@ -129,26 +129,25 @@ export const ProcessNewRequest = (props) => {
             values.sendMsgContact = sendMsgContact
             handleOnSubmit(values)
           }}
-          render = {props => (
-            <Form>
-              <RequestDateField/>
-              <ContactUserFields/>
-              <VMFields listVMOSes={[requestDetails.vm_os]} disabled={true}/>
-              <SysAdminFields disabled={true}/>
-              <HeadFields disabled={true}/>
-              <ProcessFields approved={requestApproved}
-                handleState={handleRequestState}
-                handleMsgContact={handleMsgContact}
-                handleMsgHead={handleMsgHead}
-                stateMsgHead={sendMsgHead}
-                stateMsgContact={sendMsgContact}
-                canApproveRequest={canApprove(userDetails)}
-              />
-              <SubmitChangeRequest buttonLabel='Spremi promjene'
-                disabled={!canApprove(userDetails)}/>
-            </Form>
-          )}
-        />
+        >
+          <Form>
+            <RequestDateField/>
+            <ContactUserFields/>
+            <VMFields listVMOSes={[requestDetails.vm_os]} disabled={true}/>
+            <SysAdminFields disabled={true}/>
+            <HeadFields disabled={true}/>
+            <ProcessFields approved={requestApproved}
+              handleState={handleRequestState}
+              handleMsgContact={handleMsgContact}
+              handleMsgHead={handleMsgHead}
+              stateMsgHead={sendMsgHead}
+              stateMsgContact={sendMsgContact}
+              canApproveRequest={canApprove(userDetails)}
+            />
+            <SubmitChangeRequest buttonLabel='Spremi promjene'
+              disabled={!canApprove(userDetails)}/>
+          </Form>
+        </Formik>
       </BaseView>
     )
   }

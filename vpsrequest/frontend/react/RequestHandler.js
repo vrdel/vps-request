@@ -159,74 +159,73 @@ export const ApprovedRequestHandler = (props) => {
 
             handleOnSubmit(values, callback)
           }}
-          render = {props => (
-            <Form>
-              <RequestDateField/>
-              {
-                initValues.approved === 2 ?
-                  <ContactUserFields disabled={false}/>
-                :
-                  <ContactUserFields disabled={true}/>
-              }
-              <VMFields listVMOSes={listVMOSes}/>
-              <SysAdminFields/>
-              {
-                initValues.approved === 2 ?
-                  <HeadFields disabled={false} institutionDisabled={false}/>
-                :
-                  <HeadFields disabled={true} institutionDisabled={true}/>
-              }
-              <StateFields readOnly={false} requestApproved={initValues.approved}/>
-              {
-                initValues.approved === 1 ?
-                  <SubmitChangeRequest buttonLabel='Izdaj VM'/>
-                :
-                initValues.approved === 2 ?
-                  <React.Fragment>
-                    <RequestHorizontalRule/>
-                    <Row className="mt-2 mb-4">
-                      <Col md={{offset: 4}}>
-                        <Button className="btn-lg" color="success"
-                          id="button-save" type="button"
-                          onClick={() => {
-                            if (initValues.aaieduhr !== props.values.aaieduhr) {
-                              setAreYouSureModal(!areYouSureModal);
-                              setModalTitle("Dodjeljivanje drugom korisniku");
-                              setModalMsg("Da li se sigurni da želite zahtjev dodijeliti drugom korisniku?");
-                              setOnYes('aaireassign')
-                              setFormikValues(props.values)
-                            }
-                            else {
-                              props.values.approved = 2
-                              props.values.timestamp = new Date().toISOString()
-                              props.values.request_date = requestDetails.request_date
-                              handleOnSubmit(props.values, undefined)
-                            }
-                          }}>
-                            Spremi promjene
-                        </Button>
-                      </Col>
-                      <Col>
-                        <Button className="btn-lg" color="secondary"
-                          id="button-retire" type="button"
-                          onClick={() => {
+        >
+          <Form>
+            <RequestDateField/>
+            {
+              initValues.approved === 2 ?
+                <ContactUserFields disabled={false}/>
+              :
+                <ContactUserFields disabled={true}/>
+            }
+            <VMFields listVMOSes={listVMOSes}/>
+            <SysAdminFields/>
+            {
+              initValues.approved === 2 ?
+                <HeadFields disabled={false} institutionDisabled={false}/>
+              :
+                <HeadFields disabled={true} institutionDisabled={true}/>
+            }
+            <StateFields readOnly={false} requestApproved={initValues.approved}/>
+            {
+              initValues.approved === 1 ?
+                <SubmitChangeRequest buttonLabel='Izdaj VM'/>
+              :
+              initValues.approved === 2 ?
+                <React.Fragment>
+                  <RequestHorizontalRule/>
+                  <Row className="mt-2 mb-4">
+                    <Col md={{offset: 4}}>
+                      <Button className="btn-lg" color="success"
+                        id="button-save" type="button"
+                        onClick={() => {
+                          if (initValues.aaieduhr !== props.values.aaieduhr) {
                             setAreYouSureModal(!areYouSureModal);
-                            setModalTitle("Mirovina");
-                            setModalMsg("Želite li umiroviti server (naknadne promjene nisu više moguće)?");
-                            setOnYes('retire')
+                            setModalTitle("Dodjeljivanje drugom korisniku");
+                            setModalMsg("Da li se sigurni da želite zahtjev dodijeliti drugom korisniku?");
+                            setOnYes('aaireassign')
                             setFormikValues(props.values)
-                          }}>
-                          Umirovi
-                        </Button>
-                      </Col>
-                    </Row>
-                  </React.Fragment>
-                :
-                  null
-              }
-            </Form>
-          )}
-        />
+                          }
+                          else {
+                            props.values.approved = 2
+                            props.values.timestamp = new Date().toISOString()
+                            props.values.request_date = requestDetails.request_date
+                            handleOnSubmit(props.values, undefined)
+                          }
+                        }}>
+                          Spremi promjene
+                      </Button>
+                    </Col>
+                    <Col>
+                      <Button className="btn-lg" color="secondary"
+                        id="button-retire" type="button"
+                        onClick={() => {
+                          setAreYouSureModal(!areYouSureModal);
+                          setModalTitle("Mirovina");
+                          setModalMsg("Želite li umiroviti server (naknadne promjene nisu više moguće)?");
+                          setOnYes('retire')
+                          setFormikValues(props.values)
+                        }}>
+                        Umirovi
+                      </Button>
+                    </Col>
+                  </Row>
+                </React.Fragment>
+              :
+                null
+            }
+          </Form>
+        </Formik>
       </BaseView>
     )
   }
