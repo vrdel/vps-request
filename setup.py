@@ -18,7 +18,7 @@ def get_files(install_prefix, directory):
 
 
 setup(name=NAME,
-      version='1.1.1',
+      version='1.1.2',
       description='VPS Request - web application for requesting VM within Virtual Private Server service of SRCE',
       author='SRCE',
       author_email='dvrcic@srce.hr, hsute@srce.hr',
