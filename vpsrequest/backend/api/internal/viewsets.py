@@ -36,6 +36,13 @@ class RequestsViewset(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False)
+    def mine_active(self, request):
+        user = request.user
+        requests = models.Request.objects.filter(user=user).filter(approved=2)
+        serializer = serializers.RequestsListActiveSerializer(requests, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False)
     def approved(self, request):
         requests = models.Request.objects.filter(approved__gte=1).order_by('-approved_date')
         serializer = serializers.RequestsListSerializer(requests, many=True)
@@ -147,5 +154,3 @@ class UsersViewset(viewsets.ModelViewSet):
             return get_user_model().objects.all()
         else:
             return get_user_model().objects.filter(id=user.id)
-
-

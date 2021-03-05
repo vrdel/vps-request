@@ -28,6 +28,14 @@ class RequestsListSerializer(RequestsCUSerializer):
     user = UsersSerializer(read_only=True)
 
 
+class RequestsListActiveSerializer(serializers.ModelSerializer):
+    user = UsersSerializer(read_only=True)
+    class Meta:
+        fields = ('id', 'timestamp', 'request_date', 'vm_fqdn', 'vm_dismissed',
+                  'approved', 'user')
+        model = models.Request
+
+
 class VMOSSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('vm_os',)

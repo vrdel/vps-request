@@ -3,7 +3,6 @@ from dateutil.parser import parse
 from backend.api.config import STATUSES
 
 class MsgBuilder(object):
-
     def __init__(self, file_template):
         self.template = file_template
         self.body = None
@@ -47,7 +46,7 @@ class MsgBuilder(object):
             else:
                 newVal = newRequest[db_attr]
                 oldVal = oldRequest[db_attr]
-            
+
             if newVal == oldVal:
                 self.body = re.sub("\n.+" + ph + "\n", '', self.body)
             else:
