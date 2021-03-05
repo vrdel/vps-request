@@ -9,6 +9,7 @@ import NewRequest from './RequestNew';
 import { ProcessNewRequest } from './RequestProcessNew';
 import ChangeRequest from './RequestChange';
 import { UIProxy } from './UIProxy';
+import MyRequestsActive from './RequestsActiveMy.js';
 import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
 import { VPSPage } from './UIElements';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -269,6 +270,12 @@ class App extends Component {
                   <VPSPage
                     {...propsPage}>
                     <ViewSingleRequest {...props}/>
+                  </VPSPage>}/>
+            <Route exact path="/ui/aktivni-posluzitelji"
+              render={(props) =>
+                  <VPSPage
+                    {...propsPage}>
+                    <MyRequestsActive {...props}/>
                   </VPSPage>}/>
             <Route exact path="/ui/stanje-zahtjeva"
               render={(props) =>
