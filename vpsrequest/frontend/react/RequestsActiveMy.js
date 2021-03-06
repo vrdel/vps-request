@@ -58,7 +58,7 @@ const MyRequestsActive = (props) => {
                         <th style={{width: '90px'}}>Status</th>
                         <th style={{width: '180px'}}>Datum podnošenja</th>
                         <th style={{width: '250px'}}>Poslužitelj</th>
-                        <th style={{width: '180px'}}>Potreban u 2021.</th>
+                        <th style={{width: '180px'}}>Potreban u {new Date().getFullYear()}.</th>
                         <th>Komentar</th>
                       </tr>
                     </thead>
