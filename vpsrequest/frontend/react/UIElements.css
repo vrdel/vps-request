@@ -27,6 +27,7 @@
 
 #vpsreq-navlinks-dropdown:hover {
   background-color: #f8f9fa;
+  text-decoration: none;
 }
 
 .vpsreq-autocomplete-menu {

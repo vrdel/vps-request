@@ -58,7 +58,7 @@ var linkTitle = new Map();
 linkTitle.set('novi-zahtjevi', 'Novi zahtjevi');
 linkTitle.set('odobreni-zahtjevi', 'Odobreni zahtjevi');
 linkTitle.set('odbijeni-zahtjevi', 'Odbijeni zahtjevi');
-linkTitle.set('predumirovljenje', 'Predumirovljenje');
+linkTitle.set('predumirovljenje', 'Pred umirovljenje');
 linkTitle.set('aktivni-posluzitelji', 'Aktivni VM-ovi');
 linkTitle.set('novi-zahtjev', 'Zahtjev za novim VM-om');
 linkTitle.set('stanje-zahtjeva', 'Stanje zahtjeva');
@@ -282,7 +282,7 @@ const NavigationLinks = ({location, isStaff, canApproveRequest}) => {
             }
             <Dropdown nav isOpen={dropdownOpen} toggle={toggle} className='mt-1 text-dark'>
               <DropdownToggle nav caret className={dropdownOpen ? "text-white bg-info" : "text-dark"}>
-                <FontAwesomeIcon icon={faUserEdit}/> Korisnik
+                <FontAwesomeIcon icon={faUserEdit}/> Korisnikove forme
               </DropdownToggle>
               <DropdownMenu>
                 {
