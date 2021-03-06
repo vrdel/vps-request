@@ -11,6 +11,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.renderers import StaticHTMLRenderer
 
+import datetime
+
 
 class VMOSViewset(viewsets.ModelViewSet):
     queryset = models.VMOS.objects.all()
@@ -35,12 +37,32 @@ class RequestsViewset(viewsets.ModelViewSet):
         serializer = serializers.RequestsListSerializer(requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @action(detail=False)
+    @action(detail=False, methods=['patch', 'get'])
     def mine_active(self, request):
         user = request.user
-        requests = models.Request.objects.filter(user=user).filter(approved=2)
-        serializer = serializers.RequestsListActiveSerializer(requests, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        if request.method == 'PATCH':
+            rets = list()
+            for req in request.data:
+                id = req['id']
+                req_db = models.Request.objects.get(id=id)
+                if req_db.vm_isactive != req['vm_isactive']:
+                    req['vm_isactive_response'] = datetime.datetime.now()
+
+                req['user'] = user.pk
+                serializer = serializers.RequestsListActiveSerializer(req_db, data=req)
+                if serializer.is_valid():
+                    serializer.save()
+                    rets.append(serializer.data)
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response(rets)
+
+        else:
+            requests = models.Request.objects.filter(user=user).filter(approved=2)
+            serializer = serializers.RequestsListActiveSerializer(requests, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False)
     def approved(self, request):

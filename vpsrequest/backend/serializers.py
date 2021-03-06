@@ -29,7 +29,6 @@ class RequestsListSerializer(RequestsCUSerializer):
 
 
 class RequestsListActiveSerializer(serializers.ModelSerializer):
-    user = UsersSerializer(read_only=True)
     class Meta:
         fields = ('id', 'timestamp', 'request_date', 'vm_fqdn', 'vm_isactive',
                   'vm_isactive_comment', 'vm_isactive_response', 'approved',

@@ -1,4 +1,11 @@
-import { BaseView, DropDown, LoadingAnim, Status } from './UIElements';
+import {
+  BaseView,
+  DropDown,
+  LoadingAnim,
+  Status,
+  NotifyOk,
+  NotifyError,
+} from './UIElements';
 import NotFound from './NotFound';
 import React from 'react';
 import { Backend } from './DataManager';
@@ -18,7 +25,7 @@ import { DateFormatHR } from './Util'
 const MyRequestsActive = (props) => {
   const location = props.location;
   const backend = new Backend();
-  const apiListRequests = `${CONFIG.listReqUrl}/mine_active`
+  const apiListRequestsActive = `${CONFIG.listReqUrl}/mine_active`
 
   const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
     `session-userdetails`, async () => {
@@ -31,7 +38,7 @@ const MyRequestsActive = (props) => {
 
   const { data: requests, error: errorRequest, isLoading: loadingRequests } = useQuery(
     `aktivni-vmovi-requests`, async () => {
-      const fetched = await backend.fetchData(apiListRequests)
+      const fetched = await backend.fetchData(apiListRequestsActive)
       return fetched
     },
     {
@@ -57,6 +64,19 @@ const MyRequestsActive = (props) => {
     return tmp_requests
   }
 
+  const handleOnSubmit = async (data) => {
+    let response = await backend.changeObject(`${apiListRequestsActive}/`, data);
+
+    if (response.ok)
+      NotifyOk({
+        msg: 'Statusi poslužitelja podneseni',
+        title: `Uspješno - HTTP ${response.status}`});
+    else
+      NotifyError({
+        msg: response.statusText,
+        title: `Greška - HTTP ${response.status}`});
+  }
+
   if (loadingRequests || loadingUserDetails)
     return (<LoadingAnim />)
 
@@ -67,6 +87,12 @@ const MyRequestsActive = (props) => {
         location={location}>
         <Formik
           initialValues={{activeRequests: emptyIfNullRequestPropery(requests)}}
+          onSubmit={({activeRequests})=> {
+            activeRequests.forEach(request => (
+              request.vm_isactive = CONFIG['statusVMIsActive'][request.vm_isactive]
+            ))
+            handleOnSubmit(activeRequests)
+          }}
         >
           {props => (
             <Form>
@@ -81,7 +107,7 @@ const MyRequestsActive = (props) => {
                             <th style={{width: '90px'}}>Status</th>
                             <th style={{width: '180px'}}>Datum podnošenja</th>
                             <th style={{width: '250px'}}>Poslužitelj</th>
-                            <th style={{width: '180px'}}>Potreban u {new Date().getFullYear()}.</th>
+                            <th style={{width: '140px'}}>Potreban u {new Date().getFullYear()}.</th>
                             <th>Komentar</th>
                           </tr>
                         </thead>
@@ -102,7 +128,7 @@ const MyRequestsActive = (props) => {
                                   <Field
                                     name={`activeRequests.${index}.vm_isactive`}
                                     component={DropDown}
-                                    data={['Odaberi', 'Da', 'Ne', 'Nisam siguran']}
+                                    data={['Odaberi', 'DA', 'NE']}
                                     customclassname="text-center"
                                   />
                                 </td>

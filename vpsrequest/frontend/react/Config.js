@@ -43,5 +43,9 @@ export const CONFIG = {
             'label': 'Umirovljen',
             'icon': faCouch
         },
+    },
+    'statusVMIsActive': {
+      "DA": 1,
+      "NE": 0
     }
 }
