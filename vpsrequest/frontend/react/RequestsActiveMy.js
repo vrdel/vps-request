@@ -4,16 +4,15 @@ import NotFound from './NotFound';
 import React, { Component } from 'react';
 import { Backend } from './DataManager';
 import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
-import { VPSPage } from './UIElements';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faSearch,
-  faPencilAlt,
-  } from '@fortawesome/free-solid-svg-icons';
+  Table
+} from 'reactstrap';
 import './App.css';
 import 'react-notifications/lib/notifications.css';
+import { Formik, Field, FieldArray, Form } from 'formik';
 import { CONFIG } from './Config'
 import { useQuery } from 'react-query';
+import { DateFormatHR } from './Util'
 
 
 const MyRequestsActive = (props) => {
@@ -40,7 +39,6 @@ const MyRequestsActive = (props) => {
     }
   );
 
-
   if (loadingRequests || loadingUserDetails)
     return (<LoadingAnim />)
 
@@ -49,9 +47,53 @@ const MyRequestsActive = (props) => {
       <BaseView
         title='Aktivni poslužitelji'
         location={location}>
-        {
-          "I'm active VM's"
-        }
+        <Formik
+          initialValues={{activeRequests: requests}}
+        >
+          {props => (
+            <Form>
+              <FieldArray
+                name="activeRequests"
+                render={() => (
+                  <Table responsive hover size="sm" className="mt-4">
+                    <thead className="table-active align-middle text-center">
+                      <tr>
+                        <th style={{width: '90px'}}>Status</th>
+                        <th style={{width: '180px'}}>Datum podnošenja</th>
+                        <th style={{width: '180px'}}>Poslužitelj</th>
+                        <th style={{width: '90px'}}>Potreban</th>
+                        <th>Komentar</th>
+                      </tr>
+                    </thead>
+                    <tbody className="align-middle text-center">
+                      {
+                        props.values.activeRequests.map((request, index) =>
+                          <tr key={index}>
+                            <td>
+                              <Status params={CONFIG['status'][request.approved]} renderToolTip={true}/>
+                            </td>
+                            <td>
+                              { DateFormatHR(request.request_date) }
+                            </td>
+                            <td>
+                              { request.vm_fqdn }
+                            </td>
+                            <td>
+                              { request.vm_isactive_response }
+                            </td>
+                            <td>
+                              { request.vm_isactive_comment }
+                            </td>
+                          </tr>
+                        )
+                      }
+                    </tbody>
+                  </Table>
+                )}
+              />
+            </Form>
+          )}
+        </Formik>
       </BaseView>
     )
   }
