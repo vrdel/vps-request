@@ -19,7 +19,7 @@ import { useQuery } from 'react-query';
 const MyRequestsActive = (props) => {
   const location = props.location;
   const backend = new Backend();
-  const apiListRequests = `${CONFIG.listReqUrl}/mine-active`
+  const apiListRequests = `${CONFIG.listReqUrl}/mine_active`
 
   const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
     `session-userdetails`, async () => {
@@ -31,7 +31,7 @@ const MyRequestsActive = (props) => {
   );
 
   const { data: requests, error: errorRequest, isLoading: loadingRequests } = useQuery(
-    `stanje-zahtjeva-requests`, async () => {
+    `aktivni-vmovi-requests`, async () => {
       const fetched = await backend.fetchData(apiListRequests)
       return fetched
     },
