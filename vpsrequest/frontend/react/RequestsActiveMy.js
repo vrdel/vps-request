@@ -91,8 +91,7 @@ const MyRequestsActive = (props) => {
                                 rows={1}
                               />
                             </td>
-                          </tr>
-                        )
+                          </tr>)
                       }
                     </tbody>
                   </Table>
