@@ -84,7 +84,7 @@ export const DropDown = ({field, data=[], ...props}) =>
   <Field component="select"
     name={field.name}
     required={true}
-    className={`form-control custom-select ${props.customClassName}`}
+    className={`form-control custom-select ${props.customclassname}`}
     {...props}
   >
     {
