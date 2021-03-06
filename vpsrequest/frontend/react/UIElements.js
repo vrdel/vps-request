@@ -84,7 +84,7 @@ export const DropDown = ({field, data=[], ...props}) =>
   <Field component="select"
     name={field.name}
     required={true}
-    className="form-control custom-select"
+    className={`form-control custom-select ${props.customClassName}`}
     {...props}
   >
     {
@@ -121,7 +121,6 @@ async function doLogout(history, onLogout) {
     setTimeout(() => {
         window.location = CONFIG.logoutRedirect
     }, 50)
-
 }
 
 

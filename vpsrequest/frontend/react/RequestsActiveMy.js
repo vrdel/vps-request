@@ -1,9 +1,7 @@
-import Cookies from 'universal-cookie';
-import { BaseView, LoadingAnim, Status } from './UIElements';
+import { BaseView, DropDown, LoadingAnim, Status } from './UIElements';
 import NotFound from './NotFound';
-import React, { Component } from 'react';
+import React from 'react';
 import { Backend } from './DataManager';
-import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
 import {
   Table
 } from 'reactstrap';
@@ -13,7 +11,6 @@ import { Formik, Field, FieldArray, Form } from 'formik';
 import { CONFIG } from './Config'
 import { useQuery } from 'react-query';
 import { DateFormatHR } from './Util'
-
 
 const MyRequestsActive = (props) => {
   const location = props.location;
@@ -60,8 +57,8 @@ const MyRequestsActive = (props) => {
                       <tr>
                         <th style={{width: '90px'}}>Status</th>
                         <th style={{width: '180px'}}>Datum podnošenja</th>
-                        <th style={{width: '180px'}}>Poslužitelj</th>
-                        <th style={{width: '90px'}}>Potreban</th>
+                        <th style={{width: '250px'}}>Poslužitelj</th>
+                        <th style={{width: '180px'}}>Potreban u 2021.</th>
                         <th>Komentar</th>
                       </tr>
                     </thead>
@@ -69,20 +66,30 @@ const MyRequestsActive = (props) => {
                       {
                         props.values.activeRequests.map((request, index) =>
                           <tr key={index}>
-                            <td>
+                            <td className="align-middle text-center">
                               <Status params={CONFIG['status'][request.approved]} renderToolTip={true}/>
                             </td>
-                            <td>
+                            <td className="align-middle text-center">
                               { DateFormatHR(request.request_date) }
                             </td>
-                            <td>
+                            <td className="align-middle text-center">
                               { request.vm_fqdn }
                             </td>
-                            <td>
-                              { request.vm_isactive_response }
+                            <td  className="align-middle text-center">
+                              <Field
+                                name={`activeRequests.${index}.vm_isactive`}
+                                component={DropDown}
+                                data={['Odaberi', 'Da', 'Ne', 'Nisam siguran']}
+                                customClassName="text-center"
+                              />
                             </td>
-                            <td>
-                              { request.vm_isactive_comment }
+                            <td className="align-middle text-center">
+                              <Field
+                                className="form-control"
+                                name={`activeRequests.${index}.vm_isactive_comment`}
+                                as="textarea"
+                                rows={1}
+                              />
                             </td>
                           </tr>
                         )
