@@ -1,9 +1,9 @@
 import re
 from dateutil.parser import parse
-from backend.api.config import STATUSES
+from django.conf import settings
+
 
 class MsgBuilder(object):
-
     def __init__(self, file_template):
         self.template = file_template
         self.body = None
@@ -47,13 +47,13 @@ class MsgBuilder(object):
             else:
                 newVal = newRequest[db_attr]
                 oldVal = oldRequest[db_attr]
-            
+
             if newVal == oldVal:
                 self.body = re.sub("\n.+" + ph + "\n", '', self.body)
             else:
                 if db_attr == 'approved':
-                    oldVal = STATUSES[oldVal]
-                    newVal = STATUSES[newVal]
+                    oldVal = settings.STATUSES[oldVal]
+                    newVal = settings.STATUSES[newVal]
 
                 self.body = self.body.replace(ph, "\n" + str(oldVal) + "\n\t --> \n" + str(newVal))
                 if not has_changes:

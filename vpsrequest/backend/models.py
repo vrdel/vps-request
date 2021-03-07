@@ -136,6 +136,9 @@ class Request(models.Model):
         blank=False,
         null=False
     )
+    vm_isactive = models.IntegerField('Contact Response', blank=True, null=True)
+    vm_isactive_response = models.DateTimeField('Contact Response Date', blank=True, null=True)
+    vm_isactive_comment = models.TextField('Contact Response Comment', blank=True, null=True)
 
 
 class VMOS(models.Model):

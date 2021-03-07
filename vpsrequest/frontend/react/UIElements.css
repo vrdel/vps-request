@@ -21,6 +21,11 @@
   background-color: #ffffff;
 }
 
+#vpsreq-navlinks-dropdown:hover {
+  background-color: #e8e9ea;
+  text-decoration: none;
+}
+
 .vpsreq-autocomplete-menu {
   display: block;
   width: 94%;

@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import Cookies from 'universal-cookie';
 import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
   Button,
   Card,
   CardBody,
@@ -30,6 +34,7 @@ import {
   faFileAlt,
   faFileSignature,
   faHandshake,
+  faUserEdit,
   faThumbsDown,
   faBatteryHalf,
 } from '@fortawesome/free-solid-svg-icons';
@@ -38,19 +43,23 @@ import { Field } from 'formik';
 import SrceLogo from './logos/pravisrce.png';
 import SrceLogoTiny from './logos/srce-logo-e-mail-sig.png';
 import CloudLogo from './logos/logo_cloud.png';
-import { canApprove } from './Util';
+import { canApprove, elemInArray } from './Util';
 import { RelativePath, CONFIG } from './Config';
 import { Helmet } from "react-helmet";
 
 import './UIElements.css';
 
 
-var listPages = ['novi-zahtjevi', 'odobreni-zahtjevi', 'odbijeni-zahtjevi', 'novi-zahtjev', 'stanje-zahtjeva'];
+var staffPages = ['novi-zahtjevi', 'odobreni-zahtjevi', 'odbijeni-zahtjevi',
+                  'predumirovljenje'];
+var noStaffPages = ['aktivni-posluzitelji',  'novi-zahtjev', 'stanje-zahtjeva']
 
 var linkTitle = new Map();
 linkTitle.set('novi-zahtjevi', 'Novi zahtjevi');
 linkTitle.set('odobreni-zahtjevi', 'Odobreni zahtjevi');
 linkTitle.set('odbijeni-zahtjevi', 'Odbijeni zahtjevi');
+linkTitle.set('predumirovljenje', 'Pred umirovljenje');
+linkTitle.set('aktivni-posluzitelji', 'Aktivni VM-ovi');
 linkTitle.set('novi-zahtjev', 'Zahtjev za novim VM-om');
 linkTitle.set('stanje-zahtjeva', 'Stanje zahtjeva');
 
@@ -62,18 +71,19 @@ export const Icon = props => {
   linkIcon.set('odbijeni-zahtjevi', faThumbsDown);
   linkIcon.set('novi-zahtjev', faFileSignature);
   linkIcon.set('stanje-zahtjeva', faBatteryHalf);
+  linkIcon.set('predumirovljenje', faBatteryHalf);
+  linkIcon.set('aktivni-posluzitelji', faBatteryHalf);
 
   return <FontAwesomeIcon
             icon={linkIcon.get(props.i)}
             size='1x' fixedWidth/>
 }
 
-
 export const DropDown = ({field, data=[], ...props}) =>
   <Field component="select"
     name={field.name}
     required={true}
-    className="form-control custom-select"
+    className={`form-control custom-select`}
     {...props}
   >
     {
@@ -110,7 +120,6 @@ async function doLogout(history, onLogout) {
     setTimeout(() => {
         window.location = CONFIG.logoutRedirect
     }, 50)
-
 }
 
 
@@ -239,25 +248,52 @@ const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal,
 
 
 const NavigationLinks = ({location, isStaff, canApproveRequest}) => {
-  var noStaffPages = ['novi-zahtjev', 'stanje-zahtjeva']
-  var pages = listPages
-
-  if (!isStaff && !canApproveRequest)
-    pages = noStaffPages
+  var pages = staffPages
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggle = () => setDropdownOpen(!dropdownOpen);
 
   return (
-    <Nav tabs id="vpsreq-navlinks" className="d-flex justify-content-center border-left border-right border-top rounded-top sticky-top pl-3 pr-3">
+    <Nav tabs id="vpsreq-navlinks" className="d-flex justify-content-center border-left border-right border-top rounded-top sticky-top">
       {
-        pages.map((item, i) =>
-          <NavItem key={i} className='mt-1 mr-2'>
-            <NavLink
-              tag={Link}
-              active={location.pathname.split('/')[2] === item ? true : false}
-              className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
-              to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
-            </NavLink>
-          </NavItem>
-        )
+        !isStaff && !canApproveRequest ?
+          noStaffPages.map((item, i) =>
+            <NavItem key={i} className='mt-1'>
+              <NavLink
+                tag={Link}
+                active={location.pathname.split('/')[2] === item ? true : false}
+                className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
+                to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
+              </NavLink>
+            </NavItem>)
+        :
+          <React.Fragment>
+            {
+              staffPages.map((item, i) =>
+                <NavItem key={i} className='mt-1'>
+                  <NavLink
+                    tag={Link}
+                    active={location.pathname.split('/')[2] === item ? true : false}
+                    className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
+                    to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
+                  </NavLink>
+                </NavItem>)
+            }
+            <Dropdown isOpen={dropdownOpen} toggle={toggle} className='mt-1 text-dark'>
+              <DropdownToggle nav caret className={elemInArray(location.pathname.split('/')[2], noStaffPages) ? "text-white bg-info" : "text-dark"}>
+                <FontAwesomeIcon icon={faUserEdit}/> Korisnikove forme
+              </DropdownToggle>
+              <DropdownMenu>
+                {
+                  noStaffPages.map((item, i) =>
+                    <DropdownItem key={i} id='vpsreq-navlinks-dropdown'>
+                      <Link id='vpsreq-navlinks-dropdown' to={'/ui/' + item} className="text-dark">
+                        <Icon i={item}/> {linkTitle.get(item)}
+                      </Link>
+                    </DropdownItem>)
+                }
+              </DropdownMenu>
+            </Dropdown>
+          </React.Fragment>
       }
     </Nav>
   )

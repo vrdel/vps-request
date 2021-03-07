@@ -12,6 +12,9 @@ from rest_framework.decorators import action
 from rest_framework.renderers import StaticHTMLRenderer
 
 
+import datetime
+
+
 class VMOSViewset(viewsets.ModelViewSet):
     queryset = models.VMOS.objects.all()
     serializer_class = serializers.VMOSSerializer
@@ -34,6 +37,39 @@ class RequestsViewset(viewsets.ModelViewSet):
         requests = models.Request.objects.filter(user=user)
         serializer = serializers.RequestsListSerializer(requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['patch', 'get'])
+    def mine_active(self, request):
+        user = request.user
+
+        if request.method == 'PATCH':
+            rets = list()
+
+            for req in request.data:
+                id = req['id']
+                req_db = models.Request.objects.get(id=id)
+                req['vm_isactive'] = settings.STATUSESVMACTIVE[req['vm_isactive']]
+                if req_db.vm_isactive != req['vm_isactive']:
+                    req['vm_isactive_response'] = datetime.datetime.now()
+
+                req['user'] = user.pk
+                serializer = serializers.RequestsListActiveSerializer(req_db, data=req)
+                if serializer.is_valid():
+                    serializer.save()
+                    rets.append(serializer.data)
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response(rets)
+
+        else:
+            requests = models.Request.objects.filter(user=user).filter(approved=2)
+            serializer = serializers.RequestsListActiveSerializer(requests, many=True)
+            for data in serializer.data:
+                if data['vm_isactive'] == 1 or data['vm_isactive'] == 0:
+                    data['vm_isactive'] = settings.STATUSESVMACTIVE[data['vm_isactive']]
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False)
     def approved(self, request):
@@ -147,5 +183,3 @@ class UsersViewset(viewsets.ModelViewSet):
             return get_user_model().objects.all()
         else:
             return get_user_model().objects.filter(id=user.id)
-
-
