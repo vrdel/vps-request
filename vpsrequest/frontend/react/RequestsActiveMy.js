@@ -20,12 +20,14 @@ import 'react-notifications/lib/notifications.css';
 import { Formik, Field, FieldArray, Form } from 'formik';
 import { CONFIG } from './Config'
 import { DateFormatHR } from './Util'
+import * as yup from 'yup'; // for everything
+
 
 const DropDownMyActive = ({field, data=[], ...props}) =>
   <Field component="select"
     name={field.name}
     required={true}
-    className={`form-control custom-select ${props.customclassname}
+    className={`form-control custom-select text-center
                 ${field.value === 'Da' ? 'border-success' : 'border-danger'}`}
     {...props}
   >
@@ -37,6 +39,17 @@ const DropDownMyActive = ({field, data=[], ...props}) =>
       )
     }
   </Field>
+
+
+const RequestsActiveSchema = yup.object().shape({
+  activeRequests: yup.array()
+    .of(
+      yup.object().shape({
+        vm_isactive: yup.string().required('Obavezno'),
+      })
+    )
+})
+
 
 const MyRequestsActive = (props) => {
   const location = props.location;
@@ -123,6 +136,7 @@ const MyRequestsActive = (props) => {
         location={location}>
         <Formik
           initialValues={{activeRequests: isActiveToStrings(emptyIfNullRequestPropery(requestsData))}}
+          validationSchema={RequestsActiveSchema}
           onSubmit={({activeRequests})=> {
             activeRequests.forEach(request => (
               request.vm_isactive = CONFIG['statusVMIsActive'][request.vm_isactive]
@@ -143,7 +157,7 @@ const MyRequestsActive = (props) => {
                             <th style={{width: '90px'}}>Status</th>
                             <th style={{width: '180px'}}>Datum podnošenja</th>
                             <th style={{width: '250px'}}>Poslužitelj</th>
-                            <th>Komentar</th>
+                            <th>Komentar (opcionalno)</th>
                             <th style={{width: '140px'}}>Potreban u {new Date().getFullYear()}.</th>
                           </tr>
                         </thead>
@@ -173,9 +187,15 @@ const MyRequestsActive = (props) => {
                                     name={`activeRequests.${index}.vm_isactive`}
                                     component={DropDownMyActive}
                                     data={['Odaberi', 'Da', 'Ne']}
-                                    required={true}
-                                    customclassname="text-center"
                                   />
+                                  {
+                                    props.errors && props.errors.activeRequests
+                                      && props.errors.activeRequests[index] ?
+                                        <span className="text-danger" style={{fontSize: 'small'}}>
+                                          {props.errors.activeRequests[index].vm_isactive}
+                                        </span >
+                                       : null
+                                  }
                                 </td>
                               </tr>)
                           }
