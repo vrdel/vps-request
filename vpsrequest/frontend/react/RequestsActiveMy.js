@@ -94,25 +94,6 @@ const MyRequestsActive = (props) => {
     return tmp_requests
   }
 
-  function isActiveToStrings(data) {
-    var tmp_requests = new Array()
-
-    data.forEach(
-      request => {
-        var tmp_request = new Object()
-        for (var property in request) {
-          if (property === 'vm_isactive' && request[property] !== '')
-            tmp_request[property] = CONFIG['statusVMIsActive'][request.vm_isactive]
-          else
-            tmp_request[property] = request[property]
-        }
-        tmp_requests.push(tmp_request)
-      }
-    )
-    return tmp_requests
-
-  }
-
   const handleOnSubmit = async (data) => {
     let response = await backend.changeObject(`${apiListRequestsActive}/`, data);
 
@@ -135,13 +116,11 @@ const MyRequestsActive = (props) => {
         title='Aktivni poslužitelji'
         location={location}>
         <Formik
-          initialValues={{activeRequests: isActiveToStrings(emptyIfNullRequestPropery(requestsData))}}
+          initialValues={{activeRequests: emptyIfNullRequestPropery(requestsData)}}
           validationSchema={RequestsActiveSchema}
-          onSubmit={({activeRequests})=> {
-            activeRequests.forEach(request => (
-              request.vm_isactive = CONFIG['statusVMIsActive'][request.vm_isactive]
-            ))
-            handleOnSubmit(activeRequests)
+          onSubmit={(values, {setSubmitting} )=> {
+            handleOnSubmit(values.activeRequests)
+            setSubmitting(false)
           }}
         >
           {props => (
