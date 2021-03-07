@@ -10,6 +10,14 @@ export function EmptyIfNull(field) {
     return field
 }
 
+export function elemInArray(elem, array) {
+  let pos = array.indexOf(elem)
+  if (pos !== -1)
+    return true
+  else
+    return false
+}
+
 export function canApprove(userDetails) {
   if (userDetails.is_superuser)
     return true

@@ -43,7 +43,7 @@ import { Field } from 'formik';
 import SrceLogo from './logos/pravisrce.png';
 import SrceLogoTiny from './logos/srce-logo-e-mail-sig.png';
 import CloudLogo from './logos/logo_cloud.png';
-import { canApprove } from './Util';
+import { canApprove, elemInArray } from './Util';
 import { RelativePath, CONFIG } from './Config';
 import { Helmet } from "react-helmet";
 
@@ -278,8 +278,8 @@ const NavigationLinks = ({location, isStaff, canApproveRequest}) => {
                   </NavLink>
                 </NavItem>)
             }
-            <Dropdown nav isOpen={dropdownOpen} toggle={toggle} className='mt-1 text-dark'>
-              <DropdownToggle nav caret className={dropdownOpen ? "text-white bg-info" : "text-dark"}>
+            <Dropdown isOpen={dropdownOpen} toggle={toggle} className='mt-1 text-dark'>
+              <DropdownToggle nav caret className={elemInArray(location.pathname.split('/')[2], noStaffPages) ? "text-white bg-info" : "text-dark"}>
                 <FontAwesomeIcon icon={faUserEdit}/> Korisnikove forme
               </DropdownToggle>
               <DropdownMenu>
