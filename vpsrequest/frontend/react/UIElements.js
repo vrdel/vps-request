@@ -79,12 +79,11 @@ export const Icon = props => {
             size='1x' fixedWidth/>
 }
 
-
 export const DropDown = ({field, data=[], ...props}) =>
   <Field component="select"
     name={field.name}
     required={true}
-    className={`form-control custom-select ${props.customclassname}`}
+    className={`form-control custom-select`}
     {...props}
   >
     {

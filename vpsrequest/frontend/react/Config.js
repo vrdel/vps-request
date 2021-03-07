@@ -45,7 +45,9 @@ export const CONFIG = {
         },
     },
     'statusVMIsActive': {
-      "DA": 1,
-      "NE": 0
+      "Da": 1,
+      "Ne": 0,
+      "1": "Da",
+      "0": "Ne"
     }
 }

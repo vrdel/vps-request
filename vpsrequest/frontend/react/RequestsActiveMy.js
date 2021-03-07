@@ -7,7 +7,7 @@ import {
   NotifyError,
 } from './UIElements';
 import NotFound from './NotFound';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Backend } from './DataManager';
 import {
   Button,
@@ -19,32 +19,49 @@ import './App.css';
 import 'react-notifications/lib/notifications.css';
 import { Formik, Field, FieldArray, Form } from 'formik';
 import { CONFIG } from './Config'
-import { useQuery } from 'react-query';
 import { DateFormatHR } from './Util'
+
+const DropDownMyActive = ({field, data=[], ...props}) =>
+  <Field component="select"
+    name={field.name}
+    required={true}
+    className={`form-control custom-select ${props.customclassname}
+                ${field.value === 'Da' ? 'border-success' : 'border-danger'}`}
+    {...props}
+  >
+    {
+      data.map((name, i) =>
+        i === 0 ?
+          <option key={i} hidden>{name}</option> :
+          <option key={i} value={name}>{name}</option>
+      )
+    }
+  </Field>
 
 const MyRequestsActive = (props) => {
   const location = props.location;
   const backend = new Backend();
   const apiListRequestsActive = `${CONFIG.listReqUrl}/mine_active`
+  const [loadingRequests, setLoading] = useState(false);
+  const [userDetails, setUserDetails] = useState(undefined);
+  const [requestsData, setRequests] = useState(undefined);
 
-  const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
-    `session-userdetails`, async () => {
-      const sessionActive = await backend.isActiveSession()
-      if (sessionActive.active) {
-        return sessionActive.userdetails
-      }
-    }
-  );
+  const initializeComponent = async () => {
+    const session = await backend.isActiveSession();
 
-  const { data: requests, error: errorRequest, isLoading: loadingRequests } = useQuery(
-    `aktivni-vmovi-requests`, async () => {
-      const fetched = await backend.fetchData(apiListRequestsActive)
-      return fetched
-    },
-    {
-      enabled: userDetails
+    if (session.active) {
+      const requestData = await backend.fetchData(`${apiListRequestsActive}`);
+      setRequests(requestData);
+      setUserDetails(session.userdetails);
+      setLoading(false);
     }
-  );
+  }
+
+  useEffect(() => {
+    setLoading(true);
+    initializeComponent();
+  }, [])
+
 
   function emptyIfNullRequestPropery(data) {
     var tmp_requests = new Array()
@@ -64,6 +81,25 @@ const MyRequestsActive = (props) => {
     return tmp_requests
   }
 
+  function isActiveToStrings(data) {
+    var tmp_requests = new Array()
+
+    data.forEach(
+      request => {
+        var tmp_request = new Object()
+        for (var property in request) {
+          if (property === 'vm_isactive' && request[property] !== '')
+            tmp_request[property] = CONFIG['statusVMIsActive'][request.vm_isactive]
+          else
+            tmp_request[property] = request[property]
+        }
+        tmp_requests.push(tmp_request)
+      }
+    )
+    return tmp_requests
+
+  }
+
   const handleOnSubmit = async (data) => {
     let response = await backend.changeObject(`${apiListRequestsActive}/`, data);
 
@@ -77,16 +113,16 @@ const MyRequestsActive = (props) => {
         title: `Greška - HTTP ${response.status}`});
   }
 
-  if (loadingRequests || loadingUserDetails)
+  if (loadingRequests)
     return (<LoadingAnim />)
 
-  else if (!loadingRequests && requests) {
+  else if (!loadingRequests && requestsData) {
     return (
       <BaseView
         title='Aktivni poslužitelji'
         location={location}>
         <Formik
-          initialValues={{activeRequests: emptyIfNullRequestPropery(requests)}}
+          initialValues={{activeRequests: isActiveToStrings(emptyIfNullRequestPropery(requestsData))}}
           onSubmit={({activeRequests})=> {
             activeRequests.forEach(request => (
               request.vm_isactive = CONFIG['statusVMIsActive'][request.vm_isactive]
@@ -107,8 +143,8 @@ const MyRequestsActive = (props) => {
                             <th style={{width: '90px'}}>Status</th>
                             <th style={{width: '180px'}}>Datum podnošenja</th>
                             <th style={{width: '250px'}}>Poslužitelj</th>
-                            <th style={{width: '140px'}}>Potreban u {new Date().getFullYear()}.</th>
                             <th>Komentar</th>
+                            <th style={{width: '140px'}}>Potreban u {new Date().getFullYear()}.</th>
                           </tr>
                         </thead>
                         <tbody className="align-middle text-center">
@@ -124,20 +160,21 @@ const MyRequestsActive = (props) => {
                                 <td className="align-middle text-center">
                                   { request.vm_fqdn }
                                 </td>
-                                <td  className="align-middle text-center">
-                                  <Field
-                                    name={`activeRequests.${index}.vm_isactive`}
-                                    component={DropDown}
-                                    data={['Odaberi', 'DA', 'NE']}
-                                    customclassname="text-center"
-                                  />
-                                </td>
                                 <td className="align-middle text-center">
                                   <Field
                                     className="form-control"
                                     name={`activeRequests.${index}.vm_isactive_comment`}
                                     as="textarea"
                                     rows={1}
+                                  />
+                                </td>
+                                <td className="align-middle text-center">
+                                  <Field
+                                    name={`activeRequests.${index}.vm_isactive`}
+                                    component={DropDownMyActive}
+                                    data={['Odaberi', 'Da', 'Ne']}
+                                    required={true}
+                                    customclassname="text-center"
                                   />
                                 </td>
                               </tr>)

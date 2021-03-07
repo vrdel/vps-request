@@ -43,6 +43,7 @@ class RequestsViewset(viewsets.ModelViewSet):
 
         if request.method == 'PATCH':
             rets = list()
+
             for req in request.data:
                 id = req['id']
                 req_db = models.Request.objects.get(id=id)
