@@ -250,3 +250,18 @@ LOGOUT_REDIRECT_URL = '{}/ui/proxy'.format(RELATIVE_PATH)
 SAML_CONFIG_LOADER = 'backend.auth.saml2.config.get_saml_config'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_SAMESITE = None
+
+STATUSESVMACTIVE = {
+    1: 'Da',
+    0: 'Ne',
+    'Da': 1,
+    'Ne': 0,
+}
+
+STATUSES = {
+    -1: 'Novi',
+    0: 'Odbijen',
+    1: 'Odobren',
+    2: 'Izdan VM',
+    3: 'Umirovljen'
+}

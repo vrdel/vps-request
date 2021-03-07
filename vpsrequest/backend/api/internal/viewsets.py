@@ -1,7 +1,6 @@
 from backend import serializers
 from backend import models
 from backend.email.notif import Notification
-from backend.api.config import STATUSES, STATUSESVMACTIVE
 
 from django.contrib.auth import get_user_model
 from django.conf import settings
@@ -49,7 +48,7 @@ class RequestsViewset(viewsets.ModelViewSet):
             for req in request.data:
                 id = req['id']
                 req_db = models.Request.objects.get(id=id)
-                req['vm_isactive'] = STATUSESVMACTIVE[req['vm_isactive']]
+                req['vm_isactive'] = settings.STATUSESVMACTIVE[req['vm_isactive']]
                 if req_db.vm_isactive != req['vm_isactive']:
                     req['vm_isactive_response'] = datetime.datetime.now()
 
@@ -68,7 +67,7 @@ class RequestsViewset(viewsets.ModelViewSet):
             serializer = serializers.RequestsListActiveSerializer(requests, many=True)
             for data in serializer.data:
                 if data['vm_isactive'] == 1 or data['vm_isactive'] == 0:
-                    data['vm_isactive'] = STATUSESVMACTIVE[data['vm_isactive']]
+                    data['vm_isactive'] = settings.STATUSESVMACTIVE[data['vm_isactive']]
 
             return Response(serializer.data, status=status.HTTP_200_OK)
 
