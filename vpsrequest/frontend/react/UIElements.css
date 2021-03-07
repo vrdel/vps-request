@@ -21,12 +21,8 @@
   background-color: #ffffff;
 }
 
-#vpsreq-navlinks-dropdown {
-  background-color: #ffffff;
-}
-
 #vpsreq-navlinks-dropdown:hover {
-  background-color: #f8f9fa;
+  background-color: #e8e9ea;
   text-decoration: none;
 }
 
