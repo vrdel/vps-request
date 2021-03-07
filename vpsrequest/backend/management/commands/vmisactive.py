@@ -26,4 +26,4 @@ class Command(BaseCommand):
                 req.vm_isactive = None
                 req.save()
         else:
-            pass
+            models.Request.objects.filter(approved__exact=settings.STATUSES['Izdan VM']).update(vm_isactive=None)

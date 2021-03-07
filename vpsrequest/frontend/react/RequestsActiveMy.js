@@ -1,6 +1,5 @@
 import {
   BaseView,
-  DropDown,
   LoadingAnim,
   Status,
   NotifyOk,
@@ -28,7 +27,7 @@ const DropDownMyActive = ({field, data=[], ...props}) =>
     name={field.name}
     required={true}
     className={`form-control custom-select text-center
-                ${field.value === 'Da' ? 'border-success' : field.value === 'Ne' ? 'border-danger' : 'border-secondary'}`}
+                ${field.value === 'Da' ? 'border-success' : field.value === 'Ne' ? 'border-danger' : 'border-warning'}`}
     {...props}
   >
     {
