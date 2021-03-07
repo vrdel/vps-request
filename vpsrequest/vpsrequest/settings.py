@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import datetime
 from configparser import ConfigParser, NoSectionError
 from django.core.exceptions import ImproperlyConfigured
 
@@ -41,6 +42,15 @@ try:
     # General
     DEBUG = bool(config.getboolean('GENERAL', 'Debug'))
     RELATIVE_PATH = config.get('GENERAL', 'RelativePath')
+    VMISACTIVE_RESPONSEDATE = config.get('GENERAL', 'VmIsActiveResponseDate')
+    VMISACTIVE_RESPONSEASK = config.getboolean('GENERAL', 'VmIsActiveResponseAsk')
+    today = datetime.datetime.today()
+    dateto = datetime.datetime.strptime('{}.{}'.format(VMISACTIVE_RESPONSEDATE, today.year), '%d.%m.%Y')
+    VMISACTIVE_RESPONSEDATE = datetime.datetime.strftime(dateto, '%d.%m.%Y')
+    if (today <= dateto and VMISACTIVE_RESPONSEASK):
+        VMISACTIVE_SHOULDASK_DATE = True
+    else:
+        VMISACTIVE_SHOULDASK_DATE = False
 
     ALLOWED_HOSTS = config.get('SECURITY', 'AllowedHosts')
     HOST_CERT = config.get('SECURITY', 'HostCert')
