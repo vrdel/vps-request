@@ -115,6 +115,7 @@ async function doLogout(history, onLogout) {
 
   onLogout()
 
+  cookies.remove('alertDismiss')
   history.push('/ui/proxy')
 
   if (response.ok)

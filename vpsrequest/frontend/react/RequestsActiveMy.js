@@ -20,6 +20,7 @@ import 'react-notifications/lib/notifications.css';
 import { Formik, Field, FieldArray, Form } from 'formik';
 import { CONFIG } from './Config'
 import { DateFormatHR } from './Util'
+import Cookies from 'universal-cookie';
 import * as yup from 'yup'; // for everything
 
 
@@ -60,6 +61,8 @@ const MyRequestsActive = (props) => {
   const [shouldAskVMActive, setShouldAskVMActive] = useState(undefined);
   const [requestsData, setRequests] = useState(undefined);
   const [alertVisible, setAlertVisible] = useState(true);
+  var cookie = new Cookies()
+  var cookieAlert = cookie.get('alertDismiss')
 
   const initializeComponent = async () => {
     const session = await backend.isActiveSession();
@@ -119,9 +122,9 @@ const MyRequestsActive = (props) => {
       <BaseView
         title='Aktivni poslužitelji'
         location={location}
-        alert={alertVisible && shouldAskVMActive}
-        alertdismiss={() => setAlertVisible(false)}
-        alertmsg={`izjasni se ${userDetails.vmisactive_responsedate}`}
+        alert={!cookieAlert && alertVisible && shouldAskVMActive}
+        alertdismiss={() => { new Cookies().set('alertDismiss', true); setAlertVisible(false)}}
+        alertmsg={`Molimo da se do ${userDetails.vmisactive_responsedate} izjasnite da li su vam u tekućoj godini potrebni izdani poslužitelji. To možete na stavci "Aktivni VM-ovi"`}
       >
         <Formik
           initialValues={{activeRequests: emptyIfNullRequestPropery(requestsData)}}
