@@ -38,7 +38,9 @@ export function DateFormatHR(dateStr, onlydate=false)
     hour:'numeric', minute: 'numeric', second: 'numeric', hour12: false,
     timeZone: 'Europe/Zagreb'}
 
-  if (onlydate) {
+  if (!dateStr)
+    return ''
+  else if (onlydate) {
     let year = new Intl.DateTimeFormat('hr-HR', {year: 'numeric'}).format(dateObj)
     let month = new Intl.DateTimeFormat('hr-HR', {month: 'numeric'}).format(dateObj)
     let day = new Intl.DateTimeFormat('hr-HR', {day: 'numeric'}).format(dateObj)

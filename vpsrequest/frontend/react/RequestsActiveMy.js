@@ -24,7 +24,7 @@ import Cookies from 'universal-cookie';
 import * as yup from 'yup'; // for everything
 
 
-const DropDownMyActive = ({field, data=[], ...props}) =>
+export const DropDownMyActive = ({field, data=[], ...props}) =>
   <Field component="select"
     name={field.name}
     required={true}
@@ -40,6 +40,25 @@ const DropDownMyActive = ({field, data=[], ...props}) =>
       )
     }
   </Field>
+
+
+export const emptyIfNullRequestPropery = (data) => {
+  var tmp_requests = new Array()
+
+  data.forEach(
+    request => {
+      var tmp_request = new Object()
+      for (var property in request) {
+        if (request[property] === null )
+          tmp_request[property] = ''
+        else
+          tmp_request[property] = request[property]
+      }
+      tmp_requests.push(tmp_request)
+    }
+  )
+  return tmp_requests
+}
 
 
 const RequestsActiveSchema = yup.object().shape({
@@ -81,24 +100,6 @@ const MyRequestsActive = (props) => {
     initializeComponent();
   }, [])
 
-
-  function emptyIfNullRequestPropery(data) {
-    var tmp_requests = new Array()
-
-    data.forEach(
-      request => {
-        var tmp_request = new Object()
-        for (var property in request) {
-          if (request[property] === null )
-            tmp_request[property] = ''
-          else
-            tmp_request[property] = request[property]
-        }
-        tmp_requests.push(tmp_request)
-      }
-    )
-    return tmp_requests
-  }
 
   const handleOnSubmit = async (data) => {
     let response = await backend.changeObject(`${apiListRequestsActive}/`, data);
