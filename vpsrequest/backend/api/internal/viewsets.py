@@ -78,6 +78,12 @@ class RequestsViewset(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False)
+    def vmissued_unknown(self, request):
+        requests = models.Request.objects.filter(approved=2).filter(vm_isactive=None).order_by('-approved_date')
+        serializer = serializers.RequestsListActiveWithUserSerializer(requests, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False)
     def rejected(self, request):
         requests = models.Request.objects.filter(approved=0).order_by('-approved_date')
         serializer = serializers.RequestsListSerializer(requests, many=True)
