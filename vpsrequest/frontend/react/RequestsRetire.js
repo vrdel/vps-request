@@ -107,7 +107,7 @@ const RequestsTable = ({ columns, data }) => {
                   setPageSize(Number(e.target.value))
                 }}
               >
-                {[20, 40, 80].map(pageSize => (
+                {[50, 100, 200].map(pageSize => (
                   <option label={`${pageSize} zahtjeva`} key={pageSize} value={pageSize}>
                     {pageSize} zahtjeva
                   </option>
@@ -150,30 +150,71 @@ const RetireRequests = (props) => {
     {
       id: 'cardNumber',
       Header: 'r. br.',
-      accessor: (r, i) => i + 1,
       maxWidth: 50,
       maxHeight: 32,
     },
     {
       id: 'requestDate',
       Header: 'Datum podnošenja',
-      accessor: r => DateFormatHR(r.request_date),
-      maxWidth: 180
+      accessor: r => DateFormatHR(r.request_date, true),
     },
     {
-      Header: 'Ustanova',
-      accessor: 'head_institution',
+      Header: 'Poslužitelj',
+      accessor: 'vm_fqdn',
     },
     {
       id: 'contactNameLastName',
       Header: 'Kontaktni email',
       accessor: r => r.user.email,
-      maxWidth: 180
     },
     {
-      Header: 'Poslužitelj',
-      accessor: 'vm_fqdn',
-      maxWidth: 180
+      Header: 'Komentar',
+      accessor: (r, i) => {
+        let userText = r.vm_isactive_comment;
+        return (
+          <textarea id="story"
+            className="form-control"
+            name="story"
+            rows="2"
+            value={userText ? userText : ''}
+            onChange={undefined}
+          />
+        )
+      }
+    },
+    {
+      Header: 'Potreban 2021.',
+      accessor: (r, i) => {
+        let userOption = r.vm_isactive;
+        return (
+          <select
+            id={'select' + i}
+            name="vm_isactive"
+            className={`form-control custom-select text-center
+              ${userOption === 'Da' ? 'border-success' : userOption === 'Ne'
+              ? 'border-danger' : 'border-warning'}`}
+          >
+            {
+              userOption === 'Da' ?
+                <option value="Da" selected>Da</option>
+              :
+                <option value="Da" >Da</option>
+            }
+            {
+              userOption === 'Ne' ?
+                <option value="Ne" selected>Ne</option>
+              :
+                <option value="Ne">Ne</option>
+            }
+            {
+              userOption === null ?
+                <option value="Odaberi" selected>Odaberi</option>
+              :
+                <option value="Odaberi">Odaberi</option>
+            }
+          </select>
+        )
+      }
     },
     {
       id: 'edit',

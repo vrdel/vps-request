@@ -31,12 +31,19 @@ export function canApprove(userDetails) {
   return false
 }
 
-export function DateFormatHR(dateStr)
+export function DateFormatHR(dateStr, onlydate=false)
 {
   var dateObj = new Date(dateStr)
   var options = {year: 'numeric', month: 'numeric', day: 'numeric',
     hour:'numeric', minute: 'numeric', second: 'numeric', hour12: false,
     timeZone: 'Europe/Zagreb'}
 
-  return new Intl.DateTimeFormat('hr-HR', options).format(dateObj)
+  if (onlydate) {
+    let year = new Intl.DateTimeFormat('hr-HR', {year: 'numeric'}).format(dateObj)
+    let month = new Intl.DateTimeFormat('hr-HR', {month: 'numeric'}).format(dateObj)
+    let day = new Intl.DateTimeFormat('hr-HR', {day: 'numeric'}).format(dateObj)
+    return `${day}${month}${year}`
+  }
+  else
+    return new Intl.DateTimeFormat('hr-HR', options).format(dateObj)
 }
