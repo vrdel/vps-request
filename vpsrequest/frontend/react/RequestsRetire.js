@@ -61,7 +61,11 @@ const RetireRequests = (props) => {
       indexFrom = 0
     else
       indexFrom = index * pageSize
-    indexTo = indexFrom + pageSize
+
+    if (index === pageCount)
+      indexTo = requests.length
+    else
+      indexTo = indexFrom + pageSize
 
     formikSetValues({requestsFormik: requests.slice(indexFrom, indexTo)})
     setPageIndex(i)
