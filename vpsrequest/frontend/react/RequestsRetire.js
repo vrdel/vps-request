@@ -53,16 +53,12 @@ const RetireRequests = (props) => {
   }
 
   const gotoPage = (i, formikSetValues) => {
-    let index = i + 1
     let indexTo = undefined
     let indexFrom = undefined
 
-    if (index === 1)
-      indexFrom = 0
-    else
-      indexFrom = index * pageSize
+    indexFrom = i * pageSize
 
-    if (index === pageCount)
+    if (i === pageCount - 1)
       indexTo = requests.length
     else
       indexTo = indexFrom + pageSize
@@ -70,6 +66,7 @@ const RetireRequests = (props) => {
     formikSetValues({requestsFormik: requests.slice(indexFrom, indexTo)})
     setPageIndex(i)
   }
+
 
   if (loading)
     return (<LoadingAnim />)
