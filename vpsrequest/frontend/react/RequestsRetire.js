@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Backend } from './DataManager';
 import {
   Button,
@@ -17,7 +17,6 @@ import { Formik, Field, FieldArray, Form } from 'formik';
 import { BaseView, LoadingAnim } from './UIElements';
 import { CONFIG } from './Config'
 import { DateFormatHR } from './Util'
-import { useQuery } from 'react-query';
 import { DropDownMyActive, emptyIfNullRequestPropery } from './RequestsActiveMy';
 
 
@@ -28,27 +27,26 @@ const RetireRequests = (props) => {
   const [pageSize, setPageSize] = useState(50)
   const [pageIndex, setPageIndex] = useState(0)
   const [pageCount, setPageCount] = useState(undefined)
+  const [userDetails, setUserDetails] = useState(undefined)
+  const [loading, setLoading] = useState(false);
+  const [requests, setRequests] = useState(undefined)
 
+  const initializeComponent = async () => {
+    const session = await backend.isActiveSession();
 
-  const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
-    `session-userdetails`, async () => {
-      const sessionActive = await backend.isActiveSession()
-      if (sessionActive.active) {
-        return sessionActive.userdetails
-      }
-    }
-  );
-
-  const { data: requests, error: errorRequest, isLoading: loadingRequests } = useQuery(
-    `vmissued-retire-requests`, async () => {
-      const fetched = await backend.fetchData(apiListRequests)
+    if (session.active) {
+      const fetched = await backend.fetchData(`${apiListRequests}`);
+      setRequests(emptyIfNullRequestPropery(fetched));
+      setUserDetails(session.userdetails);
       setPageCount(Math.trunc(fetched.length / pageSize))
-      return emptyIfNullRequestPropery(fetched)
-    },
-    {
-      enabled: userDetails
+      setLoading(false);
     }
-  );
+  }
+
+  useEffect(() => {
+    setLoading(true);
+    initializeComponent();
+  }, [])
 
   const handleOnSubmit = async (data) => {
     console.log(data)
@@ -69,12 +67,10 @@ const RetireRequests = (props) => {
     setPageIndex(i)
   }
 
-
-  if (loadingRequests || loadingUserDetails)
+  if (loading)
     return (<LoadingAnim />)
 
-
-  else if (!loadingRequests && requests) {
+  else if (!loading && requests && userDetails) {
     return (
       <>
         <BaseView
@@ -129,7 +125,7 @@ const RetireRequests = (props) => {
                         setPageIndex(0)
                       }}
                     >
-                      {[30, 50, 100].map(pageSize => (
+                      {[30, 50, 100, requests.length].map(pageSize => (
                         <option label={`${pageSize} zahtjeva`} key={pageSize} value={pageSize}>
                           {pageSize} zahtjeva
                         </option>
