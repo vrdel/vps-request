@@ -25,7 +25,7 @@ const RetireRequests = (props) => {
   const location = props.location;
   const backend = new Backend();
   const apiListRequests = `${CONFIG.listReqUrl}/vmissued_unknown`
-  const [pageSize, setPageSize] = useState(100)
+  const [pageSize, setPageSize] = useState(50)
   const [pageIndex, setPageIndex] = useState(0)
   const [pageCount, setPageCount] = useState(undefined)
 
@@ -91,7 +91,7 @@ const RetireRequests = (props) => {
             }}
           >
             {props => (
-              <>
+              <React.Fragment>
                 <Pagination className="mt-5">
                   <PaginationItem disabled={pageIndex === 0}>
                     <PaginationLink aria-label="Prva stranica" first onClick={() =>
@@ -115,6 +115,26 @@ const RetireRequests = (props) => {
                   </PaginationItem>
                   <PaginationItem disabled={pageIndex === pageCount - 1}>
                     <PaginationLink aria-label="Posljednja stranica" last onClick={() => gotoPage(pageCount - 1, props.setValues)}/>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <select
+                      style={{width: '180px'}}
+                      className="custom-select text-primary"
+                      aria-label="Broj zahtjeva"
+                      value={pageSize}
+                      onChange={e => {
+                        setPageSize(Number(e.target.value))
+                        setPageCount(Math.trunc(requests.length / Number(e.target.value)))
+                        props.setValues({requestsFormik: requests.slice(0, Number(e.target.value))})
+                        setPageIndex(0)
+                      }}
+                    >
+                      {[30, 50, 100].map(pageSize => (
+                        <option label={`${pageSize} zahtjeva`} key={pageSize} value={pageSize}>
+                          {pageSize} zahtjeva
+                        </option>
+                      ))}
+                    </select>
                   </PaginationItem>
                 </Pagination>
                 <Form>
@@ -162,7 +182,7 @@ const RetireRequests = (props) => {
                                       <Field
                                         name={`requestsFormik.${index}.vm_isactive`}
                                         component={DropDownMyActive}
-                                        data={['--', 'Da', 'Ne']}
+                                        data={['-', 'Da', 'Ne']}
                                       />
                                     </td>
                                     <td className="align-middle text-center">
@@ -177,7 +197,7 @@ const RetireRequests = (props) => {
                       )}
                     />
                 </Form>
-              </>
+              </React.Fragment>
             )}
           </Formik>
         </BaseView>
