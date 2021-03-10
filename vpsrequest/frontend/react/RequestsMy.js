@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Backend } from './DataManager';
 import { BaseView, LoadingAnim, Status } from './UIElements';
 import { useTable, usePagination } from 'react-table';
@@ -19,6 +19,7 @@ import {
   } from '@fortawesome/free-solid-svg-icons';
 import { DateFormatHR } from './Util'
 import { useQuery } from 'react-query';
+import Cookies from 'universal-cookie';
 
 
 const EmptyTable = ({ columns, data }) => {
@@ -193,6 +194,9 @@ const MyRequests = (props) => {
   const location = props.location;
   const backend = new Backend();
   const apiListRequests = `${CONFIG.listReqUrl}/mine`
+  const [alertVisible, setAlertVisible] = useState(true);
+  var cookie = new Cookies()
+  var cookieAlert = cookie.get('alertDismiss')
 
   const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
     `session-userdetails`, async () => {
@@ -284,7 +288,11 @@ const MyRequests = (props) => {
     return (
       <BaseView
         title='Stanje zahtjeva'
-        location={location}>
+        location={location}
+        alert={!cookieAlert && alertVisible && userDetails.vmisactive_shouldask}
+        alertdismiss={() => { cookie.set('alertDismiss', true); setAlertVisible(false)}}
+        alertmsg={`Molimo da se do ${userDetails.vmisactive_responsedate} izjasnite da li su vam u tekućoj godini potrebni izdani poslužitelji. To možete na stavci "Aktivni VM-ovi"`}
+      >
         {
           requests.length > 0 ?
             <RequestsTable columns={columns} data={requests}/>

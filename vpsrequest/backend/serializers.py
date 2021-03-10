@@ -36,6 +36,10 @@ class RequestsListActiveSerializer(serializers.ModelSerializer):
         model = models.Request
 
 
+class RequestsListActiveWithUserSerializer(RequestsListActiveSerializer):
+    user = UsersSerializer(read_only=True)
+
+
 class VMOSSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('vm_os',)

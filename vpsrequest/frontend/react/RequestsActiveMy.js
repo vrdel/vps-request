@@ -9,6 +9,7 @@ import NotFound from './NotFound';
 import React, { useEffect, useState } from 'react';
 import { Backend } from './DataManager';
 import {
+  Alert,
   Button,
   Row,
   Col,
@@ -19,15 +20,16 @@ import 'react-notifications/lib/notifications.css';
 import { Formik, Field, FieldArray, Form } from 'formik';
 import { CONFIG } from './Config'
 import { DateFormatHR } from './Util'
+import Cookies from 'universal-cookie';
 import * as yup from 'yup'; // for everything
 
 
-const DropDownMyActive = ({field, data=[], ...props}) =>
+export const DropDownMyActive = ({field, data=[], ...props}) =>
   <Field component="select"
     name={field.name}
     required={true}
     className={`form-control custom-select text-center
-                ${field.value === 'Da' ? 'border-success' : field.value === 'Ne' ? 'border-danger' : 'border-warning'}`}
+                ${field.value === 'Da' ? 'bg-success border-success text-white' : field.value === 'Ne' ? 'bg-danger border-danger text-white' : ' bg-warning border-warning'}`}
     {...props}
   >
     {
@@ -38,6 +40,27 @@ const DropDownMyActive = ({field, data=[], ...props}) =>
       )
     }
   </Field>
+
+
+export const emptyIfNullRequestPropery = (data) => {
+  var tmp_requests = new Array()
+
+  data.forEach(
+    request => {
+      var tmp_request = new Object()
+      for (var property in request) {
+        if (request[property] === null && property === "vm_isactive_response")
+          tmp_request[property] = '-'
+        else if (request[property] === null)
+          tmp_request[property] = ''
+        else
+          tmp_request[property] = request[property]
+      }
+      tmp_requests.push(tmp_request)
+    }
+  )
+  return tmp_requests
+}
 
 
 const RequestsActiveSchema = yup.object().shape({
@@ -56,7 +79,11 @@ const MyRequestsActive = (props) => {
   const apiListRequestsActive = `${CONFIG.listReqUrl}/mine_active`
   const [loadingRequests, setLoading] = useState(false);
   const [userDetails, setUserDetails] = useState(undefined);
+  const [shouldAskVMActive, setShouldAskVMActive] = useState(undefined);
   const [requestsData, setRequests] = useState(undefined);
+  const [alertVisible, setAlertVisible] = useState(true);
+  var cookie = new Cookies()
+  var cookieAlert = cookie.get('alertDismiss')
 
   const initializeComponent = async () => {
     const session = await backend.isActiveSession();
@@ -65,6 +92,7 @@ const MyRequestsActive = (props) => {
       const requestData = await backend.fetchData(`${apiListRequestsActive}`);
       setRequests(requestData);
       setUserDetails(session.userdetails);
+      setShouldAskVMActive(session.userdetails.vmisactive_shouldask);
       setLoading(false);
     }
   }
@@ -74,24 +102,6 @@ const MyRequestsActive = (props) => {
     initializeComponent();
   }, [])
 
-
-  function emptyIfNullRequestPropery(data) {
-    var tmp_requests = new Array()
-
-    data.forEach(
-      request => {
-        var tmp_request = new Object()
-        for (var property in request) {
-          if (request[property] === null )
-            tmp_request[property] = ''
-          else
-            tmp_request[property] = request[property]
-        }
-        tmp_requests.push(tmp_request)
-      }
-    )
-    return tmp_requests
-  }
 
   const handleOnSubmit = async (data) => {
     let response = await backend.changeObject(`${apiListRequestsActive}/`, data);
@@ -109,11 +119,16 @@ const MyRequestsActive = (props) => {
   if (loadingRequests)
     return (<LoadingAnim />)
 
-  else if (!loadingRequests && requestsData) {
+  else if (!loadingRequests && requestsData && userDetails
+    && shouldAskVMActive !== undefined) {
     return (
       <BaseView
-        title='Aktivni poslužitelji'
-        location={location}>
+        title={`Aktivni poslužitelji u ${new Intl.DateTimeFormat('hr-HR', {year: 'numeric'}).format(new Date())}`}
+        location={location}
+        alert={!cookieAlert && alertVisible && shouldAskVMActive}
+        alertdismiss={() => { new Cookies().set('alertDismiss', true); setAlertVisible(false)}}
+        alertmsg={`Molimo da se do ${userDetails.vmisactive_responsedate} izjasnite da li su vam u tekućoj godini potrebni izdani poslužitelji. To možete na stavci "Aktivni VM-ovi"`}
+      >
         <Formik
           initialValues={{activeRequests: emptyIfNullRequestPropery(requestsData)}}
           validationSchema={RequestsActiveSchema}
@@ -131,14 +146,14 @@ const MyRequestsActive = (props) => {
                 render={() => (
                   <React.Fragment>
                     <Row>
-                      <Table responsive hover size="sm" className="mt-4">
+                      <Table responsive hover size="sm" className={`${shouldAskVMActive && alertVisible ? "mt-1" : "mt-4"}`}>
                         <thead className="table-active align-middle text-center">
                           <tr>
                             <th style={{width: '90px'}}>Status</th>
                             <th style={{width: '180px'}}>Datum podnošenja</th>
                             <th style={{width: '250px'}}>Poslužitelj</th>
                             <th>Komentar (opcionalno)</th>
-                            <th style={{width: '140px'}}>Potreban u {new Date().getFullYear()}.</th>
+                            <th style={{width: '90px'}}>Potreban</th>
                           </tr>
                         </thead>
                         <tbody className="align-middle text-center">
@@ -159,6 +174,7 @@ const MyRequestsActive = (props) => {
                                     className="form-control"
                                     name={`activeRequests.${index}.vm_isactive_comment`}
                                     as="textarea"
+                                    spellcheck={false}
                                     rows={1}
                                   />
                                 </td>
@@ -166,7 +182,7 @@ const MyRequestsActive = (props) => {
                                   <Field
                                     name={`activeRequests.${index}.vm_isactive`}
                                     component={DropDownMyActive}
-                                    data={['Odaberi', 'Da', 'Ne']}
+                                    data={['-', 'Da', 'Ne']}
                                   />
                                   {
                                     props.errors && props.errors.activeRequests
@@ -174,7 +190,7 @@ const MyRequestsActive = (props) => {
                                         <span className="text-danger" style={{fontSize: 'small'}}>
                                           {props.errors.activeRequests[index].vm_isactive}
                                         </span >
-                                       : null
+                                      : null
                                   }
                                 </td>
                               </tr>)

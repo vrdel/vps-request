@@ -10,6 +10,7 @@ import { ProcessNewRequest } from './RequestProcessNew';
 import ChangeRequest from './RequestChange';
 import { UIProxy } from './UIProxy';
 import MyRequestsActive from './RequestsActiveMy.js';
+import RetireRequests from './RequestsRetire.js';
 import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
 import { VPSPage } from './UIElements';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -185,7 +186,7 @@ class App extends Component {
             <Route
               exact path="/ui/login"
               render={props =>
-                  <Login onLogin={this.onLogin} {...props} />
+                <Login onLogin={this.onLogin} {...props} />
               }
             />
             <Route
@@ -213,100 +214,106 @@ class App extends Component {
             <Route
               exact path="/ui/proxy"
               render={(props) =>
-                  <RedirectAfterLogin
+                <RedirectAfterLogin
                     userDetails={userDetails}
                     {...props}
                   />}/>
             <Route exact path="/ui/login"
               render={(props) =>
-                  <RedirectAfterLogin
+                <RedirectAfterLogin
                     userDetails={userDetails}
                     {...props}
                   />}/>
             <Route exact path="/ui/novi-zahtjev"
               render={(props) =>
-                  <VPSPage
+                <VPSPage
                     {...propsPage}>
-                    <NewRequest {...props}/>
-                  </VPSPage>}/>
+                  <NewRequest {...props}/>
+                </VPSPage>}/>
             <ProtectedRoute userDetails={userDetails} exact path="/ui/novi-zahtjevi"
               render={(props) =>
-                  <VPSPage
+                <VPSPage
                     {...propsPage}>
-                    <FreshRequests {...props}/>
-                  </VPSPage>}/>
+                  <FreshRequests {...props}/>
+                </VPSPage>}/>
             <ProtectedRoute userDetails={userDetails} exact path="/ui/novi-zahtjevi/:id"
               render={(props) =>
-                  <VPSPage
+                <VPSPage
                     {...propsPage}>
-                    <ProcessNewRequest {...props}/>
-                  </VPSPage>}/>
+                  <ProcessNewRequest {...props}/>
+                </VPSPage>}/>
             <ProtectedRoute userDetails={userDetails} exact path="/ui/odobreni-zahtjevi"
               render={(props) =>
-                  <VPSPage
+                <VPSPage
                     {...propsPage}>
-                    <ApprovedRequests {...props}/>
-                  </VPSPage>}/>
+                  <ApprovedRequests {...props}/>
+                </VPSPage>}/>
             <ProtectedRoute userDetails={userDetails} exact path="/ui/odobreni-zahtjevi/:id"
               render={(props) =>
-                  <VPSPage
+                <VPSPage
                     {...propsPage}>
-                    <ApprovedRequestHandler {...props}/>
-                  </VPSPage>}/>
+                  <ApprovedRequestHandler {...props}/>
+                </VPSPage>}/>
             <ProtectedRoute userDetails={userDetails} exact path="/ui/odobreni-zahtjevi/umirovljen/:id"
               render={(props) =>
-                  <VPSPage
+                <VPSPage
                     {...propsPage}>
-                    <ViewSingleRequest {...props}/>
-                  </VPSPage>}/>
+                  <ViewSingleRequest {...props}/>
+                </VPSPage>}/>
             <ProtectedRoute userDetails={userDetails} exact path="/ui/odbijeni-zahtjevi"
               render={(props) =>
-                  <VPSPage
+                <VPSPage
                     {...propsPage}>
-                    <RejectedRequests {...props}/>
-                  </VPSPage>}/>
+                  <RejectedRequests {...props}/>
+                </VPSPage>}/>
             <ProtectedRoute userDetails={userDetails} exact path="/ui/odbijeni-zahtjevi/:id"
               render={(props) =>
-                  <VPSPage
+                <VPSPage
                     {...propsPage}>
-                    <ViewSingleRequest {...props}/>
-                  </VPSPage>}/>
+                  <ViewSingleRequest {...props}/>
+                </VPSPage>}/>
+            <ProtectedRoute userDetails={userDetails} exact path="/ui/predumirovljenje"
+              render={(props) =>
+                <VPSPage
+                    {...propsPage}>
+                  <RetireRequests {...props}/>
+                </VPSPage>}/>
             <Route exact path="/ui/aktivni-posluzitelji"
               render={(props) =>
-                  <VPSPage
+                <VPSPage
                     {...propsPage}>
-                    <MyRequestsActive {...props}/>
-                  </VPSPage>}/>
+                  <MyRequestsActive {...props}/>
+                </VPSPage>}/>
             <Route exact path="/ui/stanje-zahtjeva"
               render={(props) =>
-                  <VPSPage
+                <VPSPage
                     {...propsPage}>
-                    <MyRequests {...props}/>
-                  </VPSPage>}/>
+                  <MyRequests {...props}/>
+                </VPSPage>}/>
             <Route exact path="/ui/stanje-zahtjeva/:id"
               render={(props) =>
-                  <VPSPage
+                <VPSPage
                     {...propsPage}>
-                    <ChangeRequest {...props}/>
-                  </VPSPage>}/>
+                  <ChangeRequest {...props}/>
+                </VPSPage>}/>
             <Route exact path="/ui/stanje-zahtjeva/umirovljen/:id"
               render={(props) =>
-                  <VPSPage
+                <VPSPage
                     {...propsPage}>
-                    <ViewSingleRequest {...props}/>
-                  </VPSPage>}/>
+                  <ViewSingleRequest {...props}/>
+                </VPSPage>}/>
             <Route exact path="/ui/stanje-zahtjeva/odbijen/:id"
               render={(props) =>
-                  <VPSPage
+                <VPSPage
                     {...propsPage}>
-                    <ViewSingleRequest {...props}/>
-                  </VPSPage>}/>
+                  <ViewSingleRequest {...props}/>
+                </VPSPage>}/>
             <Route exact path="/ui/izjava-pristupacnost"
               render={(props) =>
-                  <VPSPage
+                <VPSPage
                     {...propsPage}>
-                    <StatementAccessibility {...props}/>
-                  </VPSPage>}/>
+                  <StatementAccessibility {...props}/>
+                </VPSPage>}/>
           </Switch>
         </BrowserRouter>
       )

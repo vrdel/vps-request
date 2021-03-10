@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Cookies from 'universal-cookie';
 import {
+  Alert,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
@@ -114,6 +115,7 @@ async function doLogout(history, onLogout) {
 
   onLogout()
 
+  cookies.remove('alertDismiss')
   history.push('/ui/proxy')
 
   if (response.ok)
@@ -420,7 +422,8 @@ export const NotifyError = ({msg='', title='', callback=undefined}) => {
 
 export const BaseView = ({title='', isChangeView=false, isHandleNewView=false,
   isHandleApprovedView = false, isIssuedVMView = false, modal=false,
-  toggle=undefined, state=undefined, children}) =>
+  toggle=undefined, alertdismiss=undefined, alertmsg=undefined, alert=false,
+  state=undefined, children}) =>
 {
   let bgTitle = "bg-light"
 
@@ -445,12 +448,29 @@ export const BaseView = ({title='', isChangeView=false, isHandleNewView=false,
           onYes={state.modalFunc} />
       }
       <div id="vpsreq-contentwrap" className="pl-4 pb-4 pr-4 pt-3 border rounded pristupacnost">
-        {
-          <div className={`"shadow-sm p-2 mb-2 rounded " ${bgTitle}`}>
-            <h3>{title}</h3>
-          </div>
-        }
-        {children}
+        <Row>
+          {
+            <Col md={{size: 6, offset: 3}}>
+              <Alert color="danger" isOpen={alert} toggle={alertdismiss}>
+                {alertmsg}
+              </Alert>
+            </Col>
+          }
+        </Row>
+        <Row>
+          <Col>
+            {
+              <div className={`"shadow-sm p-2 mb-2 rounded " ${bgTitle}`}>
+                <h3>{title}</h3>
+              </div>
+            }
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            {children}
+          </Col>
+        </Row>
       </div>
     </React.Fragment>
   )
