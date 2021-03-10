@@ -15,7 +15,6 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Formik, Field, FieldArray, Form } from 'formik';
 import { BaseView, LoadingAnim } from './UIElements';
-import { useTable, usePagination } from 'react-table';
 import { CONFIG } from './Config'
 import { DateFormatHR } from './Util'
 import { useQuery } from 'react-query';
@@ -26,6 +25,10 @@ const RetireRequests = (props) => {
   const location = props.location;
   const backend = new Backend();
   const apiListRequests = `${CONFIG.listReqUrl}/vmissued_unknown`
+  const [pageSize, setPageSize] = useState(100)
+  const [pageIndex, setPageIndex] = useState(0)
+  const [pageCount, setPageCount] = useState(undefined)
+
 
   const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
     `session-userdetails`, async () => {
@@ -39,6 +42,7 @@ const RetireRequests = (props) => {
   const { data: requests, error: errorRequest, isLoading: loadingRequests } = useQuery(
     `vmissued-retire-requests`, async () => {
       const fetched = await backend.fetchData(apiListRequests)
+      setPageCount(Math.trunc(fetched.length / pageSize))
       return emptyIfNullRequestPropery(fetched)
     },
     {
@@ -46,13 +50,29 @@ const RetireRequests = (props) => {
     }
   );
 
-
   const handleOnSubmit = async (data) => {
     console.log(data)
   }
 
+  const gotoPage = (i, formikSetValues) => {
+    let index = i + 1
+    let indexTo = undefined
+    let indexFrom = undefined
+
+    if (index === 1)
+      indexFrom = 0
+    else
+      indexFrom = index * pageSize
+    indexTo = indexFrom + pageSize
+
+    formikSetValues({requestsFormik: requests.slice(indexFrom, indexTo)})
+    setPageIndex(i)
+  }
+
+
   if (loadingRequests || loadingUserDetails)
     return (<LoadingAnim />)
+
 
   else if (!loadingRequests && requests) {
     return (
@@ -72,24 +92,31 @@ const RetireRequests = (props) => {
           >
             {props => (
               <>
-                <Button
-                  className="btn"
-                  color="success" id="page1"
-                  onClick={() => props.setValues({requestsFormik: requests.slice(1, 10)})}>
-                  <FontAwesomeIcon icon={faSave}/>
-                </Button>
-                <Button
-                  className="btn"
-                  color="success" id="page1"
-                  onClick={() => props.setValues({requestsFormik: requests.slice(11, 20)})}>
-                  <FontAwesomeIcon icon={faSave}/>
-                </Button>
-                <Button
-                  className="btn"
-                  color="success" id="page1"
-                  onClick={() => props.setValues({requestsFormik: requests.slice(21, 30)})}>
-                  <FontAwesomeIcon icon={faSave}/>
-                </Button>
+                <Pagination className="mt-5">
+                  <PaginationItem disabled={pageIndex === 0}>
+                    <PaginationLink aria-label="Prva stranica" first onClick={() =>
+                      gotoPage(0, props.setValues)}/>
+                  </PaginationItem>
+                  <PaginationItem disabled={pageIndex === 0}>
+                    <PaginationLink aria-label="Prethodna" previous onClick={() => gotoPage(pageIndex - 1, props.setValues)}/>
+                  </PaginationItem>
+                  {
+                    [...Array(pageCount)].map((e, i) =>
+                      <PaginationItem active={ pageIndex === i ? true : false } key={i}>
+                        <PaginationLink onClick={() =>
+                          gotoPage(i, props.setValues)}>
+                          { i + 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    )
+                  }
+                  <PaginationItem disabled={pageIndex === pageCount - 1}>
+                    <PaginationLink aria-label="Sljedeca" next onClick={() => gotoPage(pageIndex + 1, props.setValues)}/>
+                  </PaginationItem>
+                  <PaginationItem disabled={pageIndex === pageCount - 1}>
+                    <PaginationLink aria-label="Posljednja stranica" last onClick={() => gotoPage(pageCount - 1, props.setValues)}/>
+                  </PaginationItem>
+                </Pagination>
                 <Form>
                   <FieldArray
                       name="requestsFormik"
@@ -112,7 +139,7 @@ const RetireRequests = (props) => {
                                 props.values.requestsFormik.map((request, index) =>
                                   <tr key={index}>
                                     <td className="align-middle text-center">
-                                      { props.values.requestsFormik.length - index }
+                                      { requests.length - index}
                                     </td>
                                     <td className="align-middle text-center">
                                       { DateFormatHR(props.values.requestsFormik[index].request_date, true) }
