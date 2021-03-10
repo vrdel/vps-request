@@ -29,7 +29,7 @@ export const DropDownMyActive = ({field, data=[], ...props}) =>
     name={field.name}
     required={true}
     className={`form-control custom-select text-center
-                ${field.value === 'Da' ? 'border-success' : field.value === 'Ne' ? 'border-danger' : 'border-warning'}`}
+                ${field.value === 'Da' ? 'bg-success border-success text-white' : field.value === 'Ne' ? 'bg-danger border-danger text-white' : ' bg-warning border-warning'}`}
     {...props}
   >
     {
@@ -49,7 +49,9 @@ export const emptyIfNullRequestPropery = (data) => {
     request => {
       var tmp_request = new Object()
       for (var property in request) {
-        if (request[property] === null )
+        if (request[property] === null && property === "vm_isactive_response")
+          tmp_request[property] = '-'
+        else if (request[property] === null)
           tmp_request[property] = ''
         else
           tmp_request[property] = request[property]
@@ -121,7 +123,7 @@ const MyRequestsActive = (props) => {
     && shouldAskVMActive !== undefined) {
     return (
       <BaseView
-        title='Aktivni poslužitelji'
+        title={`Aktivni poslužitelji u ${new Intl.DateTimeFormat('hr-HR', {year: 'numeric'}).format(new Date())}`}
         location={location}
         alert={!cookieAlert && alertVisible && shouldAskVMActive}
         alertdismiss={() => { new Cookies().set('alertDismiss', true); setAlertVisible(false)}}
@@ -151,7 +153,7 @@ const MyRequestsActive = (props) => {
                             <th style={{width: '180px'}}>Datum podnošenja</th>
                             <th style={{width: '250px'}}>Poslužitelj</th>
                             <th>Komentar (opcionalno)</th>
-                            <th style={{width: '140px'}}>Potreban u {new Date().getFullYear()}.</th>
+                            <th style={{width: '90px'}}>Potreban</th>
                           </tr>
                         </thead>
                         <tbody className="align-middle text-center">
@@ -172,6 +174,7 @@ const MyRequestsActive = (props) => {
                                     className="form-control"
                                     name={`activeRequests.${index}.vm_isactive_comment`}
                                     as="textarea"
+                                    spellcheck={false}
                                     rows={1}
                                   />
                                 </td>
@@ -179,7 +182,7 @@ const MyRequestsActive = (props) => {
                                   <Field
                                     name={`activeRequests.${index}.vm_isactive`}
                                     component={DropDownMyActive}
-                                    data={['Odaberi', 'Da', 'Ne']}
+                                    data={['-', 'Da', 'Ne']}
                                   />
                                   {
                                     props.errors && props.errors.activeRequests

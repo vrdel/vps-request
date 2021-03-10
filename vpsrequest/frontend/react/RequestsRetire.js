@@ -74,7 +74,7 @@ const RetireRequests = (props) => {
     return (
       <>
         <BaseView
-          title='Pred umirovljenje 2021.'
+          title={`Pred umirovljenje ${new Intl.DateTimeFormat('hr-HR', {year: 'numeric'}).format(new Date())}`}
           location={location}
         >
           <Formik
@@ -142,11 +142,11 @@ const RetireRequests = (props) => {
                             <thead className="table-active align-middle text-center">
                               <tr>
                                 <th style={{width: '5%'}}>r. br.</th>
-                                <th style={{width: '10%'}}>Datum podnošenja</th>
+                                <th style={{width: '10%'}}>Izjašnjen</th>
                                 <th style={{width: '5%'}}>Poslužitelj</th>
-                                <th style={{width: '10%'}}>Kontaktni email</th>
+                                <th style={{width: '10%'}}>Kontakt email</th>
                                 <th style={{width: '50%'}}>Komentar</th>
-                                <th style={{width: '5%'}}>Potreban u {new Date().getFullYear()}.</th>
+                                <th style={{width: '5%'}}>Potreban</th>
                                 <th style={{width: '5%%'}}>Spremi</th>
                               </tr>
                             </thead>
@@ -158,7 +158,7 @@ const RetireRequests = (props) => {
                                       { requests.length - index}
                                     </td>
                                     <td className="align-middle text-center">
-                                      { DateFormatHR(props.values.requestsFormik[index].request_date, true) }
+                                      { DateFormatHR(props.values.requestsFormik[index].vm_isactive_response, true) }
                                     </td>
                                     <td className="align-middle text-center">
                                       { props.values.requestsFormik[index].vm_fqdn }
@@ -182,8 +182,9 @@ const RetireRequests = (props) => {
                                       />
                                     </td>
                                     <td className="align-middle text-center">
-
-                                      <Button className="btn" color="success" id="submit-button" type="submit"> <FontAwesomeIcon icon={faSave}/></Button>
+                                      <Button className="btn" id="submit-button" type="submit" size="sm">
+                                        <FontAwesomeIcon type="submit" icon={faSave}/>
+                                      </Button>
                                     </td>
                                   </tr>)
                               }
