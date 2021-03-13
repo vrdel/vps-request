@@ -77,7 +77,6 @@ const RetireRequests = (props) => {
     setPageIndex(i)
   }
 
-
   if (loading)
     return (<LoadingAnim />)
 
@@ -87,6 +86,7 @@ const RetireRequests = (props) => {
         <BaseView
           title={`Pred umirovljenje ${new Intl.DateTimeFormat('hr-HR', {year: 'numeric'}).format(new Date())}`}
           location={location}
+          nopaddingside={true}
         >
           <Formik
             initialValues={{
@@ -165,13 +165,13 @@ const RetireRequests = (props) => {
                               <Table responsive hover size="sm">
                                 <thead className="table-active align-middle text-center">
                                   <tr>
-                                    <th style={{width: '5%'}}>r. br.</th>
+                                    <th style={{width: '10%'}}>Podnesen</th>
                                     <th style={{width: '10%'}}>Izjašnjen</th>
-                                    <th style={{width: '5%'}}>Poslužitelj</th>
+                                    <th style={{width: '10%'}}>Poslužitelj</th>
                                     <th style={{width: '10%'}}>Kontakt email</th>
-                                    <th style={{width: '50%'}}>Komentar</th>
-                                    <th style={{width: '5%'}}>Potreban</th>
-                                    <th style={{width: '5%%'}}>Spremi</th>
+                                    <th style={{width: '47%'}}>Komentar</th>
+                                    <th style={{width: '8%'}}>Potreban</th>
+                                    <th style={{width: '5%'}}>Spremi</th>
                                   </tr>
                                 </thead>
                                 <tbody className="align-middle text-center">
@@ -225,13 +225,13 @@ const RetireRequests = (props) => {
                                     </td>
                                     <td>
                                       <select
-                                        style={{width: '180px'}}
-                                        className="custom-select text-primary"
+                                        className="custom-select"
                                         value={pageSize}
                                         onChange={e => {
                                           setPageSize(Number(e.target.value))
                                         }}>
-                                        <option value='-'>Foo</option>
+                                        <option value='Svi'>Svi</option>
+                                        <option value='-'>-</option>
                                         <option value='Da'>Da</option>
                                         <option value='Ne'>Ne</option>
                                       </select>
@@ -244,9 +244,7 @@ const RetireRequests = (props) => {
                                     props.values.requestsFormik.map((request, index) =>
                                       <tr key={index}>
                                         <td className="align-middle text-center">
-                                          {
-                                            requests.length - index - (pageIndex * pageSize)
-                                          }
+                                          { DateFormatHR(props.values.requestsFormik[index].request_date, true) }
                                         </td>
                                         <td className="align-middle text-center">
                                           { DateFormatHR(props.values.requestsFormik[index].vm_isactive_response, true) }

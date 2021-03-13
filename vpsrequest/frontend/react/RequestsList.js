@@ -113,7 +113,7 @@ function RequestsTable({ columns, data }) {
                   return (
                     <td key={cell_index}
                       className="align-middle align-self-center">
-                        {rows.length - row_index}
+                      {rows.length - row_index}
                     </td>
                   )
                 else
@@ -230,6 +230,7 @@ const ListRequests = (props) => {
     return (
       <BaseView
         title={props.typeRequest.title}
+        nopaddingside={true}
         location={location}>
         {
           <span>
@@ -245,15 +246,18 @@ const ListRequests = (props) => {
       </BaseView>
     )
   }
+
   else if (!loadingRequests && requests && !isApprovedList) {
     return (
       <BaseView
         title={props.typeRequest.title}
+        nopaddingside={true}
         location={location}>
         <RequestsTable columns={columns} data={requests}/>
       </BaseView>
     )
   }
+
   else
     return null
 }
