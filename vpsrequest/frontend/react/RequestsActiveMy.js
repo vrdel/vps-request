@@ -102,7 +102,6 @@ const MyRequestsActive = (props) => {
     initializeComponent();
   }, [])
 
-
   const handleOnSubmit = async (data) => {
     let response = await backend.changeObject(`${apiListRequestsActive}/`, data);
 
