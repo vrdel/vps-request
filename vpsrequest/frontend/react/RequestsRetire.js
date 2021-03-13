@@ -81,7 +81,7 @@ const RetireRequests = (props) => {
     else
       indexTo = indexFrom + pageSize
 
-    formikSetValues({requestsFormik: requests.slice(indexFrom, indexTo)})
+    formikSetValues({requestsFormik: requestsView.slice(indexFrom, indexTo)})
     setPageIndex(i)
   }
 
@@ -89,11 +89,11 @@ const RetireRequests = (props) => {
     let filtered = Array()
     if (field === 'vm_isactive') {
       if (target === "Svi")
-        filtered = requests.slice(0, pageSize)
+        filtered = requests
       else if (target === "-")
-        filtered = requests.filter((elem) => elem[field] === "").slice(0, pageSize)
+        filtered = requests.filter((elem) => elem[field] === "")
       else
-        filtered = requests.filter((elem) => matchItem(elem[field], target)).slice(0, pageSize)
+        filtered = requests.filter((elem) => matchItem(elem[field], target))
     }
     setRequestsView(filtered)
   }
