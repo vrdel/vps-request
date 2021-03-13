@@ -98,21 +98,27 @@ const RetireRequests = (props) => {
 
     if (!resetSearch) {
       if (field === 'user.email')
-        filtered = filtered.filter((elem) => matchItem(elem.user.email, target))
+        filtered = filtered.filter((elem) => matchItem(elem.user.email, target)
+          || matchItem(elem.sys_email, target))
       if (field === 'vm_fqdn')
-        filtered = filtered.filter((elem) => matchItem(elem[field], target))
+        filtered = filtered.filter((elem) => matchItem(elem[field], target)
+          || matchItem(elem.vm_ip, target))
       setRequestsView(filtered)
     }
     else {
       let filtered = [...requests]
 
       if (field === 'user.email') {
-        filtered = filtered.filter((elem) => matchItem(elem.vm_fqdn, searchVmFqdn))
-        filtered = filtered.filter((elem) => matchItem(elem.user.email, target))
+        filtered = filtered.filter((elem) => matchItem(elem.vm_fqdn, searchVmFqdn)
+          || matchItem(elem.vm_ip, searchVmFqdn) )
+        filtered = filtered.filter((elem) => matchItem(elem.user.email, target)
+          || matchItem(elem.sys_email, target))
       }
       else if (field === 'vm_fqdn') {
-        filtered = filtered.filter((elem) => matchItem(elem.user.email, searchEmail))
-        filtered = filtered.filter((elem) => matchItem(elem[field], target))
+        filtered = filtered.filter((elem) => matchItem(elem.user.email, searchEmail)
+          || matchItem(elem.sys_email, searchEmail))
+        filtered = filtered.filter((elem) => matchItem(elem[field], target)
+          || matchItem(elem.vm_ip, target))
       }
       setRequestsView(filtered)
     }
@@ -120,9 +126,11 @@ const RetireRequests = (props) => {
     if (field === 'vm_isactive') {
       let requestsSearch = [...requests]
       if (searchVmFqdn)
-        requestsSearch = requestsSearch.filter((elem) => matchItem(elem.vm_fqdn, searchVmFqdn))
+        requestsSearch = requestsSearch.filter((elem) => matchItem(elem.vm_fqdn, searchVmFqdn)
+          || matchItem(elem.vm_ip, searchVmFqdn))
       if (searchEmail)
-        requestsSearch = requestsSearch.filter((elem) => matchItem(elem.user.email, searchEmail))
+        requestsSearch = requestsSearch.filter((elem) => matchItem(elem.user.email, searchEmail)
+          || matchItem(elem.sys_email, searchEmail))
 
       if (target === "Svi")
         filtered = requestsSearch
@@ -226,8 +234,8 @@ const RetireRequests = (props) => {
                                   <tr>
                                     <th style={{width: '10%'}}>Podnesen</th>
                                     <th style={{width: '10%'}}>Izjašnjen</th>
-                                    <th style={{width: '10%'}}>Poslužitelj</th>
-                                    <th style={{width: '10%'}}>Kontakt email</th>
+                                    <th style={{width: '10%'}}>Poslužitelj, IP adresa</th>
+                                    <th style={{width: '10%'}}>Kontaktna, sistemac email</th>
                                     <th style={{width: '47%'}}>Komentar</th>
                                     <th style={{width: '8%'}}>Potreban</th>
                                     <th style={{width: '5%'}}>Spremi</th>
@@ -327,17 +335,19 @@ const RetireRequests = (props) => {
                                           { DateFormatHR(props.values.requestsFormik[index].vm_isactive_response, true) }
                                         </td>
                                         <td className="align-middle text-left">
-                                          { props.values.requestsFormik[index].vm_fqdn }
+                                          { props.values.requestsFormik[index].vm_fqdn } <br/>
+                                          { props.values.requestsFormik[index].vm_ip }
                                         </td>
                                         <td className="align-middle text-left">
-                                          { props.values.requestsFormik[index].user.email}
+                                          { props.values.requestsFormik[index].user.email } <br/>
+                                          { props.values.requestsFormik[index].sys_email }
                                         </td>
                                         <td className="align-middle text-center">
                                           <Field
                                             className="form-control"
                                             name={`requestsFormik.${index}.vm_isactive_comment`}
                                             as="textarea"
-                                            rows={1}
+                                            rows={2}
                                           />
                                         </td>
                                         <td className="align-middle text-center">
