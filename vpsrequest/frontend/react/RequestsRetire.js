@@ -25,6 +25,11 @@ export const SearchField = ({field, ...rest}) =>
   <input type="text" placeholder="Pretraži" {...field} {...rest}/>
 
 
+function matchItem(item, value) {
+  return item.toLowerCase().indexOf(value.toLowerCase()) !== -1;
+}
+
+
 const RetireRequests = (props) => {
   const location = props.location;
   const backend = new Backend();
@@ -35,6 +40,7 @@ const RetireRequests = (props) => {
   const [userDetails, setUserDetails] = useState(undefined)
   const [loading, setLoading] = useState(false);
   const [requests, setRequests] = useState(undefined)
+  const [requestsView, setRequestsView] = useState(undefined)
   const [searchDateRequest, setSearchDateRequest] = useState("")
   const [searchDateResponse, setSearchDateResponse] = useState("")
   const [searchVmFqdn, setSearchVmFqdn] = useState("")
@@ -48,6 +54,7 @@ const RetireRequests = (props) => {
     if (session.active) {
       const fetched = await backend.fetchData(`${apiListRequests}`);
       setRequests(emptyIfNullRequestPropery(fetched));
+      setRequestsView(emptyIfNullRequestPropery(fetched));
       setUserDetails(session.userdetails);
       setPageCount(Math.trunc(fetched.length / pageSize))
       setLoading(false);
@@ -78,10 +85,23 @@ const RetireRequests = (props) => {
     setPageIndex(i)
   }
 
+  const searchHandler = (field, target) => {
+    let filtered = Array()
+    if (field === 'vm_isactive') {
+      if (target === "Svi")
+        filtered = requests.slice(0, pageSize)
+      else if (target === "-")
+        filtered = requests.filter((elem) => elem[field] === "").slice(0, pageSize)
+      else
+        filtered = requests.filter((elem) => matchItem(elem[field], target)).slice(0, pageSize)
+    }
+    setRequestsView(filtered)
+  }
+
   if (loading)
     return (<LoadingAnim />)
 
-  else if (!loading && requests && userDetails) {
+  else if (!loading && requests && requestsView && userDetails) {
     return (
       <React.Fragment>
         <BaseView
@@ -91,7 +111,7 @@ const RetireRequests = (props) => {
         >
           <Formik
             initialValues={{
-              requestsFormik: requests.slice(0, pageSize),
+              requestsFormik: requestsView.slice(0, pageSize),
               searchDateRequest: searchDateRequest,
               searchDateResponse: searchDateResponse,
               searchVmFqdn: searchVmFqdn,
@@ -101,6 +121,7 @@ const RetireRequests = (props) => {
             }}
             validateOnChange={false}
             validateOnBlur={false}
+            enableReinitialize={true}
             onSubmit={(values, {setSubmitting} )=> {
               handleOnSubmit(values.requestsFormik)
               setSubmitting(false)
@@ -234,17 +255,21 @@ const RetireRequests = (props) => {
                                       />
                                     </td>
                                     <td>
-                                      <select
-                                        className="custom-select"
-                                        value={pageSize}
-                                        onChange={e => {
-                                          setPageSize(Number(e.target.value))
-                                        }}>
-                                        <option value='Svi'>Svi</option>
-                                        <option value='-'>-</option>
-                                        <option value='Da'>Da</option>
-                                        <option value='Ne'>Ne</option>
-                                      </select>
+                                      <Field
+                                        name="searchVmIsActive"
+                                        component="select"
+                                        className="form-control custom-select"
+                                        onChange={(e) => {
+                                          searchHandler('vm_isactive', e.target.value)
+                                          setSearchVmIsActive(e.target.value)
+                                        }}
+                                      >
+                                        <option key={0} value='Svi' hidden className="text-muted">Svi</option>
+                                        <option key={1} value='Svi'>Svi</option>
+                                        <option key={2} value='-'>-</option>
+                                        <option key={3} value='Da'>Da</option>
+                                        <option key={4} value='Ne'>Ne</option>
+                                      </Field>
                                     </td>
                                     <td>
                                       {''}

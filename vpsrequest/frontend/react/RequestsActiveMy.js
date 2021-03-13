@@ -35,7 +35,7 @@ export const DropDownMyActive = ({field, data=[], ...props}) =>
     {
       data.map((name, i) =>
         i === 0 ?
-          <option key={i} hidden>{name}</option> :
+          <option key={i} className="text-muted" hidden>{name}</option> :
           <option key={i} value={name}>{name}</option>
       )
     }
