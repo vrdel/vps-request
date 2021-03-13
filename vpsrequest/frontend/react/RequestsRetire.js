@@ -41,8 +41,6 @@ const RetireRequests = (props) => {
   const [loading, setLoading] = useState(false);
   const [requests, setRequests] = useState(undefined)
   const [requestsView, setRequestsView] = useState(undefined)
-  const [searchDateRequest, setSearchDateRequest] = useState("")
-  const [searchDateResponse, setSearchDateResponse] = useState("")
   const [searchVmFqdn, setSearchVmFqdn] = useState("")
   const [searchEmail, setSearchEmail] = useState("")
   const [searchVmIsActiveComment, setSearchVmIsActiveComment] = useState("")
@@ -98,6 +96,9 @@ const RetireRequests = (props) => {
     else if (field === 'vm_fqdn' && searchVmFqdn.length > target.length)
       resetSearch = true
 
+    else if (field === 'vm_isactive_comment' && searchVmIsActiveComment.length > target.length)
+      resetSearch = true
+
     if (!resetSearch) {
       if (field === 'user.email')
         filtered = filtered.filter((elem) => matchItem(elem.user.email, target)
@@ -106,6 +107,9 @@ const RetireRequests = (props) => {
       if (field === 'vm_fqdn')
         filtered = filtered.filter((elem) => matchItem(elem[field], target)
           || matchItem(elem.vm_ip, target))
+
+      if (field === 'vm_isactive_comment')
+        filtered = filtered.filter((elem) => matchItem(elem[field], target))
 
       setRequestsView(filtered)
     }
@@ -129,6 +133,9 @@ const RetireRequests = (props) => {
           || matchItem(elem.vm_ip, target))
       }
 
+      else if (field === 'vm_isactive_comment')
+        filtered = filtered.filter((elem) => matchItem(elem[field], target))
+
       setRequestsView(filtered)
     }
 
@@ -142,6 +149,10 @@ const RetireRequests = (props) => {
       if (searchEmail)
         requestsSearch = requestsSearch.filter((elem) => matchItem(elem.user.email, searchEmail)
           || matchItem(elem.sys_email, searchEmail))
+
+      if (searchVmIsActiveComment)
+        requestsSearch = requestsSearch.filter((elem) =>
+          matchItem(elem.vm_isactive_comment, searchVmIsActiveComment))
 
       if (target === "Svi")
         filtered = requestsSearch
@@ -170,8 +181,6 @@ const RetireRequests = (props) => {
           <Formik
             initialValues={{
               requestsFormik: requestsView.slice(0, pageSize),
-              searchDateRequest: searchDateRequest,
-              searchDateResponse: searchDateResponse,
               searchVmFqdn: searchVmFqdn,
               searchEmail: searchEmail,
               searchVmIsActiveComment: searchVmIsActiveComment,
@@ -246,13 +255,13 @@ const RetireRequests = (props) => {
                               <Table responsive hover size="sm">
                                 <thead className="table-active align-middle text-center">
                                   <tr>
-                                    <th style={{width: '10%'}}>Podnesen</th>
-                                    <th style={{width: '10%'}}>Izjašnjen</th>
-                                    <th style={{width: '10%'}}>Poslužitelj, IP adresa</th>
-                                    <th style={{width: '10%'}}>Kontaktna, sistemac email</th>
-                                    <th style={{width: '47%'}}>Komentar</th>
-                                    <th style={{width: '8%'}}>Potreban</th>
-                                    <th style={{width: '5%'}}>Spremi</th>
+                                    <th style={{width: '90px'}}>Podnesen</th>
+                                    <th style={{width: '90px'}}>Izjašnjen</th>
+                                    <th>Poslužitelj, IP adresa</th>
+                                    <th>Kontaktna, sistemac email</th>
+                                    <th>Komentar</th>
+                                    <th style={{width: '80px'}}>Potreban</th>
+                                    <th style={{width: '50px'}}>Spremi</th>
                                   </tr>
                                 </thead>
                                 <tbody className="align-middle text-center">
@@ -298,7 +307,10 @@ const RetireRequests = (props) => {
                                         required={false}
                                         className="form-control"
                                         id="searchVmIsActiveComment"
-                                        onChange={(e) => (e)}
+                                        onChange={(e) => {
+                                          searchHandler('vm_isactive_comment', e.target.value)
+                                          setSearchVmIsActiveComment(e.target.value)
+                                        }}
                                         component={SearchField}
                                       />
                                     </td>
