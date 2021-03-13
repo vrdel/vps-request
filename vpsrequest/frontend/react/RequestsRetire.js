@@ -86,16 +86,52 @@ const RetireRequests = (props) => {
   }
 
   const searchHandler = (field, target) => {
-    let filtered = Array()
-    if (field === 'vm_isactive') {
-      if (target === "Svi")
-        filtered = requests
-      else if (target === "-")
-        filtered = requests.filter((elem) => elem[field] === "")
-      else
-        filtered = requests.filter((elem) => matchItem(elem[field], target))
+    let filtered = [...requestsView]
+    let resetSearch = false
+
+    if (target.length === '')
+      resetSearch = true
+    else if (field === 'user.email' && searchEmail.length > target.length)
+      resetSearch = true
+    else if (field === 'vm_fqdn' && searchVmFqdn.length > target.length)
+      resetSearch = true
+
+    if (!resetSearch) {
+      if (field === 'user.email')
+        filtered = filtered.filter((elem) => matchItem(elem.user.email, target))
+      if (field === 'vm_fqdn')
+        filtered = filtered.filter((elem) => matchItem(elem[field], target))
+      setRequestsView(filtered)
     }
-    setRequestsView(filtered)
+    else {
+      let filtered = [...requests]
+
+      if (field === 'user.email') {
+        filtered = filtered.filter((elem) => matchItem(elem.vm_fqdn, searchVmFqdn))
+        filtered = filtered.filter((elem) => matchItem(elem.user.email, target))
+      }
+      else if (field === 'vm_fqdn') {
+        filtered = filtered.filter((elem) => matchItem(elem.user.email, searchEmail))
+        filtered = filtered.filter((elem) => matchItem(elem[field], target))
+      }
+      setRequestsView(filtered)
+    }
+
+    if (field === 'vm_isactive') {
+      let requestsSearch = [...requests]
+      if (searchVmFqdn)
+        requestsSearch = requestsSearch.filter((elem) => matchItem(elem.vm_fqdn, searchVmFqdn))
+      if (searchEmail)
+        requestsSearch = requestsSearch.filter((elem) => matchItem(elem.user.email, searchEmail))
+
+      if (target === "Svi")
+        filtered = requestsSearch
+      else if (target === "-")
+        filtered = requestsSearch.filter((elem) => elem[field] === "")
+      else
+        filtered = requestsSearch.filter((elem) => matchItem(elem[field], target))
+      setRequestsView(filtered)
+    }
   }
 
   if (loading)
@@ -228,7 +264,10 @@ const RetireRequests = (props) => {
                                         required={false}
                                         className="form-control"
                                         id="searchVmFqdn"
-                                        onChange={(e) => (e)}
+                                        onChange={(e) => {
+                                          searchHandler('vm_fqdn', e.target.value)
+                                          setSearchVmFqdn(e.target.value)
+                                        }}
                                         component={SearchField}
                                       />
                                     </td>
@@ -239,7 +278,10 @@ const RetireRequests = (props) => {
                                         required={false}
                                         className="form-control"
                                         id="searchEmail"
-                                        onChange={(e) => (e)}
+                                        onChange={(e) => {
+                                          searchHandler('user.email', e.target.value)
+                                          setSearchEmail(e.target.value)
+                                        }}
                                         component={SearchField}
                                       />
                                     </td>
@@ -278,16 +320,16 @@ const RetireRequests = (props) => {
                                   {
                                     props.values.requestsFormik.map((request, index) =>
                                       <tr key={index}>
-                                        <td className="align-middle text-center">
+                                        <td className="align-middle text-left">
                                           { DateFormatHR(props.values.requestsFormik[index].request_date, true) }
                                         </td>
-                                        <td className="align-middle text-center">
+                                        <td className="align-middle text-left">
                                           { DateFormatHR(props.values.requestsFormik[index].vm_isactive_response, true) }
                                         </td>
-                                        <td className="align-middle text-center">
+                                        <td className="align-middle text-left">
                                           { props.values.requestsFormik[index].vm_fqdn }
                                         </td>
-                                        <td className="align-middle text-center">
+                                        <td className="align-middle text-left">
                                           { props.values.requestsFormik[index].user.email}
                                         </td>
                                         <td className="align-middle text-center">
