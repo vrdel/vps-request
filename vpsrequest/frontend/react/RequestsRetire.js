@@ -10,6 +10,7 @@ import {
   Table
 } from 'reactstrap';
 import {
+  faSearch,
   faSave,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,6 +19,10 @@ import { BaseView, LoadingAnim } from './UIElements';
 import { CONFIG } from './Config'
 import { DateFormatHR } from './Util'
 import { DropDownMyActive, emptyIfNullRequestPropery } from './RequestsActiveMy';
+
+
+export const SearchField = ({field, ...rest}) =>
+  <input type="text" placeholder="Pretraži" {...field} {...rest}/>
 
 
 const RetireRequests = (props) => {
@@ -30,6 +35,11 @@ const RetireRequests = (props) => {
   const [userDetails, setUserDetails] = useState(undefined)
   const [loading, setLoading] = useState(false);
   const [requests, setRequests] = useState(undefined)
+  const [searchDateResponse, setSearchDateResponse] = useState("")
+  const [searchVmFqdn, setSearchVmFqdn] = useState("")
+  const [searchEmail, setSearchEmail] = useState("")
+  const [searchVmIsActiveComment, setSearchVmIsActiveComment] = useState("")
+  const [searchVmIsActive, setSearchVmIsActive] = useState("")
 
   const initializeComponent = async () => {
     const session = await backend.isActiveSession();
@@ -79,7 +89,14 @@ const RetireRequests = (props) => {
           location={location}
         >
           <Formik
-            initialValues={{requestsFormik: requests.slice(0, pageSize)}}
+            initialValues={{
+              requestsFormik: requests.slice(0, pageSize),
+              searchDateResponse: searchDateResponse,
+              searchVmFqdn: searchVmFqdn,
+              searchEmail: searchEmail,
+              searchVmIsActiveComment: searchVmIsActiveComment,
+              searchVmIsActive: searchVmIsActive,
+            }}
             validateOnChange={false}
             validateOnBlur={false}
             onSubmit={(values, {setSubmitting} )=> {
@@ -158,6 +175,71 @@ const RetireRequests = (props) => {
                                   </tr>
                                 </thead>
                                 <tbody className="align-middle text-center">
+                                  <tr style={{background: "#ECECEC"}}>
+                                    <td className="align-middle text-center">
+                                      <FontAwesomeIcon icon={faSearch}/>
+                                    </td>
+                                    <td>
+                                      <Field
+                                        type="text"
+                                        name="searchDateResponse"
+                                        required={false}
+                                        className="form-control"
+                                        id="searchDateResponse"
+                                        onChange={(e) => (e)}
+                                        component={SearchField}
+                                      />
+                                    </td>
+                                    <td>
+                                      <Field
+                                        type="text"
+                                        name="searchVmFqdn"
+                                        required={false}
+                                        className="form-control"
+                                        id="searchVmFqdn"
+                                        onChange={(e) => (e)}
+                                        component={SearchField}
+                                      />
+                                    </td>
+                                    <td>
+                                      <Field
+                                        type="text"
+                                        name="searchEmail"
+                                        required={false}
+                                        className="form-control"
+                                        id="searchEmail"
+                                        onChange={(e) => (e)}
+                                        component={SearchField}
+                                      />
+                                    </td>
+                                    <td>
+                                      <Field
+                                        type="text"
+                                        name="searchVmIsActiveComment"
+                                        required={false}
+                                        className="form-control"
+                                        id="searchVmIsActiveComment"
+                                        onChange={(e) => (e)}
+                                        component={SearchField}
+                                      />
+                                    </td>
+                                    <td>
+                                      <select
+                                        style={{width: '180px'}}
+                                        className="custom-select text-primary"
+                                        value={pageSize}
+                                        onChange={e => {
+                                          setPageSize(Number(e.target.value))
+                                        }}>
+                                        <option value='-'>Foo</option>
+                                        <option value='Da'>Da</option>
+                                        <option value='Ne'>Ne</option>
+                                      </select>
+                                    </td>
+                                    <td>
+                                      {''}
+                                    </td>
+                                  </tr>
                                   {
                                     props.values.requestsFormik.map((request, index) =>
                                       <tr key={index}>
@@ -215,7 +297,7 @@ const RetireRequests = (props) => {
 
   else
     return null
-
 }
+
 
 export default RetireRequests;
