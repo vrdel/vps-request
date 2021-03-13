@@ -35,6 +35,7 @@ const RetireRequests = (props) => {
   const [userDetails, setUserDetails] = useState(undefined)
   const [loading, setLoading] = useState(false);
   const [requests, setRequests] = useState(undefined)
+  const [searchDateRequest, setSearchDateRequest] = useState("")
   const [searchDateResponse, setSearchDateResponse] = useState("")
   const [searchVmFqdn, setSearchVmFqdn] = useState("")
   const [searchEmail, setSearchEmail] = useState("")
@@ -91,6 +92,7 @@ const RetireRequests = (props) => {
           <Formik
             initialValues={{
               requestsFormik: requests.slice(0, pageSize),
+              searchDateRequest: searchDateRequest,
               searchDateResponse: searchDateResponse,
               searchVmFqdn: searchVmFqdn,
               searchEmail: searchEmail,
@@ -177,7 +179,15 @@ const RetireRequests = (props) => {
                                 <tbody className="align-middle text-center">
                                   <tr style={{background: "#ECECEC"}}>
                                     <td className="align-middle text-center">
-                                      <FontAwesomeIcon icon={faSearch}/>
+                                      <Field
+                                        type="text"
+                                        name="searchDateRequest"
+                                        required={false}
+                                        className="form-control"
+                                        id="searchDateRequest"
+                                        onChange={(e) => (e)}
+                                        component={SearchField}
+                                      />
                                     </td>
                                     <td>
                                       <Field
