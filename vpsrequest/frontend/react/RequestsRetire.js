@@ -91,8 +91,10 @@ const RetireRequests = (props) => {
 
     if (target.length === '')
       resetSearch = true
+
     else if (field === 'user.email' && searchEmail.length > target.length)
       resetSearch = true
+
     else if (field === 'vm_fqdn' && searchVmFqdn.length > target.length)
       resetSearch = true
 
@@ -100,44 +102,56 @@ const RetireRequests = (props) => {
       if (field === 'user.email')
         filtered = filtered.filter((elem) => matchItem(elem.user.email, target)
           || matchItem(elem.sys_email, target))
+
       if (field === 'vm_fqdn')
         filtered = filtered.filter((elem) => matchItem(elem[field], target)
           || matchItem(elem.vm_ip, target))
+
       setRequestsView(filtered)
     }
+
     else {
       let filtered = [...requests]
 
       if (field === 'user.email') {
         filtered = filtered.filter((elem) => matchItem(elem.vm_fqdn, searchVmFqdn)
           || matchItem(elem.vm_ip, searchVmFqdn) )
+
         filtered = filtered.filter((elem) => matchItem(elem.user.email, target)
           || matchItem(elem.sys_email, target))
       }
+
       else if (field === 'vm_fqdn') {
         filtered = filtered.filter((elem) => matchItem(elem.user.email, searchEmail)
           || matchItem(elem.sys_email, searchEmail))
+
         filtered = filtered.filter((elem) => matchItem(elem[field], target)
           || matchItem(elem.vm_ip, target))
       }
+
       setRequestsView(filtered)
     }
 
     if (field === 'vm_isactive') {
       let requestsSearch = [...requests]
+
       if (searchVmFqdn)
         requestsSearch = requestsSearch.filter((elem) => matchItem(elem.vm_fqdn, searchVmFqdn)
           || matchItem(elem.vm_ip, searchVmFqdn))
+
       if (searchEmail)
         requestsSearch = requestsSearch.filter((elem) => matchItem(elem.user.email, searchEmail)
           || matchItem(elem.sys_email, searchEmail))
 
       if (target === "Svi")
         filtered = requestsSearch
+
       else if (target === "-")
         filtered = requestsSearch.filter((elem) => elem[field] === "")
+
       else
         filtered = requestsSearch.filter((elem) => matchItem(elem[field], target))
+
       setRequestsView(filtered)
     }
   }
@@ -244,26 +258,10 @@ const RetireRequests = (props) => {
                                 <tbody className="align-middle text-center">
                                   <tr style={{background: "#ECECEC"}}>
                                     <td className="align-middle text-center">
-                                      <Field
-                                        type="text"
-                                        name="searchDateRequest"
-                                        required={false}
-                                        className="form-control"
-                                        id="searchDateRequest"
-                                        onChange={(e) => (e)}
-                                        component={SearchField}
-                                      />
+                                      <FontAwesomeIcon icon={faSearch}/>
                                     </td>
-                                    <td>
-                                      <Field
-                                        type="text"
-                                        name="searchDateResponse"
-                                        required={false}
-                                        className="form-control"
-                                        id="searchDateResponse"
-                                        onChange={(e) => (e)}
-                                        component={SearchField}
-                                      />
+                                    <td className="align-middle text-center">
+                                      {''}
                                     </td>
                                     <td>
                                       <Field
