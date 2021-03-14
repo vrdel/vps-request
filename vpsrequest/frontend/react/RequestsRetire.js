@@ -7,7 +7,7 @@ import {
   PaginationLink,
   Row,
   Col,
-  Table
+  Table,
 } from 'reactstrap';
 import {
   faSearch,
@@ -15,7 +15,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Formik, Field, FieldArray, Form } from 'formik';
-import { BaseView, LoadingAnim } from './UIElements';
+import { BaseView, LoadingAnim, NotifyOk, NotifyError, } from './UIElements';
 import { CONFIG } from './Config'
 import { DateFormatHR } from './Util'
 import { DropDownMyActive, emptyIfNullRequestPropery } from './RequestsActiveMy';
@@ -64,8 +64,18 @@ const RetireRequests = (props) => {
     initializeComponent();
   }, [])
 
+
   const handleOnSubmit = async (data) => {
-    console.log(data)
+    let response = await backend.changeObject(`${apiListRequests}/`, data);
+
+    if (response.ok)
+      NotifyOk({
+        msg: 'Statusi poslužitelja uspješno promijenjeni',
+        title: `Uspješno - HTTP ${response.status}`});
+    else
+      NotifyError({
+        msg: response.statusText,
+        title: `Greška - HTTP ${response.status}`});
   }
 
   const gotoPage = (i, formikSetValues) => {
