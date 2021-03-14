@@ -80,25 +80,18 @@ class RequestsViewset(viewsets.ModelViewSet):
     @action(detail=False, methods=['patch', 'get'])
     def vmissued_unknown(self, request):
         if request.method == 'PATCH':
-            rets = list()
-
-            for req in request.data:
-                id = req['id']
-                req_db = models.Request.objects.get(id=id)
-                if (req['vm_isactive'] == '' and req_db.vm_isactive is None and
-                    req['vm_isactive_comment'] == ''  and req_db.vm_isactive_comment is None):
-                    continue
-                if req_db.vm_isactive != req['vm_isactive']:
-                    req['vm_isactive_response'] = datetime.datetime.now()
-                req['vm_isactive'] = settings.STATUSESVMACTIVE[req['vm_isactive']]
-                serializer = serializers.RequestsListActiveWithUserSerializer(req_db, data=req)
-                if serializer.is_valid():
-                    serializer.save()
-                    rets.append(serializer.data)
-                else:
-                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-            return Response(rets)
+            req = request.data
+            id = req['id']
+            req_db = models.Request.objects.get(id=id)
+            if req_db.vm_isactive != req['vm_isactive']:
+                req['vm_isactive_response'] = datetime.datetime.now()
+            req['vm_isactive'] = settings.STATUSESVMACTIVE[req['vm_isactive']]
+            serializer = serializers.RequestsListActiveWithUserSerializer(req_db, data=req)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         else:
             requests = models.Request.objects.filter(approved=2).order_by('-approved_date')

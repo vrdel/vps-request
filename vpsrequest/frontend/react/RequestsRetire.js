@@ -38,6 +38,7 @@ const RetireRequests = (props) => {
   const [pageIndex, setPageIndex] = useState(0)
   const [pageCount, setPageCount] = useState(undefined)
   const [userDetails, setUserDetails] = useState(undefined)
+  const [indexRequestSubmit, setIndexRequestSubmit] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [requests, setRequests] = useState(undefined)
   const [requestsView, setRequestsView] = useState(undefined)
@@ -177,6 +178,10 @@ const RetireRequests = (props) => {
     }
   }
 
+  const handleClickSubmit = (e, index) => {
+    setIndexRequestSubmit(index)
+  }
+
   if (loading)
     return (<LoadingAnim />)
 
@@ -200,7 +205,7 @@ const RetireRequests = (props) => {
             validateOnBlur={false}
             enableReinitialize={true}
             onSubmit={(values, {setSubmitting} )=> {
-              handleOnSubmit(values.requestsFormik)
+              handleOnSubmit(values.requestsFormik[indexRequestSubmit])
               setSubmitting(false)
             }}
           >
@@ -378,7 +383,7 @@ const RetireRequests = (props) => {
                                           />
                                         </td>
                                         <td className="align-middle text-center">
-                                          <Button className="btn" id="submit-button" type="submit" size="sm">
+                                          <Button className="btn" id="submit-button" onClick={(e) => handleClickSubmit(e, index)} type="submit" size="sm">
                                             <FontAwesomeIcon type="submit" icon={faSave}/>
                                           </Button>
                                         </td>
