@@ -132,7 +132,6 @@ export const ApprovedRequestHandler = (props) => {
   if (loading)
     return (<LoadingAnim />)
 
-
   else if (!loading && listVMOSes && initValues) {
     return (
       <BaseView
@@ -232,6 +231,6 @@ export const ApprovedRequestHandler = (props) => {
     )
   }
 
-    else
-      return null
+  else
+    return null
 }

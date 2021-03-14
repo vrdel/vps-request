@@ -7,17 +7,27 @@ import {
   PaginationLink,
   Row,
   Col,
-  Table
+  Table,
 } from 'reactstrap';
 import {
+  faSearch,
   faSave,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Formik, Field, FieldArray, Form } from 'formik';
-import { BaseView, LoadingAnim } from './UIElements';
+import { BaseView, LoadingAnim, NotifyOk, NotifyError, } from './UIElements';
 import { CONFIG } from './Config'
 import { DateFormatHR } from './Util'
 import { DropDownMyActive, emptyIfNullRequestPropery } from './RequestsActiveMy';
+
+
+export const SearchField = ({field, ...rest}) =>
+  <input type="text" placeholder="Pretraži" {...field} {...rest}/>
+
+
+function matchItem(item, value) {
+  return item.toLowerCase().indexOf(value.toLowerCase()) !== -1;
+}
 
 
 const RetireRequests = (props) => {
@@ -28,8 +38,14 @@ const RetireRequests = (props) => {
   const [pageIndex, setPageIndex] = useState(0)
   const [pageCount, setPageCount] = useState(undefined)
   const [userDetails, setUserDetails] = useState(undefined)
+  const [indexRequestSubmit, setIndexRequestSubmit] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [requests, setRequests] = useState(undefined)
+  const [requestsView, setRequestsView] = useState(undefined)
+  const [searchVmFqdn, setSearchVmFqdn] = useState("")
+  const [searchEmail, setSearchEmail] = useState("")
+  const [searchVmIsActiveComment, setSearchVmIsActiveComment] = useState("")
+  const [searchVmIsActive, setSearchVmIsActive] = useState("")
 
   const initializeComponent = async () => {
     const session = await backend.isActiveSession();
@@ -37,6 +53,7 @@ const RetireRequests = (props) => {
     if (session.active) {
       const fetched = await backend.fetchData(`${apiListRequests}`);
       setRequests(emptyIfNullRequestPropery(fetched));
+      setRequestsView(emptyIfNullRequestPropery(fetched));
       setUserDetails(session.userdetails);
       setPageCount(Math.trunc(fetched.length / pageSize))
       setLoading(false);
@@ -48,8 +65,18 @@ const RetireRequests = (props) => {
     initializeComponent();
   }, [])
 
+
   const handleOnSubmit = async (data) => {
-    console.log(data)
+    let response = await backend.changeObject(`${apiListRequests}/`, data);
+
+    if (response.ok)
+      NotifyOk({
+        msg: 'Statusi poslužitelja uspješno promijenjeni',
+        title: `Uspješno - HTTP ${response.status}`});
+    else
+      NotifyError({
+        msg: response.statusText,
+        title: `Greška - HTTP ${response.status}`});
   }
 
   const gotoPage = (i, formikSetValues) => {
@@ -63,27 +90,122 @@ const RetireRequests = (props) => {
     else
       indexTo = indexFrom + pageSize
 
-    formikSetValues({requestsFormik: requests.slice(indexFrom, indexTo)})
+    formikSetValues({requestsFormik: requestsView.slice(indexFrom, indexTo)})
     setPageIndex(i)
   }
 
+  const searchHandler = (field, target) => {
+    let filtered = [...requestsView]
+    let resetSearch = false
+
+    if (target.length === '')
+      resetSearch = true
+
+    else if (field === 'user.email' && searchEmail.length > target.length)
+      resetSearch = true
+
+    else if (field === 'vm_fqdn' && searchVmFqdn.length > target.length)
+      resetSearch = true
+
+    else if (field === 'vm_isactive_comment' && searchVmIsActiveComment.length > target.length)
+      resetSearch = true
+
+    if (!resetSearch) {
+      if (field === 'user.email')
+        filtered = filtered.filter((elem) => matchItem(elem.user.email, target)
+          || matchItem(elem.sys_email, target))
+
+      if (field === 'vm_fqdn')
+        filtered = filtered.filter((elem) => matchItem(elem[field], target)
+          || matchItem(elem.vm_ip, target))
+
+      if (field === 'vm_isactive_comment')
+        filtered = filtered.filter((elem) => matchItem(elem[field], target))
+
+      setRequestsView(filtered)
+    }
+
+    else {
+      let filtered = [...requests]
+
+      if (field === 'user.email') {
+        filtered = filtered.filter((elem) => matchItem(elem.vm_fqdn, searchVmFqdn)
+          || matchItem(elem.vm_ip, searchVmFqdn) )
+
+        filtered = filtered.filter((elem) => matchItem(elem.user.email, target)
+          || matchItem(elem.sys_email, target))
+      }
+
+      else if (field === 'vm_fqdn') {
+        filtered = filtered.filter((elem) => matchItem(elem.user.email, searchEmail)
+          || matchItem(elem.sys_email, searchEmail))
+
+        filtered = filtered.filter((elem) => matchItem(elem[field], target)
+          || matchItem(elem.vm_ip, target))
+      }
+
+      else if (field === 'vm_isactive_comment')
+        filtered = filtered.filter((elem) => matchItem(elem[field], target))
+
+      setRequestsView(filtered)
+    }
+
+    if (field === 'vm_isactive') {
+      let requestsSearch = [...requests]
+
+      if (searchVmFqdn)
+        requestsSearch = requestsSearch.filter((elem) => matchItem(elem.vm_fqdn, searchVmFqdn)
+          || matchItem(elem.vm_ip, searchVmFqdn))
+
+      if (searchEmail)
+        requestsSearch = requestsSearch.filter((elem) => matchItem(elem.user.email, searchEmail)
+          || matchItem(elem.sys_email, searchEmail))
+
+      if (searchVmIsActiveComment)
+        requestsSearch = requestsSearch.filter((elem) =>
+          matchItem(elem.vm_isactive_comment, searchVmIsActiveComment))
+
+      if (target === "Svi")
+        filtered = requestsSearch
+
+      else if (target === "-")
+        filtered = requestsSearch.filter((elem) => elem[field] === "")
+
+      else
+        filtered = requestsSearch.filter((elem) => matchItem(elem[field], target))
+
+      setRequestsView(filtered)
+    }
+  }
+
+  const handleClickSubmit = (e, index) => {
+    setIndexRequestSubmit(index)
+  }
 
   if (loading)
     return (<LoadingAnim />)
 
-  else if (!loading && requests && userDetails) {
+  else if (!loading && requests && requestsView && userDetails) {
     return (
       <React.Fragment>
         <BaseView
           title={`Pred umirovljenje ${new Intl.DateTimeFormat('hr-HR', {year: 'numeric'}).format(new Date())}`}
           location={location}
+          nopaddingside={true}
         >
           <Formik
-            initialValues={{requestsFormik: requests.slice(0, pageSize)}}
+            initialValues={{
+              requestsFormik: requestsView.slice(0, pageSize),
+              searchVmFqdn: searchVmFqdn,
+              searchEmail: searchEmail,
+              searchVmIsActiveComment: searchVmIsActiveComment,
+              searchVmIsActive: searchVmIsActive,
+            }}
             validateOnChange={false}
             validateOnBlur={false}
+            enableReinitialize={true}
             onSubmit={(values, {setSubmitting} )=> {
-              handleOnSubmit(values.requestsFormik)
+              handleOnSubmit(values.requestsFormik[indexRequestSubmit])
               setSubmitting(false)
             }}
           >
@@ -148,39 +270,109 @@ const RetireRequests = (props) => {
                               <Table responsive hover size="sm">
                                 <thead className="table-active align-middle text-center">
                                   <tr>
-                                    <th style={{width: '5%'}}>r. br.</th>
-                                    <th style={{width: '10%'}}>Izjašnjen</th>
-                                    <th style={{width: '5%'}}>Poslužitelj</th>
-                                    <th style={{width: '10%'}}>Kontakt email</th>
-                                    <th style={{width: '50%'}}>Komentar</th>
-                                    <th style={{width: '5%'}}>Potreban</th>
-                                    <th style={{width: '5%%'}}>Spremi</th>
+                                    <th style={{width: '90px'}}>Podnesen</th>
+                                    <th style={{width: '90px'}}>Izjašnjen</th>
+                                    <th>Poslužitelj, IP adresa</th>
+                                    <th>Kontaktna, sistemac email</th>
+                                    <th>Komentar</th>
+                                    <th style={{width: '80px'}}>Potreban</th>
+                                    <th style={{width: '50px'}}>Spremi</th>
                                   </tr>
                                 </thead>
                                 <tbody className="align-middle text-center">
+                                  <tr style={{background: "#ECECEC"}}>
+                                    <td className="align-middle text-center">
+                                      <FontAwesomeIcon icon={faSearch}/>
+                                    </td>
+                                    <td className="align-middle text-center">
+                                      {''}
+                                    </td>
+                                    <td>
+                                      <Field
+                                        type="text"
+                                        name="searchVmFqdn"
+                                        required={false}
+                                        className="form-control"
+                                        id="searchVmFqdn"
+                                        onChange={(e) => {
+                                          searchHandler('vm_fqdn', e.target.value)
+                                          setSearchVmFqdn(e.target.value)
+                                        }}
+                                        component={SearchField}
+                                      />
+                                    </td>
+                                    <td>
+                                      <Field
+                                        type="text"
+                                        name="searchEmail"
+                                        required={false}
+                                        className="form-control"
+                                        id="searchEmail"
+                                        onChange={(e) => {
+                                          searchHandler('user.email', e.target.value)
+                                          setSearchEmail(e.target.value)
+                                        }}
+                                        component={SearchField}
+                                      />
+                                    </td>
+                                    <td>
+                                      <Field
+                                        type="text"
+                                        name="searchVmIsActiveComment"
+                                        required={false}
+                                        className="form-control"
+                                        id="searchVmIsActiveComment"
+                                        onChange={(e) => {
+                                          searchHandler('vm_isactive_comment', e.target.value)
+                                          setSearchVmIsActiveComment(e.target.value)
+                                        }}
+                                        component={SearchField}
+                                      />
+                                    </td>
+                                    <td>
+                                      <Field
+                                        name="searchVmIsActive"
+                                        component="select"
+                                        className="form-control custom-select"
+                                        onChange={(e) => {
+                                          searchHandler('vm_isactive', e.target.value)
+                                          setSearchVmIsActive(e.target.value)
+                                        }}
+                                      >
+                                        <option key={0} value='Svi' hidden className="text-muted">Svi</option>
+                                        <option key={1} value='Svi'>Svi</option>
+                                        <option key={2} value='-'>-</option>
+                                        <option key={3} value='Da'>Da</option>
+                                        <option key={4} value='Ne'>Ne</option>
+                                      </Field>
+                                    </td>
+                                    <td>
+                                      {''}
+                                    </td>
+                                  </tr>
                                   {
                                     props.values.requestsFormik.map((request, index) =>
                                       <tr key={index}>
-                                        <td className="align-middle text-center">
-                                          {
-                                            requests.length - index - (pageIndex * pageSize)
-                                          }
+                                        <td className="align-middle text-left">
+                                          { DateFormatHR(props.values.requestsFormik[index].request_date, true) }
                                         </td>
-                                        <td className="align-middle text-center">
+                                        <td className="align-middle text-left">
                                           { DateFormatHR(props.values.requestsFormik[index].vm_isactive_response, true) }
                                         </td>
-                                        <td className="align-middle text-center">
-                                          { props.values.requestsFormik[index].vm_fqdn }
+                                        <td className="align-middle text-left">
+                                          { props.values.requestsFormik[index].vm_fqdn } <br/>
+                                          { props.values.requestsFormik[index].vm_ip }
                                         </td>
-                                        <td className="align-middle text-center">
-                                          { props.values.requestsFormik[index].user.email}
+                                        <td className="align-middle text-left">
+                                          { props.values.requestsFormik[index].user.email } <br/>
+                                          { props.values.requestsFormik[index].sys_email }
                                         </td>
                                         <td className="align-middle text-center">
                                           <Field
                                             className="form-control"
                                             name={`requestsFormik.${index}.vm_isactive_comment`}
                                             as="textarea"
-                                            rows={1}
+                                            rows={2}
                                           />
                                         </td>
                                         <td className="align-middle text-center">
@@ -191,7 +383,7 @@ const RetireRequests = (props) => {
                                           />
                                         </td>
                                         <td className="align-middle text-center">
-                                          <Button className="btn" id="submit-button" type="submit" size="sm">
+                                          <Button className="btn" id="submit-button" onClick={(e) => handleClickSubmit(e, index)} type="submit" size="sm">
                                             <FontAwesomeIcon type="submit" icon={faSave}/>
                                           </Button>
                                         </td>
@@ -215,7 +407,7 @@ const RetireRequests = (props) => {
 
   else
     return null
-
 }
+
 
 export default RetireRequests;

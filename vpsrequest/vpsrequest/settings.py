@@ -266,6 +266,8 @@ STATUSESVMACTIVE = {
     0: 'Ne',
     'Da': 1,
     'Ne': 0,
+    '': -1,
+    -1: -1
 }
 
 STATUSES = {
@@ -273,5 +275,10 @@ STATUSES = {
     0: 'Odbijen',
     1: 'Odobren',
     2: 'Izdan VM',
-    3: 'Umirovljen'
+    3: 'Umirovljen',
+    'Novi': -1,
+    'Odbijen': 0,
+    'Odobren': 1,
+    'Izdan VM': 2,
+    'Umirovljen': 3,
 }
