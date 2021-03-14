@@ -24,6 +24,8 @@ class Command(BaseCommand):
             user_request = models.Request.objects.filter(user__id=userdb.pk)
             for req in user_request:
                 req.vm_isactive = None
+                req.vm_isactive_comment = None
+                req.vm_isactive_response = None
                 req.save()
         else:
             models.Request.objects.filter(approved__exact=settings.STATUSES['Izdan VM']).update(vm_isactive=None, vm_isactive_comment=None, vm_isactive_response=None)

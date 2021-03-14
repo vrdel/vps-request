@@ -264,10 +264,10 @@ SESSION_COOKIE_SAMESITE = None
 STATUSESVMACTIVE = {
     1: 'Da',
     0: 'Ne',
-    -1: '',
     'Da': 1,
     'Ne': 0,
-    '': -1
+    '': -1,
+    -1: -1
 }
 
 STATUSES = {

@@ -85,10 +85,12 @@ class RequestsViewset(viewsets.ModelViewSet):
             for req in request.data:
                 id = req['id']
                 req_db = models.Request.objects.get(id=id)
-                req['vm_isactive'] = settings.STATUSESVMACTIVE[req['vm_isactive']]
+                if (req['vm_isactive'] == '' and req_db.vm_isactive is None and
+                    req['vm_isactive_comment'] == ''  and req_db.vm_isactive_comment is None):
+                    continue
                 if req_db.vm_isactive != req['vm_isactive']:
                     req['vm_isactive_response'] = datetime.datetime.now()
-
+                req['vm_isactive'] = settings.STATUSESVMACTIVE[req['vm_isactive']]
                 serializer = serializers.RequestsListActiveWithUserSerializer(req_db, data=req)
                 if serializer.is_valid():
                     serializer.save()
