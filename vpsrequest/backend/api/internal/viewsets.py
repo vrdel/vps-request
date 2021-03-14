@@ -85,7 +85,6 @@ class RequestsViewset(viewsets.ModelViewSet):
             for req in request.data:
                 id = req['id']
                 req_db = models.Request.objects.get(id=id)
-                isactive = req.get('vm_isactive', -1)
                 req['vm_isactive'] = settings.STATUSESVMACTIVE[req['vm_isactive']]
                 if req_db.vm_isactive != req['vm_isactive']:
                     req['vm_isactive_response'] = datetime.datetime.now()
