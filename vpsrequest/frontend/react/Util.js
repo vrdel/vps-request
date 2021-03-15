@@ -31,20 +31,26 @@ export function canApprove(userDetails) {
   return false
 }
 
-export function DateFormatHR(dateStr, onlydate=false)
+export function DateFormatHR(dateStr, onlydate=false, onlytime=false)
 {
   var dateObj = new Date(dateStr)
   var options = {year: 'numeric', month: 'numeric', day: 'numeric',
-    hour:'numeric', minute: 'numeric', second: 'numeric', hour12: false,
+    hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false,
     timeZone: 'Europe/Zagreb'}
 
   if (!dateStr || dateStr === '-')
     return '-'
   else if (onlydate) {
-    let year = new Intl.DateTimeFormat('hr-HR', {year: 'numeric'}).format(dateObj)
-    let month = new Intl.DateTimeFormat('hr-HR', {month: 'numeric'}).format(dateObj)
-    let day = new Intl.DateTimeFormat('hr-HR', {day: 'numeric'}).format(dateObj)
+    let year = new Intl.DateTimeFormat('hr-HR', {year: '2-digit'}).format(dateObj)
+    let month = new Intl.DateTimeFormat('hr-HR', {month: '2-digit'}).format(dateObj)
+    let day = new Intl.DateTimeFormat('hr-HR', {day: '2-digit'}).format(dateObj)
     return `${day}${month}${year}`
+  }
+  else if (onlytime) {
+    let hours = new Intl.DateTimeFormat('hr-HR', {hour: '2-digit'}).format(dateObj)
+    let minutes = new Intl.DateTimeFormat('hr-HR', {minute: '2-digit'}).format(dateObj)
+    let seconds = new Intl.DateTimeFormat('hr-HR', {second: '2-digit'}).format(dateObj)
+    return `${hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`
   }
   else
     return new Intl.DateTimeFormat('hr-HR', options).format(dateObj)

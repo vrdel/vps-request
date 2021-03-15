@@ -71,12 +71,24 @@ const RetireRequests = (props) => {
 
     if (response.ok)
       NotifyOk({
-        msg: 'Statusi poslužitelja uspješno promijenjeni',
+        msg: 'Status poslužitelja uspješno promijenjeni',
         title: `Uspješno - HTTP ${response.status}`});
     else
       NotifyError({
         msg: response.statusText,
         title: `Greška - HTTP ${response.status}`});
+
+    let targetId = data.id
+    let targetIndex = requestsView.findIndex(request => request.id === targetId)
+
+    let copyView = [...requestsView]
+    copyView[targetIndex] = data
+    setRequestsView(copyView)
+
+    let copyFull = [...requests]
+    targetIndex = requests.findIndex(request => request.id === targetId)
+    copyFull[targetIndex] = data
+    setRequests(copyFull)
   }
 
   const gotoPage = (i, formikSetValues) => {
@@ -204,7 +216,10 @@ const RetireRequests = (props) => {
             validateOnChange={false}
             validateOnBlur={false}
             enableReinitialize={true}
-            onSubmit={(values, {setSubmitting} )=> {
+            onSubmit={(values, {setSubmitting, setFieldValue} )=> {
+              let vmIsActiveDateSet = new Date()
+              setFieldValue(`requestsFormik.${indexRequestSubmit}.vm_isactive_response`, vmIsActiveDateSet)
+              values.requestsFormik[indexRequestSubmit].vm_isactive_response = vmIsActiveDateSet
               handleOnSubmit(values.requestsFormik[indexRequestSubmit])
               setSubmitting(false)
             }}
@@ -354,18 +369,42 @@ const RetireRequests = (props) => {
                                     props.values.requestsFormik.map((request, index) =>
                                       <tr key={index}>
                                         <td className="align-middle text-left">
-                                          { DateFormatHR(props.values.requestsFormik[index].request_date, true) }
+                                          <Field
+                                            name={`requestsFormik.${index}.request_date`}>
+                                            {({ field }) => (
+                                              <div>
+                                                { DateFormatHR(field.value, true) } <br/>
+                                                { DateFormatHR(field.value, false, true) }
+                                              </div>
+                                            )}
+                                          </Field>
                                         </td>
                                         <td className="align-middle text-left">
-                                          { DateFormatHR(props.values.requestsFormik[index].vm_isactive_response, true) }
+                                          <Field
+                                            name={`requestsFormik.${index}.vm_isactive_response`}>
+                                            {({ field }) => (
+                                              <div>
+                                                { DateFormatHR(field.value, true) } <br/>
+                                                { DateFormatHR(field.value, false, true) }
+                                              </div>
+                                            )}
+                                          </Field>
                                         </td>
                                         <td className="align-middle text-left">
-                                          { props.values.requestsFormik[index].vm_fqdn } <br/>
-                                          { props.values.requestsFormik[index].vm_ip }
+                                          <span className="font-weight-bold">
+                                            { props.values.requestsFormik[index].vm_fqdn } <br/>
+                                          </span>
+                                          <span className="text-monospace">
+                                            { props.values.requestsFormik[index].vm_ip }
+                                          </span>
                                         </td>
                                         <td className="align-middle text-left">
-                                          { props.values.requestsFormik[index].user.email } <br/>
-                                          { props.values.requestsFormik[index].sys_email }
+                                          <a href="#" className="text-decoration-none">
+                                            { props.values.requestsFormik[index].user.email } <br/>
+                                          </a>
+                                          <a href="#" className="text-decoration-none">
+                                            { props.values.requestsFormik[index].sys_email }
+                                          </a>
                                         </td>
                                         <td className="align-middle text-center">
                                           <Field
