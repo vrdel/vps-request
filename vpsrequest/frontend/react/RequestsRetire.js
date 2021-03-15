@@ -205,6 +205,7 @@ const RetireRequests = (props) => {
             validateOnBlur={false}
             enableReinitialize={true}
             onSubmit={(values, {setSubmitting, setFieldValue} )=> {
+              setFieldValue(`requestsFormik.${indexRequestSubmit}.vm_isactive_response`, new Date())
               handleOnSubmit(values.requestsFormik[indexRequestSubmit])
               setSubmitting(false)
             }}
@@ -354,12 +355,26 @@ const RetireRequests = (props) => {
                                     props.values.requestsFormik.map((request, index) =>
                                       <tr key={index}>
                                         <td className="align-middle text-left">
-                                          { DateFormatHR(props.values.requestsFormik[index].request_date, true) } <br/>
-                                          { DateFormatHR(props.values.requestsFormik[index].request_date, false, true) }
+                                          <Field
+                                            name={`requestsFormik.${index}.request_date`}>
+                                            {({ field }) => (
+                                              <div>
+                                                { DateFormatHR(field.value, true) } <br/>
+                                                { DateFormatHR(field.value, false, true) }
+                                              </div>
+                                            )}
+                                          </Field>
                                         </td>
                                         <td className="align-middle text-left">
-                                          { DateFormatHR(props.values.requestsFormik[index].vm_isactive_response, true) } <br/>
-                                          { DateFormatHR(props.values.requestsFormik[index].vm_isactive_response, false, true) }
+                                          <Field
+                                            name={`requestsFormik.${index}.vm_isactive_response`}>
+                                            {({ field }) => (
+                                              <div>
+                                                { DateFormatHR(field.value, true) } <br/>
+                                                { DateFormatHR(field.value, false, true) }
+                                              </div>
+                                            )}
+                                          </Field>
                                         </td>
                                         <td className="align-middle text-left">
                                           <span className="font-weight-bold">
