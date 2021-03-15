@@ -71,12 +71,24 @@ const RetireRequests = (props) => {
 
     if (response.ok)
       NotifyOk({
-        msg: 'Statusi poslužitelja uspješno promijenjeni',
+        msg: 'Status poslužitelja uspješno promijenjeni',
         title: `Uspješno - HTTP ${response.status}`});
     else
       NotifyError({
         msg: response.statusText,
         title: `Greška - HTTP ${response.status}`});
+
+    let targetId = data.id
+    let targetIndex = requestsView.findIndex(request => request.id === targetId)
+
+    let copyView = [...requestsView]
+    copyView[targetIndex] = data
+    setRequestsView(copyView)
+
+    let copyFull = [...requests]
+    targetIndex = requests.findIndex(request => request.id === targetId)
+    copyFull[targetIndex] = data
+    setRequests(copyFull)
   }
 
   const gotoPage = (i, formikSetValues) => {
@@ -205,7 +217,9 @@ const RetireRequests = (props) => {
             validateOnBlur={false}
             enableReinitialize={true}
             onSubmit={(values, {setSubmitting, setFieldValue} )=> {
-              setFieldValue(`requestsFormik.${indexRequestSubmit}.vm_isactive_response`, new Date())
+              let vmIsActiveDateSet = new Date()
+              setFieldValue(`requestsFormik.${indexRequestSubmit}.vm_isactive_response`, vmIsActiveDateSet)
+              values.requestsFormik[indexRequestSubmit].vm_isactive_response = vmIsActiveDateSet
               handleOnSubmit(values.requestsFormik[indexRequestSubmit])
               setSubmitting(false)
             }}
