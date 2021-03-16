@@ -38,7 +38,7 @@ const RetireRequests = (props) => {
   const apiListRequestsStats = `${CONFIG.listReqUrl}/vmissued_retire_stats`
   const [pageSize, setPageSize] = useState(30)
   const [pageIndex, setPageIndex] = useState(0)
-  const [pageCount, setPageCount] = useState(undefined)
+  const [pageCount, setStatePageCount] = useState(undefined)
   const [requestsStats, setRequestsStats] = useState({})
   const [userDetails, setUserDetails] = useState(undefined)
   const [indexRequestSubmit, setIndexRequestSubmit] = useState(undefined)
@@ -61,11 +61,7 @@ const RetireRequests = (props) => {
       setRequestsView(noNullFetched);
       setRequestsStats(fetched_stats);
       setUserDetails(session.userdetails);
-      let remainder = fetched.length / pageSize
-      if (remainder)
-        setPageCount(Math.trunc(fetched.length / pageSize) + 1)
-      else
-        setPageCount(Math.trunc(fetched.length / pageSize))
+      setPageCount(fetched)
       setLoading(false);
     }
   }
@@ -75,16 +71,25 @@ const RetireRequests = (props) => {
     initializeComponent();
   }, [])
 
-  const setPageCountNoZero = (dataArray) => {
-    let result = Math.trunc(dataArray.length / pageSize)
+  const setPageCount = (dataArray, pagesize=undefined) => {
+    let localPageSize = undefined
+
+    if (pagesize)
+      localPageSize = pagesize
+    else
+      localPageSize = pageSize
+
+    let result = Math.trunc(dataArray.length / localPageSize)
+    let remainder = dataArray.length / localPageSize
+
     if (result === 0)
-      setPageCount(1)
+      setStatePageCount(1)
+
     else {
-      let remainder = dataArray.length / pageSize
       if (remainder)
-        setPageCount(Math.trunc(dataArray.length / pageSize) + 1)
+        setStatePageCount(result + 1)
       else
-        setPageCount(Math.trunc(dataArray.length / pageSize))
+        setStatePageCount(result)
     }
   }
 
@@ -166,7 +171,7 @@ const RetireRequests = (props) => {
         filtered = filtered.filter((elem) => matchItem(elem[field], target))
 
       setRequestsView(filtered)
-      setPageCountNoZero(filtered)
+      setPageCount(filtered)
       setPageIndex(0)
     }
 
@@ -193,7 +198,7 @@ const RetireRequests = (props) => {
         filtered = filtered.filter((elem) => matchItem(elem[field], target))
 
       setRequestsView(filtered)
-      setPageCountNoZero(filtered)
+      setPageCount(filtered)
       setPageIndex(0)
     }
 
@@ -222,7 +227,7 @@ const RetireRequests = (props) => {
         filtered = requestsSearch.filter((elem) => matchItem(elem[field], target))
 
       setRequestsView(filtered)
-      setPageCountNoZero(filtered)
+      setPageCount(filtered)
       setPageIndex(0)
     }
   }
@@ -310,11 +315,7 @@ const RetireRequests = (props) => {
                           value={pageSize}
                           onChange={e => {
                             setPageSize(Number(e.target.value))
-                            let remainder = requests.length / pageSize
-                            if (remainder)
-                              setPageCount(Math.trunc(requests.length / Number(e.target.value)) + 1)
-                            else
-                              setPageCount(Math.trunc(requests.length / Number(e.target.value)))
+                            setPageCount(requests, e.target.value)
                             props.setValues({requestsFormik: requests.slice(0, Number(e.target.value))})
                             setPageIndex(0)
                           }}
