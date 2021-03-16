@@ -78,7 +78,7 @@ class RequestsViewset(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['patch', 'get'])
-    def vmissued_unknown(self, request):
+    def vmissued_retire(self, request):
         if request.method == 'PATCH':
             req = request.data
             id = req['id']
@@ -100,6 +100,20 @@ class RequestsViewset(viewsets.ModelViewSet):
                 if data['vm_isactive'] == 1 or data['vm_isactive'] == 0:
                     data['vm_isactive'] = settings.STATUSESVMACTIVE[data['vm_isactive']]
             return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['patch', 'get'])
+    def vmissued_retire_stats(self, request):
+        yes, no, unknown = None, None, None
+
+        yes = len(models.Request.objects.filter(approved=2).filter(vm_isactive=1))
+        no = len(models.Request.objects.filter(approved=2).filter(vm_isactive=0))
+        unknown = len(models.Request.objects.filter(approved=2).filter(vm_isactive=None))
+
+        return Response({
+            'yes': yes,
+            'no': no,
+            'unknown': unknown
+        }, status=status.HTTP_200_OK)
 
     @action(detail=False)
     def rejected(self, request):
