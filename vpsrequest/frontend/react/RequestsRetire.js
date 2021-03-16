@@ -52,8 +52,9 @@ const RetireRequests = (props) => {
 
     if (session.active) {
       const fetched = await backend.fetchData(`${apiListRequests}`);
-      setRequests(emptyIfNullRequestPropery(fetched));
-      setRequestsView(emptyIfNullRequestPropery(fetched));
+      let noNullFetched = emptyIfNullRequestPropery(fetched)
+      setRequests(noNullFetched);
+      setRequestsView(noNullFetched);
       setUserDetails(session.userdetails);
       setPageCount(Math.trunc(fetched.length / pageSize))
       setLoading(false);
@@ -65,6 +66,13 @@ const RetireRequests = (props) => {
     initializeComponent();
   }, [])
 
+  const setPageCountNoZero = (dataArray) => {
+    let result = Math.trunc(dataArray.length / pageSize)
+    if (result === 0)
+      setPageCount(1)
+    else
+      setPageCount(result)
+  }
 
   const handleOnSubmit = async (data) => {
     let response = await backend.changeObject(`${apiListRequests}/`, data);
@@ -135,6 +143,8 @@ const RetireRequests = (props) => {
         filtered = filtered.filter((elem) => matchItem(elem[field], target))
 
       setRequestsView(filtered)
+      setPageCountNoZero(filtered)
+      setPageIndex(0)
     }
 
     else {
@@ -160,6 +170,8 @@ const RetireRequests = (props) => {
         filtered = filtered.filter((elem) => matchItem(elem[field], target))
 
       setRequestsView(filtered)
+      setPageCountNoZero(filtered)
+      setPageIndex(0)
     }
 
     if (field === 'vm_isactive') {
@@ -187,6 +199,8 @@ const RetireRequests = (props) => {
         filtered = requestsSearch.filter((elem) => matchItem(elem[field], target))
 
       setRequestsView(filtered)
+      setPageCountNoZero(filtered)
+      setPageIndex(0)
     }
   }
 
