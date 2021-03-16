@@ -413,10 +413,10 @@ const RetireRequests = (props) => {
                                           </span>
                                         </td>
                                         <td className="align-middle text-left">
-                                          <a href="#" className="text-decoration-none">
+                                          <a href={`mailto:${props.values.requestsFormik[index].user.email}`} className="text-decoration-none">
                                             { props.values.requestsFormik[index].user.email } <br/>
                                           </a>
-                                          <a href="#" className="text-decoration-none">
+                                          <a href={`mailto:${props.values.requestsFormik[index].sys_email}`} className="text-decoration-none">
                                             { props.values.requestsFormik[index].sys_email }
                                           </a>
                                         </td>
