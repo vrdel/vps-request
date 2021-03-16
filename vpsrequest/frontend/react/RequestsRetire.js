@@ -61,7 +61,11 @@ const RetireRequests = (props) => {
       setRequestsView(noNullFetched);
       setRequestsStats(fetched_stats);
       setUserDetails(session.userdetails);
-      setPageCount(Math.trunc(fetched.length / pageSize))
+      let remainder = fetched.length / pageSize
+      if (remainder)
+        setPageCount(Math.trunc(fetched.length / pageSize) + 1)
+      else
+        setPageCount(Math.trunc(fetched.length / pageSize))
       setLoading(false);
     }
   }
@@ -75,8 +79,13 @@ const RetireRequests = (props) => {
     let result = Math.trunc(dataArray.length / pageSize)
     if (result === 0)
       setPageCount(1)
-    else
-      setPageCount(result)
+    else {
+      let remainder = dataArray.length / pageSize
+      if (remainder)
+        setPageCount(Math.trunc(dataArray.length / pageSize) + 1)
+      else
+        setPageCount(Math.trunc(dataArray.length / pageSize))
+    }
   }
 
   const handleOnSubmit = async (data) => {
@@ -301,7 +310,11 @@ const RetireRequests = (props) => {
                           value={pageSize}
                           onChange={e => {
                             setPageSize(Number(e.target.value))
-                            setPageCount(Math.trunc(requests.length / Number(e.target.value)))
+                            let remainder = requests.length / pageSize
+                            if (remainder)
+                              setPageCount(Math.trunc(requests.length / Number(e.target.value)) + 1)
+                            else
+                              setPageCount(Math.trunc(requests.length / Number(e.target.value)))
                             props.setValues({requestsFormik: requests.slice(0, Number(e.target.value))})
                             setPageIndex(0)
                           }}
