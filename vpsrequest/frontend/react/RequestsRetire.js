@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Backend } from './DataManager';
 import {
+  Badge,
   Button,
   Pagination,
   PaginationItem,
@@ -33,13 +34,15 @@ function matchItem(item, value) {
 const RetireRequests = (props) => {
   const location = props.location;
   const backend = new Backend();
-  const apiListRequests = `${CONFIG.listReqUrl}/vmissued_unknown`
+  const apiListRequests = `${CONFIG.listReqUrl}/vmissued_retire`
+  const apiListRequestsStats = `${CONFIG.listReqUrl}/vmissued_retire_stats`
   const [pageSize, setPageSize] = useState(30)
   const [pageIndex, setPageIndex] = useState(0)
   const [pageCount, setPageCount] = useState(undefined)
+  const [requestsStats, setRequestsStats] = useState({})
   const [userDetails, setUserDetails] = useState(undefined)
-  const [indexRequestSubmit, setIndexRequestSubmit] = useState(undefined);
-  const [loading, setLoading] = useState(false);
+  const [indexRequestSubmit, setIndexRequestSubmit] = useState(undefined)
+  const [loading, setLoading] = useState(false)
   const [requests, setRequests] = useState(undefined)
   const [requestsView, setRequestsView] = useState(undefined)
   const [searchVmFqdn, setSearchVmFqdn] = useState("")
@@ -52,9 +55,11 @@ const RetireRequests = (props) => {
 
     if (session.active) {
       const fetched = await backend.fetchData(`${apiListRequests}`);
+      const fetched_stats = await backend.fetchData(`${apiListRequestsStats}`);
       let noNullFetched = emptyIfNullRequestPropery(fetched)
       setRequests(noNullFetched);
       setRequestsView(noNullFetched);
+      setRequestsStats(fetched_stats);
       setUserDetails(session.userdetails);
       setPageCount(Math.trunc(fetched.length / pageSize))
       setLoading(false);
@@ -97,6 +102,15 @@ const RetireRequests = (props) => {
     targetIndex = requests.findIndex(request => request.id === targetId)
     copyFull[targetIndex] = data
     setRequests(copyFull)
+
+    let yes = copyFull.filter(e => e.vm_isactive === 'Da')
+    let no = copyFull.filter(e => e.vm_isactive === 'Ne')
+    let unknown = copyFull.filter(e => e.vm_isactive === '')
+    setRequestsStats({
+      'yes': yes.length,
+      'no': no.length,
+      'unknown': unknown.length
+    })
   }
 
   const gotoPage = (i, formikSetValues) => {
@@ -211,7 +225,7 @@ const RetireRequests = (props) => {
   if (loading)
     return (<LoadingAnim />)
 
-  else if (!loading && requests && requestsView && userDetails) {
+  else if (!loading && requests && requestsView && userDetails && requestsStats) {
     return (
       <React.Fragment>
         <BaseView
@@ -240,6 +254,19 @@ const RetireRequests = (props) => {
           >
             {props => (
               <React.Fragment>
+                <Row>
+                  <Col>
+                    <Badge className="mt-3" color="success" style={{fontSize: '110%'}}>
+                      Aktivni<Badge className="ml-2" color="light">{requestsStats.yes}</Badge>
+                    </Badge>
+                    <Badge className="ml-3" color="danger" style={{fontSize: '110%'}}>
+                      Umirovljenje<Badge className="ml-2" color="light">{requestsStats.no}</Badge>
+                    </Badge>
+                    <Badge className="ml-3" color="warning" style={{fontSize: '110%'}}>
+                      Neizjašnjeni<Badge className="ml-2" color="light">{requestsStats.unknown}</Badge>
+                    </Badge>
+                  </Col>
+                </Row>
                 <Row>
                   <Col className="d-flex justify-content-center align-self-center">
                     <Pagination className="mt-5">
