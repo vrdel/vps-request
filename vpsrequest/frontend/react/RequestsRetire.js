@@ -114,17 +114,34 @@ const RetireRequests = (props) => {
 
     let copyFull = [...requests]
     targetIndex = requests.findIndex(request => request.id === targetId)
+    let prevRequest = new Object(copyFull[targetIndex])
     copyFull[targetIndex] = data
     setRequests(copyFull)
 
-    let yes = copyFull.filter(e => e.vm_isactive === 'Da')
-    let no = copyFull.filter(e => e.vm_isactive === 'Ne')
-    let unknown = copyFull.filter(e => e.vm_isactive === '')
-    setRequestsStats({
-      'yes': yes.length,
-      'no': no.length,
-      'unknown': unknown.length
-    })
+    let newRequestStats = JSON.parse(JSON.stringify(requestsStats));
+
+    if (prevRequest.vm_isactive === '') {
+      if (data.vm_isactive === 'Da') {
+        newRequestStats.unknown -= 1
+        newRequestStats.yes += 1
+      }
+      else if (data.vm_isactive === 'Ne') {
+        newRequestStats.unknown -= 1
+        newRequestStats.no += 1
+      }
+    }
+    else if (prevRequest.vm_isactive === 'Ne'
+      && data.vm_isactive === 'Da') {
+      newRequestStats.no -= 1
+      newRequestStats.yes += 1
+    }
+    else if (prevRequest.vm_isactive === 'Da'
+      && data.vm_isactive === 'Ne') {
+      newRequestStats.yes -= 1
+      newRequestStats.no += 1
+    }
+
+    setRequestsStats(newRequestStats)
   }
 
   const gotoPage = (i, formikSetValues) => {
