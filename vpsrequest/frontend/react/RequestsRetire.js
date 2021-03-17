@@ -260,6 +260,29 @@ const RetireRequests = (props) => {
     setIndexRequestSubmit(index)
   }
 
+  const prepareCSV = ({viewData=false}) => {
+    let csvContent = []
+    let data = undefined
+
+    if (viewData)
+      data = requestsView
+    else
+      data = requests
+
+    data.forEach((request) => {
+      csvContent.push({
+        podnesen: DateFormatHR(request.request_date, true),
+        izjasnjen: DateFormatHR(request.vm_isactive_response, true),
+        posluzitelj: request.vm_fqdn,
+        email_kontaktna: request.user.email,
+        email_sistemac: request.sys_email,
+        komentar: request.vm_isactive_comment,
+        potreban: !request.vm_isactive ? '-' : request.vm_isactive})
+    })
+
+    return csvContent
+  }
+
   if (loading)
     return (<LoadingAnim />)
 
@@ -361,19 +384,8 @@ const RetireRequests = (props) => {
                       <DropdownMenu>
                         <DropdownItem id='vpsreq-retire-dropdown'
                           onClick={() => {
-                            let csvContent = [];
-                            requests.forEach((request) => {
-                              csvContent.push({
-                                podnesen: DateFormatHR(request.request_date, true),
-                                izjasnjen: DateFormatHR(request.vm_isactive_response, true),
-                                posluzitelj: request.vm_fqdn,
-                                email_kontaktna: request.user.email,
-                                email_sistemac: request.sys_email,
-                                komentar: request.vm_isactive_comment,
-                                potreban: !request.vm_isactive ? '-' : request.vm_isactive})
-                            })
                             const link = document.createElement('a');
-                            link.setAttribute('href', encodeURI(`data:text/csv;charset=utf8,\ufeff${PapaParse.unparse(csvContent)}`));
+                            link.setAttribute('href', encodeURI(`data:text/csv;charset=utf8,\ufeff${PapaParse.unparse(prepareCSV({viewData: false}))}`));
                             link.setAttribute('download', `predumirovljenje-svi.csv`);
                             link.click();
                             link.remove();
@@ -381,7 +393,15 @@ const RetireRequests = (props) => {
                         >
                           Svi
                         </DropdownItem>
-                        <DropdownItem id='vpsreq-retire-dropdown'>
+                        <DropdownItem id='vpsreq-retire-dropdown'
+                          onClick={() => {
+                            const link = document.createElement('a');
+                            link.setAttribute('href', encodeURI(`data:text/csv;charset=utf8,\ufeff${PapaParse.unparse(prepareCSV({viewData: true}))}`));
+                            link.setAttribute('download', `predumirovljenje-filtrirani.csv`);
+                            link.click();
+                            link.remove();
+                          }}
+                        >
                           Filtrirani
                         </DropdownItem>
                       </DropdownMenu>
