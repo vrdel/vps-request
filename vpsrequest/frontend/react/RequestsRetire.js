@@ -9,6 +9,10 @@ import {
   Row,
   Col,
   Table,
+  ButtonDropdown,
+  DropdownMenu,
+  DropdownToggle,
+  DropdownItem
 } from 'reactstrap';
 import {
   faSearch,
@@ -20,7 +24,8 @@ import { BaseView, LoadingAnim, NotifyOk, NotifyError, } from './UIElements';
 import { CONFIG } from './Config'
 import { DateFormatHR } from './Util'
 import { DropDownMyActive, emptyIfNullRequestPropery } from './RequestsActiveMy';
-
+import PapaParse from 'papaparse';
+import './RequestsRetire.css';
 
 export const SearchField = ({field, ...rest}) =>
   <input type="text" placeholder="Pretraži" {...field} {...rest}/>
@@ -49,6 +54,8 @@ const RetireRequests = (props) => {
   const [searchEmail, setSearchEmail] = useState("")
   const [searchVmIsActiveComment, setSearchVmIsActiveComment] = useState("")
   const [searchVmIsActive, setSearchVmIsActive] = useState("")
+  const [dropdownExport, setDropdownExport] = useState(false);
+  const toggleDropdown = () => setDropdownExport(!dropdownExport);
 
   const initializeComponent = async () => {
     const session = await backend.isActiveSession();
@@ -298,9 +305,9 @@ const RetireRequests = (props) => {
                     </Badge>
                   </Col>
                 </Row>
-                <Row>
-                  <Col className="d-flex justify-content-center align-self-center">
-                    <Pagination className="mt-5">
+                <Row className="d-flex justify-content-end align-self-center">
+                  <Col sm="10">
+                    <Pagination className="mt-5 justify-content-end">
                       <PaginationItem disabled={pageIndex === 0}>
                         <PaginationLink aria-label="Prva stranica" first onClick={() =>
                           gotoPage(0, props.setValues)}/>
@@ -345,6 +352,40 @@ const RetireRequests = (props) => {
                         </select>
                       </PaginationItem>
                     </Pagination>
+                  </Col>
+                  <Col className="d-inline-flex align-items-center justify-content-end" sm="2">
+                    <ButtonDropdown className="mt-5" isOpen={dropdownExport} toggle={toggleDropdown}>
+                      <DropdownToggle caret>
+                        Izvoz
+                      </DropdownToggle >
+                      <DropdownMenu>
+                        <DropdownItem id='vpsreq-retire-dropdown'
+                          onClick={() => {
+                            let csvContent = [];
+                            requests.forEach((request) => {
+                              csvContent.push({
+                                podnesen: DateFormatHR(request.request_date, true),
+                                izjasnjen: DateFormatHR(request.vm_isactive_response, true),
+                                posluzitelj: request.vm_fqdn,
+                                email_kontaktna: request.user.email,
+                                email_sistemac: request.sys_email,
+                                komentar: request.vm_isactive_comment,
+                                potreban: !request.vm_isactive ? '-' : request.vm_isactive})
+                            })
+                            const link = document.createElement('a');
+                            link.setAttribute('href', encodeURI(`data:text/csv;charset=utf8,\ufeff${PapaParse.unparse(csvContent)}`));
+                            link.setAttribute('download', `predumirovljenje-svi.csv`);
+                            link.click();
+                            link.remove();
+                          }}
+                        >
+                          Svi
+                        </DropdownItem>
+                        <DropdownItem id='vpsreq-retire-dropdown'>
+                          Filtrirani
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </ButtonDropdown>
                   </Col>
                 </Row>
                 <Row>
