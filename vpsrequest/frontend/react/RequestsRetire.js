@@ -9,6 +9,10 @@ import {
   Row,
   Col,
   Table,
+  ButtonDropdown,
+  DropdownMenu,
+  DropdownToggle,
+  DropdownItem
 } from 'reactstrap';
 import {
   faSearch,
@@ -20,7 +24,8 @@ import { BaseView, LoadingAnim, NotifyOk, NotifyError, } from './UIElements';
 import { CONFIG } from './Config'
 import { DateFormatHR } from './Util'
 import { DropDownMyActive, emptyIfNullRequestPropery } from './RequestsActiveMy';
-
+import PapaParse from 'papaparse';
+import './RequestsRetire.css';
 
 export const SearchField = ({field, ...rest}) =>
   <input type="text" placeholder="Pretraži" {...field} {...rest}/>
@@ -49,6 +54,8 @@ const RetireRequests = (props) => {
   const [searchEmail, setSearchEmail] = useState("")
   const [searchVmIsActiveComment, setSearchVmIsActiveComment] = useState("")
   const [searchVmIsActive, setSearchVmIsActive] = useState("")
+  const [dropdownExport, setDropdownExport] = useState(false);
+  const toggleDropdown = () => setDropdownExport(!dropdownExport);
 
   const initializeComponent = async () => {
     const session = await backend.isActiveSession();
@@ -114,17 +121,34 @@ const RetireRequests = (props) => {
 
     let copyFull = [...requests]
     targetIndex = requests.findIndex(request => request.id === targetId)
+    let prevRequest = new Object(copyFull[targetIndex])
     copyFull[targetIndex] = data
     setRequests(copyFull)
 
-    let yes = copyFull.filter(e => e.vm_isactive === 'Da')
-    let no = copyFull.filter(e => e.vm_isactive === 'Ne')
-    let unknown = copyFull.filter(e => e.vm_isactive === '')
-    setRequestsStats({
-      'yes': yes.length,
-      'no': no.length,
-      'unknown': unknown.length
-    })
+    let newRequestStats = JSON.parse(JSON.stringify(requestsStats));
+
+    if (prevRequest.vm_isactive === '') {
+      if (data.vm_isactive === 'Da') {
+        newRequestStats.unknown -= 1
+        newRequestStats.yes += 1
+      }
+      else if (data.vm_isactive === 'Ne') {
+        newRequestStats.unknown -= 1
+        newRequestStats.no += 1
+      }
+    }
+    else if (prevRequest.vm_isactive === 'Ne'
+      && data.vm_isactive === 'Da') {
+      newRequestStats.no -= 1
+      newRequestStats.yes += 1
+    }
+    else if (prevRequest.vm_isactive === 'Da'
+      && data.vm_isactive === 'Ne') {
+      newRequestStats.yes -= 1
+      newRequestStats.no += 1
+    }
+
+    setRequestsStats(newRequestStats)
   }
 
   const gotoPage = (i, formikSetValues) => {
@@ -236,6 +260,29 @@ const RetireRequests = (props) => {
     setIndexRequestSubmit(index)
   }
 
+  const prepareCSV = ({viewData=false}) => {
+    let csvContent = []
+    let data = undefined
+
+    if (viewData)
+      data = requestsView
+    else
+      data = requests
+
+    data.forEach((request) => {
+      csvContent.push({
+        podnesen: DateFormatHR(request.request_date, true),
+        izjasnjen: DateFormatHR(request.vm_isactive_response, true),
+        posluzitelj: request.vm_fqdn,
+        email_kontaktna: request.user.email,
+        email_sistemac: request.sys_email,
+        komentar: request.vm_isactive_comment,
+        potreban: !request.vm_isactive ? '-' : request.vm_isactive})
+    })
+
+    return csvContent
+  }
+
   if (loading)
     return (<LoadingAnim />)
 
@@ -281,9 +328,9 @@ const RetireRequests = (props) => {
                     </Badge>
                   </Col>
                 </Row>
-                <Row>
-                  <Col className="d-flex justify-content-center align-self-center">
-                    <Pagination className="mt-5">
+                <Row className="d-flex justify-content-end align-self-center">
+                  <Col sm="10">
+                    <Pagination className="mt-5 justify-content-end">
                       <PaginationItem disabled={pageIndex === 0}>
                         <PaginationLink aria-label="Prva stranica" first onClick={() =>
                           gotoPage(0, props.setValues)}/>
@@ -328,6 +375,37 @@ const RetireRequests = (props) => {
                         </select>
                       </PaginationItem>
                     </Pagination>
+                  </Col>
+                  <Col className="d-inline-flex align-items-center justify-content-end" sm="2">
+                    <ButtonDropdown className="mt-5" isOpen={dropdownExport} toggle={toggleDropdown}>
+                      <DropdownToggle caret>
+                        Izvoz
+                      </DropdownToggle >
+                      <DropdownMenu>
+                        <DropdownItem id='vpsreq-retire-dropdown'
+                          onClick={() => {
+                            const link = document.createElement('a');
+                            link.setAttribute('href', encodeURI(`data:text/csv;charset=utf8,\ufeff${PapaParse.unparse(prepareCSV({viewData: false}))}`));
+                            link.setAttribute('download', `predumirovljenje-svi.csv`);
+                            link.click();
+                            link.remove();
+                          }}
+                        >
+                          Svi
+                        </DropdownItem>
+                        <DropdownItem id='vpsreq-retire-dropdown'
+                          onClick={() => {
+                            const link = document.createElement('a');
+                            link.setAttribute('href', encodeURI(`data:text/csv;charset=utf8,\ufeff${PapaParse.unparse(prepareCSV({viewData: true}))}`));
+                            link.setAttribute('download', `predumirovljenje-filtrirani.csv`);
+                            link.click();
+                            link.remove();
+                          }}
+                        >
+                          Filtrirani
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </ButtonDropdown>
                   </Col>
                 </Row>
                 <Row>
