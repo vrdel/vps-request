@@ -52,7 +52,7 @@ const RetireRequests = (props) => {
   const [requests, setRequests] = useState(undefined)
   const [requestsView, setRequestsView] = useState(undefined)
   const [searchVmFqdn, setSearchVmFqdn] = useState("")
-  const [columnSortSubmit, setColumnSortSubmit] = useState(undefined)
+  const [columnSort, setColumnSort] = useState(undefined)
   const [searchEmail, setSearchEmail] = useState("")
   const [searchVmIsActiveComment, setSearchVmIsActiveComment] = useState("")
   const [searchVmIsActive, setSearchVmIsActive] = useState("")
@@ -233,6 +233,7 @@ const RetireRequests = (props) => {
         filtered = filtered.filter((elem) => matchItem(elem[field], target))
 
       setRequestsView(filtered)
+      setColumnSort(undefined)
       setPageCount(filtered)
       setPageIndex(0)
     }
@@ -271,13 +272,13 @@ const RetireRequests = (props) => {
   const sortColumn = (columnName) => {
     const sortDate = (a, b) => {
       if (new Date(a[columnName]).getTime() < new Date(b[columnName]).getTime()) {
-        if (columnSortSubmit)
+        if (columnSort)
           return -1
         else
           return 1
       }
       if (new Date(a[columnName]).getTime() > new Date(b[columnName]).getTime())
-        if (columnSortSubmit)
+        if (columnSort)
           return 1
         else
           return -1
@@ -453,11 +454,11 @@ const RetireRequests = (props) => {
                                   <tr>
                                     <th
                                       onClick={() => {
-                                        setColumnSortSubmit(!columnSortSubmit)
+                                        setColumnSort(!columnSort)
                                         sortColumn('request_date')
                                       }}
                                       style={{width: '94px'}}>
-                                        Podnesen {showArror(columnSortSubmit)}
+                                        Podnesen {showArror(columnSort)}
                                     </th>
                                     <th style={{width: '90px'}}>Izjašnjen</th>
                                     <th>Poslužitelj, IP adresa</th>
