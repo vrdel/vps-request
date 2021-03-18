@@ -17,6 +17,7 @@ import {
 import {
   faSearch,
   faSave,
+  faArrowUp,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Formik, Field, FieldArray, Form } from 'formik';
@@ -51,6 +52,7 @@ const RetireRequests = (props) => {
   const [requests, setRequests] = useState(undefined)
   const [requestsView, setRequestsView] = useState(undefined)
   const [searchVmFqdn, setSearchVmFqdn] = useState("")
+  const [columnSortSubmit, setColumnSortSubmit] = useState(undefined)
   const [searchEmail, setSearchEmail] = useState("")
   const [searchVmIsActiveComment, setSearchVmIsActiveComment] = useState("")
   const [searchVmIsActive, setSearchVmIsActive] = useState("")
@@ -98,6 +100,15 @@ const RetireRequests = (props) => {
       else
         setStatePageCount(result)
     }
+  }
+
+  const showArror = (whichState) => {
+    if (whichState === true)
+      return <span>&uarr;</span>;
+    else if (whichState === false)
+      return <span>&darr;</span>;
+    else
+      return ''
   }
 
   const handleOnSubmit = async (data) => {
@@ -254,6 +265,28 @@ const RetireRequests = (props) => {
       setPageCount(filtered)
       setPageIndex(0)
     }
+  }
+
+
+  const sortColumn = (columnName) => {
+    const sortDate = (a, b) => {
+      if (new Date(a[columnName]).getTime() < new Date(b[columnName]).getTime()) {
+        if (columnSortSubmit)
+          return -1
+        else
+          return 1
+      }
+      if (new Date(a[columnName]).getTime() > new Date(b[columnName]).getTime())
+        if (columnSortSubmit)
+          return 1
+        else
+          return -1
+      if (new Date(a[columnName]).getTime() == new Date(b[columnName]).getTime())
+        return 0
+    }
+    let sortedRequest = [...requestsView]
+    sortedRequest.sort(sortDate)
+    setRequestsView(sortedRequest)
   }
 
   const handleClickSubmit = (e, index) => {
@@ -418,7 +451,14 @@ const RetireRequests = (props) => {
                               <Table responsive hover size="sm">
                                 <thead className="table-active align-middle text-center">
                                   <tr>
-                                    <th style={{width: '90px'}}>Podnesen</th>
+                                    <th
+                                      onClick={() => {
+                                        setColumnSortSubmit(!columnSortSubmit)
+                                        sortColumn('request_date')
+                                      }}
+                                      style={{width: '94px'}}>
+                                        Podnesen {showArror(columnSortSubmit)}
+                                    </th>
                                     <th style={{width: '90px'}}>Izjašnjen</th>
                                     <th>Poslužitelj, IP adresa</th>
                                     <th>Kontaktna, sistemac email</th>
