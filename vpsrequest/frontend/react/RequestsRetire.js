@@ -52,12 +52,22 @@ const RetireRequests = (props) => {
   const [requests, setRequests] = useState(undefined)
   const [requestsView, setRequestsView] = useState(undefined)
   const [searchVmFqdn, setSearchVmFqdn] = useState("")
-  const [columnSort, setColumnSort] = useState(undefined)
+  const [columnSortSubmit, setColumnSortSubmit] = useState(undefined)
+  const [columnSortResponse, setColumnSortResponse] = useState(undefined)
   const [searchEmail, setSearchEmail] = useState("")
   const [searchVmIsActiveComment, setSearchVmIsActiveComment] = useState("")
   const [searchVmIsActive, setSearchVmIsActive] = useState("")
   const [dropdownExport, setDropdownExport] = useState(false);
   const toggleDropdown = () => setDropdownExport(!dropdownExport);
+
+  const columnMap = new Object({
+    'request_date': columnSortSubmit,
+    'vm_isactive_response': columnSortResponse,
+    'set_request_date': setColumnSortSubmit,
+    'set_vm_isactive_response': setColumnSortResponse
+  })
+
+  const setColumnSort = (whichColumn) => columnMap[`set_${whichColumn}`](!columnMap[whichColumn])
 
   const initializeComponent = async () => {
     const session = await backend.isActiveSession();
@@ -233,7 +243,8 @@ const RetireRequests = (props) => {
         filtered = filtered.filter((elem) => matchItem(elem[field], target))
 
       setRequestsView(filtered)
-      setColumnSort(undefined)
+      setColumnSortSubmit(undefined)
+      setColumnSortResponse(undefined)
       setPageCount(filtered)
       setPageIndex(0)
     }
@@ -263,22 +274,23 @@ const RetireRequests = (props) => {
         filtered = requestsSearch.filter((elem) => matchItem(elem[field], target))
 
       setRequestsView(filtered)
+      setColumnSortSubmit(undefined)
+      setColumnSortResponse(undefined)
       setPageCount(filtered)
       setPageIndex(0)
     }
   }
 
-
   const sortColumn = (columnName) => {
     const sortDate = (a, b) => {
       if (new Date(a[columnName]).getTime() < new Date(b[columnName]).getTime()) {
-        if (columnSort)
+        if (columnMap[columnName])
           return -1
         else
           return 1
       }
       if (new Date(a[columnName]).getTime() > new Date(b[columnName]).getTime())
-        if (columnSort)
+        if (columnMap[columnName])
           return 1
         else
           return -1
@@ -454,13 +466,20 @@ const RetireRequests = (props) => {
                                   <tr>
                                     <th
                                       onClick={() => {
-                                        setColumnSort(!columnSort)
+                                        setColumnSort('request_date')
                                         sortColumn('request_date')
                                       }}
                                       style={{width: '94px'}}>
-                                        Podnesen {showArror(columnSort)}
+                                        Podnesen { showArror(columnMap['request_date']) }
                                     </th>
-                                    <th style={{width: '90px'}}>Izjašnjen</th>
+                                    <th
+                                      onClick={() => {
+                                        setColumnSort('vm_isactive_response')
+                                        sortColumn('vm_isactive_response')
+                                      }}
+                                      style={{width: '90px'}}>
+                                      Izjašnjen { showArror(columnMap['vm_isactive_response']) }
+                                    </th>
                                     <th>Poslužitelj, IP adresa</th>
                                     <th>Kontaktna, sistemac email</th>
                                     <th>Komentar</th>
