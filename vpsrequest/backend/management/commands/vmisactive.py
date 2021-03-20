@@ -16,20 +16,22 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--initialset', action='store_true', dest='setinitial', help='Set vm_isactive=5 as initial value', required=False)
-        parser.add_argument('--setnull', action='store_true', dest='setnull', help='null vm_isactive for untouched requests')
-        parser.add_argument('--setallnull', action='store_true', dest='setallnull', help='null vm_isactive for all requests')
+        parser.add_argument('--setnull', action='store_true', dest='setnull', help='Null vm_isactive for untouched requests')
+        parser.add_argument('--setallnull', action='store_true', dest='setallnull', help='Null vm_isactive for all issued requests')
         parser.add_argument('--username', type=str, dest='username', help='Username of user', required=False)
         parser.add_argument('--year', type=int, dest='year', help='Year')
 
     def handle(self, *args, **options):
         if options['setinitial']:
-            models.Request.objects.all().update(vm_isactive=5)
+            requests = models.Request.objects.all()
+            if options['year']:
+                requests = requests.filter(request_date__year=options['year'])
+            requests.update(vm_isactive=5)
 
         elif options['username'] and options['year'] and  (options['setnull'] or options['setallnull']):
             userdb = self.user_model.objects.get(username=options['username'])
             user_request = models.Request.objects.filter(user__id=userdb.pk)
             user_request = user_request.filter(approved__exact=settings.STATUSES['Izdan VM'])
-            user_request = user_request.filter(vm_isactive=5)
             if options['setnull']:
                 user_request = user_request.filter(~Q(vm_isactive__in=[-1,0,1]))
             user_request = user_request.filter(request_date__year=options['year'])
@@ -39,9 +41,10 @@ class Command(BaseCommand):
                 req.vm_isactive_response = None
                 req.save()
 
-        elif options['year'] and options['setnull']:
+        elif options['year'] and (options['setnull'] or options['setallnull']):
             requests = models.Request.objects.\
                 filter(approved__exact=settings.STATUSES['Izdan VM'])
             requests = requests.filter(request_date__year=options['year'])
-            requests = requests.filter(vm_isactive=5)
+            if options['setnull']:
+                requests = requests.filter(~Q(vm_isactive__in=[-1,0,1]))
             requests.update(vm_isactive=None, vm_isactive_comment=None, vm_isactive_response=None)
