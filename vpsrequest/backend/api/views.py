@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.db.models import Q
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -17,7 +18,7 @@ class IsSessionActive(APIView):
         perms = list(user.user_permissions.all().values_list('codename', flat=True))
         userdetails['perms'] = perms
         userdetails['vmisactive_responsedate'] = settings.VMISACTIVE_RESPONSEDATE
-        user_request = models.Request.objects.filter(user__id=user.id).filter(vm_isactive__in=[None,-1])
+        user_request = models.Request.objects.filter(user__id=user.id).filter(Q(vm_isactive=None) | Q(vm_isactive=-1))
         userdetails['vmisactive_shouldask'] = settings.VMISACTIVE_SHOULDASK_DATE and len(list(user_request)) > 0
 
         return Response({'active': True, 'userdetails': userdetails})

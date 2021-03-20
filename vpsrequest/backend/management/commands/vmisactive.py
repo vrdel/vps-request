@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
-from django.db import DEFAULT_DB_ALIAS
+from django.db.models import Q
 from django.db.utils import IntegrityError
 
 from backend import models
@@ -15,17 +15,33 @@ class Command(BaseCommand):
         self.user_model = get_user_model()
 
     def add_arguments(self, parser):
-        parser.add_argument('--setnull', action='store_true', dest='operation_set', help='Set vm_isactive field to initial value for requests')
+        parser.add_argument('--initialset', action='store_true', dest='setinitial', help='Set vm_isactive=5 as initial value', required=False)
+        parser.add_argument('--setnull', action='store_true', dest='setnull', help='null vm_isactive for untouched requests')
+        parser.add_argument('--setallnull', action='store_true', dest='setallnull', help='null vm_isactive for all requests')
         parser.add_argument('--username', type=str, dest='username', help='Username of user', required=False)
+        parser.add_argument('--year', type=int, dest='year', help='Year')
 
     def handle(self, *args, **options):
-        if options['username']:
+        if options['setinitial']:
+            models.Request.objects.all().update(vm_isactive=5)
+
+        elif options['username'] and options['year'] and  (options['setnull'] or options['setallnull']):
             userdb = self.user_model.objects.get(username=options['username'])
             user_request = models.Request.objects.filter(user__id=userdb.pk)
+            user_request = user_request.filter(approved__exact=settings.STATUSES['Izdan VM'])
+            user_request = user_request.filter(vm_isactive=5)
+            if options['setnull']:
+                user_request = user_request.filter(~Q(vm_isactive__in=[-1,0,1]))
+            user_request = user_request.filter(request_date__year=options['year'])
             for req in user_request:
                 req.vm_isactive = None
                 req.vm_isactive_comment = None
                 req.vm_isactive_response = None
                 req.save()
-        else:
-            models.Request.objects.filter(approved__exact=settings.STATUSES['Izdan VM']).update(vm_isactive=None, vm_isactive_comment=None, vm_isactive_response=None)
+
+        elif options['year'] and options['setnull']:
+            requests = models.Request.objects.\
+                filter(approved__exact=settings.STATUSES['Izdan VM'])
+            requests = requests.filter(request_date__year=options['year'])
+            requests = requests.filter(vm_isactive=5)
+            requests.update(vm_isactive=None, vm_isactive_comment=None, vm_isactive_response=None)

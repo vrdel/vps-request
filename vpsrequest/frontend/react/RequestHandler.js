@@ -149,6 +149,7 @@ export const ApprovedRequestHandler = (props) => {
             let callback = undefined
 
             values.approved = 2
+            values.vm_isactive = 5
             values.timestamp = new Date().toISOString()
             values.request_date = requestDetails.request_date
 

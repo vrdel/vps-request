@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('backend', '0013_null_vm_remark'),
     ]
@@ -13,7 +12,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='request',
             name='vm_isactive',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Contact Response'),
+            field=models.IntegerField(blank=True, null=True, default=5, verbose_name='Contact Response'),
         ),
         migrations.AddField(
             model_name='request',

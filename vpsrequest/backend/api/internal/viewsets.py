@@ -4,6 +4,7 @@ from backend.email.notif import Notification
 
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.db.models import Q
 
 from rest_framework import status
 from rest_framework import viewsets
@@ -64,6 +65,7 @@ class RequestsViewset(viewsets.ModelViewSet):
 
         else:
             requests = models.Request.objects.filter(user=user).filter(approved=2)
+            requests = requests.filter(Q(vm_isactive=None) | Q(vm_isactive__in=[-1, 0, 1]))
             serializer = serializers.RequestsListActiveSerializer(requests, many=True)
             for data in serializer.data:
                 if data['vm_isactive'] == 1 or data['vm_isactive'] == 0:
@@ -95,6 +97,7 @@ class RequestsViewset(viewsets.ModelViewSet):
 
         else:
             requests = models.Request.objects.filter(approved=2).order_by('-approved_date')
+            requests = requests.filter(Q(vm_isactive=None) | Q(vm_isactive__in=[-1, 0, 1]))
             serializer = serializers.RequestsListActiveWithUserSerializer(requests, many=True)
             for data in serializer.data:
                 if data['vm_isactive'] == 1 or data['vm_isactive'] == 0:

@@ -35,6 +35,7 @@ export const SearchField = ({field, ...rest}) =>
 function matchItem(item, value) {
   if (typeof(item) === "string")
     return item.toLowerCase().indexOf(value.toLowerCase()) !== -1;
+
   else if (typeof(item) === "number" && item === -1) {
     item = ""
     return item.toLowerCase().indexOf(value.toLowerCase()) !== -1;

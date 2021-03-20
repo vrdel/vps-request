@@ -173,7 +173,7 @@ const MyRequestsActive = (props) => {
                                     className="form-control"
                                     name={`activeRequests.${index}.vm_isactive_comment`}
                                     as="textarea"
-                                    spellcheck={false}
+                                    spellCheck={false}
                                     rows={1}
                                   />
                                 </td>
