@@ -33,7 +33,12 @@ export const SearchField = ({field, ...rest}) =>
 
 
 function matchItem(item, value) {
-  return item.toLowerCase().indexOf(value.toLowerCase()) !== -1;
+  if (typeof(item) === "string")
+    return item.toLowerCase().indexOf(value.toLowerCase()) !== -1;
+  else if (typeof(item) === "number" && item === -1) {
+    item = ""
+    return item.toLowerCase().indexOf(value.toLowerCase()) !== -1;
+  }
 }
 
 
@@ -148,7 +153,7 @@ const RetireRequests = (props) => {
 
     let newRequestStats = JSON.parse(JSON.stringify(requestsStats));
 
-    if (prevRequest.vm_isactive === '') {
+    if (prevRequest.vm_isactive === '' || prevRequest.vm_isactive === -1) {
       if (data.vm_isactive === 'Da') {
         newRequestStats.unknown -= 1
         newRequestStats.yes += 1
@@ -268,10 +273,11 @@ const RetireRequests = (props) => {
         filtered = requestsSearch
 
       else if (target === "-")
-        filtered = requestsSearch.filter((elem) => elem[field] === "")
+        filtered = requestsSearch.filter((elem) => elem[field] === "" || elem[field] === -1)
 
-      else
+      else {
         filtered = requestsSearch.filter((elem) => matchItem(elem[field], target))
+      }
 
       setRequestsView(filtered)
       setColumnSortSubmit(undefined)

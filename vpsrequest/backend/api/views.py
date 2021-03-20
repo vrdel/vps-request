@@ -17,7 +17,7 @@ class IsSessionActive(APIView):
         perms = list(user.user_permissions.all().values_list('codename', flat=True))
         userdetails['perms'] = perms
         userdetails['vmisactive_responsedate'] = settings.VMISACTIVE_RESPONSEDATE
-        user_request = models.Request.objects.filter(user__id=user.id).filter(vm_isactive=None)
+        user_request = models.Request.objects.filter(user__id=user.id).filter(vm_isactive__in=[None,-1])
         userdetails['vmisactive_shouldask'] = settings.VMISACTIVE_SHOULDASK_DATE and len(list(user_request)) > 0
 
         return Response({'active': True, 'userdetails': userdetails})
