@@ -64,7 +64,7 @@ class RequestsViewset(viewsets.ModelViewSet):
             return Response(rets)
 
         else:
-            requests = models.Request.objects.filter(user=user).filter(approved=2)
+            requests = models.Request.objects.filter(user=user).filter(approved__in=[2, 3])
             requests = requests.filter(Q(vm_isactive=None) | Q(vm_isactive__in=[-1, 0, 1]))
             serializer = serializers.RequestsListActiveSerializer(requests, many=True)
             for data in serializer.data:
