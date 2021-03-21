@@ -110,6 +110,7 @@ const NewRequest = (props) => {
             values.request_date = new Date().toISOString()
             values.user = userDetails.pk
             values.approved = -1
+            values.vm_isactive = 5
 
             if (!acceptConditions)
               setAcceptConditionsAlert(true)
