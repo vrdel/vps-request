@@ -33,7 +33,7 @@ class Command(BaseCommand):
             user_request = models.Request.objects.filter(user__id=userdb.pk)
             user_request = user_request.filter(approved__exact=settings.STATUSES['Izdan VM'])
             if options['setnull']:
-                user_request = user_request.filter(~Q(vm_isactive__in=[-1,0,1]))
+                user_request = user_request.filter(~Q(vm_isactive__in=[-1, 0, 1]))
             user_request = user_request.filter(request_date__year=options['year'])
             for req in user_request:
                 req.vm_isactive = None
@@ -46,5 +46,5 @@ class Command(BaseCommand):
                 filter(approved__exact=settings.STATUSES['Izdan VM'])
             requests = requests.filter(request_date__year=options['year'])
             if options['setnull']:
-                requests = requests.filter(~Q(vm_isactive__in=[-1,0,1]))
+                requests = requests.filter(~Q(vm_isactive__in=[-1, 0, 1]))
             requests.update(vm_isactive=None, vm_isactive_comment=None, vm_isactive_response=None)
