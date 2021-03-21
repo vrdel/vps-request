@@ -96,7 +96,7 @@ class RequestsViewset(viewsets.ModelViewSet):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         else:
-            requests = models.Request.objects.filter(approved=2).order_by('-approved_date')
+            requests = models.Request.objects.filter(approved__in=[2, 3]).order_by('-approved_date')
             requests = requests.filter(Q(vm_isactive=None) | Q(vm_isactive__in=[-1, 0, 1]))
             serializer = serializers.RequestsListActiveWithUserSerializer(requests, many=True)
             for data in serializer.data:
@@ -109,7 +109,7 @@ class RequestsViewset(viewsets.ModelViewSet):
         yes, no, unknown = None, None, None
 
         yes = len(models.Request.objects.filter(approved=2).filter(vm_isactive=1))
-        no = len(models.Request.objects.filter(approved=2).filter(vm_isactive=0))
+        no = len(models.Request.objects.filter(approved__in=[2, 3]).filter(vm_isactive=0))
         unknown = len(models.Request.objects.filter(approved=2).filter(vm_isactive=None))
 
         return Response({
