@@ -28,7 +28,7 @@ class Command(BaseCommand):
                 requests = requests.filter(request_date__year=options['year'])
             requests.update(vm_isactive=5)
 
-        elif options['username'] and options['year'] and  (options['setnull'] or options['setallnull']):
+        elif options['username'] and options['year'] and (options['setnull'] or options['setallnull']):
             userdb = self.user_model.objects.get(username=options['username'])
             user_request = models.Request.objects.filter(user__id=userdb.pk)
             user_request = user_request.filter(approved__exact=settings.STATUSES['Izdan VM'])

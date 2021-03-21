@@ -17,7 +17,6 @@ import {
 import {
   faSearch,
   faSave,
-  faArrowUp,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Formik, Field, FieldArray, Form } from 'formik';
@@ -290,18 +289,25 @@ const RetireRequests = (props) => {
 
   const sortColumn = (columnName) => {
     const sortDate = (a, b) => {
-      if (new Date(a[columnName]).getTime() < new Date(b[columnName]).getTime()) {
+      let a_time = new Date(a[columnName]).getTime()
+      let b_time = new Date(b[columnName]).getTime()
+      if (Number.isNaN(a_time))
+        a_time = 0
+      if (Number.isNaN(b_time))
+        b_time = 0
+
+      if (a_time < b_time) {
         if (columnMap[columnName])
           return -1
         else
           return 1
       }
-      if (new Date(a[columnName]).getTime() > new Date(b[columnName]).getTime())
+      if (a_time > b_time)
         if (columnMap[columnName])
           return 1
         else
           return -1
-      if (new Date(a[columnName]).getTime() == new Date(b[columnName]).getTime())
+      if (a_time == b_time)
         return 0
     }
     let sortedRequest = [...requestsView]
@@ -455,7 +461,7 @@ const RetireRequests = (props) => {
                             link.remove();
                           }}
                         >
-                          Filtrirani
+                          Pretraživani
                         </DropdownItem>
                       </DropdownMenu>
                     </ButtonDropdown>
@@ -484,8 +490,8 @@ const RetireRequests = (props) => {
                                         setColumnSort('vm_isactive_response')
                                         sortColumn('vm_isactive_response')
                                       }}
-                                      style={{width: '90px'}}>
-                                      Izjašnjen { showArror(columnMap['vm_isactive_response']) }
+                                      style={{width: '94px'}}>
+                                      Promjena { showArror(columnMap['vm_isactive_response']) }
                                     </th>
                                     <th>Poslužitelj, IP adresa</th>
                                     <th>Kontaktna, sistemac email</th>
