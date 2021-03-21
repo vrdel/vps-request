@@ -152,7 +152,12 @@ const MyRequestsActive = (props) => {
                             <th style={{width: '180px'}}>Datum podnošenja</th>
                             <th style={{width: '250px'}}>Poslužitelj</th>
                             <th>Komentar (opcionalno)</th>
-                            <th style={{width: '90px'}}>Potreban</th>
+                            <th style={{width: '90px'}}>
+                              Potreban
+                              <span className="ml-1 text-danger">
+                                *
+                              </span>
+                            </th>
                           </tr>
                         </thead>
                         <tbody className="align-middle text-center">
