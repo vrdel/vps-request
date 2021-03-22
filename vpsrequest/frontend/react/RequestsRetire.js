@@ -336,7 +336,9 @@ const RetireRequests = (props) => {
         email_kontaktna: request.user.email,
         email_sistemac: request.sys_email,
         komentar: request.vm_isactive_comment,
-        potreban: !request.vm_isactive ? '-' : request.vm_isactive})
+        potreban: !request.vm_isactive ? '-' : request.vm_isactive,
+        umirovljen: request.approved === 3 ? 'Da' : 'Ne'
+      })
     })
 
     return csvContent
