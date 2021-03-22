@@ -258,21 +258,16 @@ const NavigationLinks = ({location, isStaff, canApproveRequest, showActiveVm}) =
       item === 'aktivni-posluzitelji' ?
         <NavItem key={i} className='mt-1'>
           {
-          showActiveVm ?
-            <NavLink
-              tag={Link}
-              active={location.pathname.split('/')[2] === item ? true : false}
-              className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
-              to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
-            </NavLink>
-          :
-            <NavLink
-              className="text-muted"
-              tag={Link}
-            >
-              <Icon i={item}/> {linkTitle.get(item)}
-            </NavLink>
-        }
+            showActiveVm ?
+              <NavLink
+                tag={Link}
+                active={location.pathname.split('/')[2] === item ? true : false}
+                className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
+                to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
+              </NavLink>
+            :
+              ''
+          }
         </NavItem>
       :
         <NavItem key={i} className='mt-1'>
@@ -312,9 +307,7 @@ const NavigationLinks = ({location, isStaff, canApproveRequest, showActiveVm}) =
                         <Icon i={item}/> {linkTitle.get(item)}
                       </Link>
                     :
-                      <span className="text-muted">
-                        <Icon i={item}/> {linkTitle.get(item)}
-                      </span>
+                      ''
                   }
                 </DropdownItem>
             :
