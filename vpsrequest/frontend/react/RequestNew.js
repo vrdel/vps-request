@@ -17,7 +17,7 @@ import {
 } from './RequestElements.js';
 import { CONFIG } from './Config'
 import { useQuery } from 'react-query';
-
+import Cookies from 'universal-cookie';
 
 const NewRequest = (props) => {
   const history = props.history;
@@ -26,6 +26,9 @@ const NewRequest = (props) => {
   const apiListRequests = CONFIG.listReqUrl;
   const [acceptConditions, setAcceptConditions] = useState(false);
   const [acceptConditionsAlert, setAcceptConditionsAlert] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(true)
+  var cookie = new Cookies()
+  var cookieAlert = cookie.get('alertDismiss')
 
   const { data: userDetails, error: errorUserDetails, isLoading: loadingUserDetails } = useQuery(
     `session-userdetails`, async () => {
@@ -103,7 +106,11 @@ const NewRequest = (props) => {
     return (
       <BaseView
         title='Novi zahtjev'
-        isChangeView={false}>
+        isChangeView={false}
+        alert={!cookieAlert && alertVisible && userDetails.vmisactive_shouldask}
+        alertdismiss={() => { cookie.set('alertDismiss', true); setAlertVisible(false)}}
+        alertmsg={`Molimo da se do ${userDetails.vmisactive_responsedate} izjasnite da li su vam u tekućoj godini potrebni izdani poslužitelji. To možete na stavci "Aktivni VM-ovi"`}
+      >
         <Formik
           initialValues={initValues}
           onSubmit={(values, actions) => {
