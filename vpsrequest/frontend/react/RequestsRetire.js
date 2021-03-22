@@ -576,6 +576,7 @@ const RetireRequests = (props) => {
                                       <tr key={index}>
                                         <td className="align-middle text-left">
                                           <Field
+                                            disabled={request.approved === 3}
                                             name={`requestsFormik.${index}.request_date`}>
                                             {({ field }) => (
                                               <div>
@@ -587,6 +588,7 @@ const RetireRequests = (props) => {
                                         </td>
                                         <td className="align-middle text-left">
                                           <Field
+                                            disabled={request.approved === 3}
                                             name={`requestsFormik.${index}.vm_isactive_response`}>
                                             {({ field }) => (
                                               <div>
@@ -614,6 +616,7 @@ const RetireRequests = (props) => {
                                         </td>
                                         <td className="align-middle text-center">
                                           <Field
+                                            disabled={request.approved === 3}
                                             className="form-control"
                                             name={`requestsFormik.${index}.vm_isactive_comment`}
                                             as="textarea"
@@ -622,13 +625,20 @@ const RetireRequests = (props) => {
                                         </td>
                                         <td className="align-middle text-center">
                                           <Field
+                                            disabled={request.approved === 3}
                                             name={`requestsFormik.${index}.vm_isactive`}
                                             component={DropDownMyActive}
                                             data={['-', 'Da', 'Ne']}
                                           />
                                         </td>
                                         <td className="align-middle text-center">
-                                          <Button className="btn" id="submit-button" onClick={(e) => handleClickSubmit(e, index)} type="submit" size="sm">
+                                          <Button className="btn"
+                                            id="submit-button"
+                                            onClick={(e) => handleClickSubmit(e, index)}
+                                            type="submit"
+                                            size="sm"
+                                            disabled={request.approved === 3}
+                                          >
                                             <FontAwesomeIcon type="submit" icon={faSave}/>
                                           </Button>
                                         </td>
