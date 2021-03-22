@@ -16,8 +16,9 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--initialset', action='store_true', dest='setinitial', help='Set vm_isactive=5 as initial value', required=False)
-        parser.add_argument('--setnull', action='store_true', dest='setnull', help='Null vm_isactive for untouched requests')
-        parser.add_argument('--setallnull', action='store_true', dest='setallnull', help='Null vm_isactive for all issued requests')
+        parser.add_argument('--setnull', action='store_true', dest='setnull', help='Null vm_isactive for untouched requests; --year mandatory')
+        parser.add_argument('--setallnull', action='store_true', dest='setallnull', help='Null vm_isactive for all issued requests; --year mandatory')
+        parser.add_argument('--setretire50', action='store_true', dest='setretire50', help='For retired requests set vm_isactive=50 to skip them on retired views; --year optional')
         parser.add_argument('--username', type=str, dest='username', help='Username of user', required=False)
         parser.add_argument('--year', type=int, dest='year', help='Year')
 
@@ -27,6 +28,14 @@ class Command(BaseCommand):
             if options['year']:
                 requests = requests.filter(request_date__year=options['year'])
             requests.update(vm_isactive=5)
+
+        elif options['setretire50']:
+            requests = models.Request.objects.\
+                filter(approved__exact=settings.STATUSES['Umirovljen'])
+            requests = requests.filter(vm_isactive=0)
+            if options['year']:
+                requests = requests.filter(request_date__year=options['year'])
+            requests.update(vm_isactive=50)
 
         elif options['username'] and options['year'] and (options['setnull'] or options['setallnull']):
             userdb = self.user_model.objects.get(username=options['username'])
