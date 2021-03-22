@@ -250,25 +250,13 @@ const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal,
 
 
 const NavigationLinks = ({location, isStaff, canApproveRequest, showActiveVm}) => {
-  var pages = staffPages
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggle = () => setDropdownOpen(!dropdownOpen);
   const NoStaffNavLinks = () =>
     noStaffPages.map((item, i) =>
-      item === 'aktivni-posluzitelji' ?
-        <NavItem key={i} className='mt-1'>
-          {
-            showActiveVm ?
-              <NavLink
-                tag={Link}
-                active={location.pathname.split('/')[2] === item ? true : false}
-                className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
-                to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
-              </NavLink>
-            :
-              ''
-          }
-        </NavItem>
+      item === 'aktivni-posluzitelji' && !showActiveVm
+      ?
+        ''
       :
         <NavItem key={i} className='mt-1'>
           <NavLink
@@ -299,17 +287,9 @@ const NavigationLinks = ({location, isStaff, canApproveRequest, showActiveVm}) =
         <DropdownMenu>
           {
             noStaffPages.map((item, i) =>
-              item === 'aktivni-posluzitelji' ?
-                <DropdownItem key={i} id='vpsreq-navlinks-dropdown'>
-                  {
-                    showActiveVm ?
-                      <Link id='vpsreq-navlinks-dropdown' to={'/ui/' + item} className="text-dark">
-                        <Icon i={item}/> {linkTitle.get(item)}
-                      </Link>
-                    :
-                      ''
-                  }
-                </DropdownItem>
+              item === 'aktivni-posluzitelji' && !showActiveVm
+            ?
+                ''
             :
                 <DropdownItem key={i} id='vpsreq-navlinks-dropdown'>
                   <Link id='vpsreq-navlinks-dropdown' to={'/ui/' + item} className="text-dark">
