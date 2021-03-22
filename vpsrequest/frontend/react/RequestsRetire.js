@@ -516,7 +516,7 @@ const RetireRequests = (props) => {
                                         type="text"
                                         name="searchVmFqdn"
                                         required={false}
-                                        className="form-control"
+                                        className="form-control text-center"
                                         id="searchVmFqdn"
                                         onChange={(e) => {
                                           searchHandler('vm_fqdn', e.target.value)
@@ -530,7 +530,7 @@ const RetireRequests = (props) => {
                                         type="text"
                                         name="searchEmail"
                                         required={false}
-                                        className="form-control"
+                                        className="form-control text-center"
                                         id="searchEmail"
                                         onChange={(e) => {
                                           searchHandler('user.email', e.target.value)
@@ -544,7 +544,7 @@ const RetireRequests = (props) => {
                                         type="text"
                                         name="searchVmIsActiveComment"
                                         required={false}
-                                        className="form-control"
+                                        className="form-control text-center"
                                         id="searchVmIsActiveComment"
                                         onChange={(e) => {
                                           searchHandler('vm_isactive_comment', e.target.value)

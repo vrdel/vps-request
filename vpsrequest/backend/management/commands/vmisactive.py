@@ -15,7 +15,7 @@ class Command(BaseCommand):
         self.user_model = get_user_model()
 
     def add_arguments(self, parser):
-        parser.add_argument('--initialset', action='store_true', dest='setinitial', help='Set vm_isactive=5 as initial value', required=False)
+        parser.add_argument('--setinitial', action='store_true', dest='setinitial', help='Set vm_isactive=5 as initial value', required=False)
         parser.add_argument('--setnull', action='store_true', dest='setnull', help='Null vm_isactive for untouched requests; --year mandatory')
         parser.add_argument('--setallnull', action='store_true', dest='setallnull', help='Null vm_isactive for all issued requests; --year mandatory')
         parser.add_argument('--setretire50', action='store_true', dest='setretire50', help='For retired requests set vm_isactive=50 to skip them on retired views; --year optional')

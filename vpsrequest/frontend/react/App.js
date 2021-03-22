@@ -278,12 +278,15 @@ class App extends Component {
                     {...propsPage}>
                   <RetireRequests {...props}/>
                 </VPSPage>}/>
-            <Route exact path="/ui/aktivni-posluzitelji"
-              render={(props) =>
-                <VPSPage
-                    {...propsPage}>
-                  <MyRequestsActive {...props}/>
-                </VPSPage>}/>
+            {
+              userDetails.vmisactive_navlink &&
+              <Route exact path="/ui/aktivni-posluzitelji"
+                render={(props) =>
+                  <VPSPage
+                      {...propsPage}>
+                    <MyRequestsActive {...props}/>
+                  </VPSPage>}/>
+            }
             <Route exact path="/ui/stanje-zahtjeva"
               render={(props) =>
                 <VPSPage

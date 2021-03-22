@@ -249,53 +249,94 @@ const NavigationBar = ({history, onLogout, isOpenModal, toggle, titleModal,
 }
 
 
-const NavigationLinks = ({location, isStaff, canApproveRequest}) => {
+const NavigationLinks = ({location, isStaff, canApproveRequest, showActiveVm}) => {
   var pages = staffPages
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggle = () => setDropdownOpen(!dropdownOpen);
+  const NoStaffNavLinks = () =>
+    noStaffPages.map((item, i) =>
+      item === 'aktivni-posluzitelji' ?
+        <NavItem key={i} className='mt-1'>
+          {
+          showActiveVm ?
+            <NavLink
+              tag={Link}
+              active={location.pathname.split('/')[2] === item ? true : false}
+              className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
+              to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
+            </NavLink>
+          :
+            <NavLink
+              className="text-muted"
+              tag={Link}
+            >
+              <Icon i={item}/> {linkTitle.get(item)}
+            </NavLink>
+        }
+        </NavItem>
+      :
+        <NavItem key={i} className='mt-1'>
+          <NavLink
+            tag={Link}
+            active={location.pathname.split('/')[2] === item ? true : false}
+            className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
+            to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
+          </NavLink>
+        </NavItem>
+  )
+  const StaffNavLinks = () => (
+    <React.Fragment>
+      {
+        staffPages.map((item, i) =>
+          <NavItem key={i} className='mt-1'>
+            <NavLink
+              tag={Link}
+              active={location.pathname.split('/')[2] === item ? true : false}
+              className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
+              to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
+            </NavLink>
+          </NavItem>)
+      }
+      <Dropdown isOpen={dropdownOpen} toggle={toggle} className='mt-1 text-dark'>
+        <DropdownToggle nav caret className={elemInArray(location.pathname.split('/')[2], noStaffPages) ? "text-white bg-info" : "text-dark"}>
+          <FontAwesomeIcon icon={faUserEdit}/> Korisnikove forme
+        </DropdownToggle>
+        <DropdownMenu>
+          {
+            noStaffPages.map((item, i) =>
+              item === 'aktivni-posluzitelji' ?
+                <DropdownItem key={i} id='vpsreq-navlinks-dropdown'>
+                  {
+                    showActiveVm ?
+                      <Link id='vpsreq-navlinks-dropdown' to={'/ui/' + item} className="text-dark">
+                        <Icon i={item}/> {linkTitle.get(item)}
+                      </Link>
+                    :
+                      <span className="text-muted">
+                        <Icon i={item}/> {linkTitle.get(item)}
+                      </span>
+                  }
+                </DropdownItem>
+            :
+                <DropdownItem key={i} id='vpsreq-navlinks-dropdown'>
+                  <Link id='vpsreq-navlinks-dropdown' to={'/ui/' + item} className="text-dark">
+                    <Icon i={item}/> {linkTitle.get(item)}
+                  </Link>
+                </DropdownItem>
+          )
+        }
+        </DropdownMenu>
+      </Dropdown>
+    </React.Fragment>
+  )
 
   return (
     <Nav tabs id="vpsreq-navlinks" className="d-flex justify-content-center border-left border-right border-top rounded-top sticky-top">
       {
         !isStaff && !canApproveRequest ?
-          noStaffPages.map((item, i) =>
-            <NavItem key={i} className='mt-1'>
-              <NavLink
-                tag={Link}
-                active={location.pathname.split('/')[2] === item ? true : false}
-                className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
-                to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
-              </NavLink>
-            </NavItem>)
+          <NoStaffNavLinks/>
         :
-          <React.Fragment>
-            {
-              staffPages.map((item, i) =>
-                <NavItem key={i} className='mt-1'>
-                  <NavLink
-                    tag={Link}
-                    active={location.pathname.split('/')[2] === item ? true : false}
-                    className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
-                    to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
-                  </NavLink>
-                </NavItem>)
-            }
-            <Dropdown isOpen={dropdownOpen} toggle={toggle} className='mt-1 text-dark'>
-              <DropdownToggle nav caret className={elemInArray(location.pathname.split('/')[2], noStaffPages) ? "text-white bg-info" : "text-dark"}>
-                <FontAwesomeIcon icon={faUserEdit}/> Korisnikove forme
-              </DropdownToggle>
-              <DropdownMenu>
-                {
-                  noStaffPages.map((item, i) =>
-                    <DropdownItem key={i} id='vpsreq-navlinks-dropdown'>
-                      <Link id='vpsreq-navlinks-dropdown' to={'/ui/' + item} className="text-dark">
-                        <Icon i={item}/> {linkTitle.get(item)}
-                      </Link>
-                    </DropdownItem>)
-                }
-              </DropdownMenu>
-            </Dropdown>
-          </React.Fragment>
+          <StaffNavLinks/>
       }
     </Nav>
   )
@@ -322,7 +363,10 @@ const VPSPageBase = ({location, toggleAreYouSure, onLogout, areYouSureModal, use
     </Row>
     <Row className="no-gutters">
       <Col>
-        <NavigationLinksWithRouter isStaff={userDetails.is_staff} canApproveRequest={canApprove(userDetails)} />
+        <NavigationLinksWithRouter
+          isStaff={userDetails.is_staff}
+          canApproveRequest={canApprove(userDetails)}
+          showActiveVm={userDetails.vmisactive_navlink} />
         {children}
       </Col>
     </Row>
