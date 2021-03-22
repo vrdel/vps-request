@@ -18,7 +18,7 @@ def get_files(install_prefix, directory):
 
 
 setup(name=NAME,
-      version='1.1.2',
+      version='1.1.3',
       description='VPS Request - web application for requesting VM within Virtual Private Server service of SRCE',
       author='SRCE',
       author_email='dvrcic@srce.hr, hsute@srce.hr',
@@ -40,6 +40,7 @@ setup(name=NAME,
           ('etc/apache2/sites-available/', ['apache/vpsrequest.example.com.conf']),
           ('var/log/vpsrequest', ['helpers/empty']),
           ('var/lib/vpsrequest', ['helpers/empty']),
+          ('', ['requirements.txt']),
       ] + get_files('share/', 'vpsrequest/static/'),
       include_package_data=True,
       packages=find_packages(),

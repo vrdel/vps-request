@@ -4,12 +4,8 @@ IMAGE="ipanema:5000/vps-request-packaging"
 VENV=/data/vps-request
 WORKDIR=$HOME/my_work/srce/git.vps-request/vps-request/
 
-if [ -z "$1" ]
-then
-	IMG="$IMAGE"
-else
-	IMG="$IMAGE:$1"
-fi
+test -z $1 && IMG="$IMAGE" || IMG="$1"
+test -z $2 && SH="$SHELL" || SH="$2"
 
 docker run --net vrdel-net --ip 172.18.0.10 --privileged --rm --name vps-request-packaging -ti \
 	-p 80:80 -p 443:443 -p 3306:3306 -p 8000:8000 \
@@ -25,4 +21,4 @@ docker run --net vrdel-net --ip 172.18.0.10 --privileged --rm --name vps-request
 -v $WORKDIR/docker/syncsite.sh:/home/user/syncsite.sh \
 -v $WORKDIR/docker/pysitepkg:/home/user/pysitepkg \
 $IMG \
-/bin/bash
+$SH

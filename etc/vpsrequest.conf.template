@@ -4,6 +4,8 @@ VENV = /data/vps-request/
 [GENERAL]
 Debug = True
 RelativePath = /zahtjev
+VmIsActiveResponseDate = 21.03
+VmIsActiveResponseAsk = True
 
 [SECURITY]
 AllowedHosts = vpsrequest.example.com
