@@ -488,7 +488,7 @@ export const BaseView = ({title='', isChangeView=false, isHandleNewView=false,
         <Row>
           {
             <Col md={{size: 6, offset: 3}}>
-              <Alert color="danger" isOpen={alert} toggle={alertdismiss}>
+              <Alert className="text-center" color="danger" isOpen={alert} toggle={alertdismiss}>
                 {alertmsg}
               </Alert>
             </Col>

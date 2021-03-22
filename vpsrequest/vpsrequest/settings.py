@@ -44,10 +44,10 @@ try:
     RELATIVE_PATH = config.get('GENERAL', 'RelativePath')
     VMISACTIVE_RESPONSEDATE = config.get('GENERAL', 'VmIsActiveResponseDate')
     VMISACTIVE_RESPONSEASK = config.getboolean('GENERAL', 'VmIsActiveResponseAsk')
-    today = datetime.datetime.today()
-    dateto = datetime.datetime.strptime('{}.{}'.format(VMISACTIVE_RESPONSEDATE, today.year), '%d.%m.%Y')
-    VMISACTIVE_RESPONSEDATE = datetime.datetime.strftime(dateto, '%d.%m.%Y')
-    if (today <= dateto and VMISACTIVE_RESPONSEASK):
+    TODAY = datetime.datetime.today()
+    DATETO = datetime.datetime.strptime('{}.{}'.format(VMISACTIVE_RESPONSEDATE, TODAY.year), '%d.%m.%Y')
+    VMISACTIVE_RESPONSEDATE = datetime.datetime.strftime(DATETO, '%d.%m.%Y')
+    if (TODAY <= DATETO and VMISACTIVE_RESPONSEASK):
         VMISACTIVE_SHOULDASK_DATE = True
     else:
         VMISACTIVE_SHOULDASK_DATE = False

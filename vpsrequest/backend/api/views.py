@@ -22,5 +22,6 @@ class IsSessionActive(APIView):
         userdetails['vmisactive_shouldask'] = settings.VMISACTIVE_SHOULDASK_DATE and len(list(user_request)) > 0
         request_question = models.Request.objects.filter(user__id=user.id).filter(Q(vm_isactive=None) | Q(vm_isactive__in=[-1, 0, 1]))
         userdetails['vmisactive_navlink'] = len(list(request_question)) > 0
+        userdetails['vmisactive_responsedate_expired'] = settings.TODAY <= settings.DATETO
 
         return Response({'active': True, 'userdetails': userdetails})

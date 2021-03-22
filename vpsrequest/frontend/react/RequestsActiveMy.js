@@ -125,7 +125,7 @@ const MyRequestsActive = (props) => {
         title={`Aktivni poslužitelji u ${new Intl.DateTimeFormat('hr-HR', {year: 'numeric'}).format(new Date())}`}
         location={location}
         alert={!cookieAlert && alertVisible && shouldAskVMActive}
-        alertdismiss={() => { new Cookies().set('alertDismiss', true); setAlertVisible(false)}}
+        alertdismiss={() => {new Cookies().set('alertDismiss', true); setAlertVisible(false)}}
         alertmsg={`Molimo da se do ${userDetails.vmisactive_responsedate} izjasnite da li su vam u tekućoj godini potrebni izdani poslužitelji. To možete na stavci "Aktivni VM-ovi"`}
       >
         <Formik
@@ -204,7 +204,7 @@ const MyRequestsActive = (props) => {
                     </Row>
                     <Row className="mt-2 mb-2 text-center">
                       <Col>
-                        <Button className="btn-lg" color="success" id="submit-button" type="submit">Spremi</Button>
+                        <Button disabled={!userDetails.vmisactive_responsedate_expired} className="btn-lg" color="success" id="submit-button" type="submit">Spremi</Button>
                       </Col>
                     </Row>
                   </React.Fragment>
