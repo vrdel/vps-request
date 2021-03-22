@@ -333,6 +333,7 @@ const RetireRequests = (props) => {
         podnesen: DateFormatHR(request.request_date, true),
         izjasnjen: DateFormatHR(request.vm_isactive_response, true),
         posluzitelj: request.vm_fqdn,
+        ip_adresa: request.vm_ip,
         email_kontaktna: request.user.email,
         email_sistemac: request.sys_email,
         komentar: request.vm_isactive_comment,
