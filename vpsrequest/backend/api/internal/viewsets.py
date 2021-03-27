@@ -91,7 +91,7 @@ class RequestsViewset(viewsets.ModelViewSet):
             serializer = serializers.RequestsListActiveWithUserSerializer(req_db, data=req)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -152,14 +152,14 @@ class RequestsViewset(viewsets.ModelViewSet):
         }, status=status.HTTP_200_OK)
 
     def partial_update(self, request, pk=None):
-        changedContact = request.data.pop('changedContact', False)
-        sendMsgContact = request.data.pop('sendMsgContact', False)
-        sendMsgHead = request.data.pop('sendMsgHead', False)
+        changed_contact = request.data.pop('changedContact', False)
+        sendmsg_contact = request.data.pop('sendMsgContact', False)
+        sendmsg_head = request.data.pop('sendMsgHead', False)
         user = self.request.user
 
-        oldReq = models.Request.objects.get(pk=pk)
+        old_req = models.Request.objects.get(pk=pk)
 
-        if changedContact:
+        if changed_contact:
             data = request.data
             user = None
             user_model = get_user_model()
@@ -175,30 +175,30 @@ class RequestsViewset(viewsets.ModelViewSet):
                                                  institution=data['institution'],
                                                  is_staff=False,
                                                  is_active=True)
-            oldReq.user = user
-            oldReq.save()
+            old_req.user = user
+            old_req.save()
 
-        serializer = serializers.RequestsListSerializer(oldReq)
-        oldRequest = serializer.data
+        serializer = serializers.RequestsListSerializer(old_req)
+        old_request = serializer.data
         ret = super().partial_update(request, pk)
 
-        if not changedContact:
-            newRequest = ret.data
+        if not changed_contact:
+            new_request = ret.data
             if settings.MAIL_SEND:
-                notification = Notification(newRequest['id'])
+                notification = Notification(new_request['id'])
 
                 # state transitions mail sending
-                if (oldRequest['approved'] == 2 and newRequest['approved'] > 1) or (oldRequest['approved'] == 1 and newRequest['approved'] == 2):
-                    notification.sendChangedRequestEmail(oldRequest)
-                elif oldRequest['approved'] == -1 and newRequest['approved'] == -1:
+                if (old_request['approved'] == 2 and new_request['approved'] > 1) or (old_request['approved'] == 1 and new_request['approved'] == 2):
+                    notification.sendChangedRequestEmail(old_request)
+                elif old_request['approved'] == -1 and new_request['approved'] == -1:
                     if user.is_staff:
-                        notification.sendFixRequestEmail(sendMsgContact, sendMsgHead)
+                        notification.sendFixRequestEmail(sendmsg_contact, sendmsg_head)
                     else:
-                        notification.sendChangedRequestEmail(oldRequest)
-                elif oldRequest['approved'] == -1 and newRequest['approved'] == 0:
-                    notification.sendRejecedRequestEmail(sendMsgContact, sendMsgHead)
-                elif oldRequest['approved'] == -1 and newRequest['approved'] == 1:
-                    notification.sendApprovedRequestEmail(sendMsgContact, sendMsgHead)
+                        notification.sendChangedRequestEmail(old_request)
+                elif old_request['approved'] == -1 and new_request['approved'] == 0:
+                    notification.sendRejecedRequestEmail(sendmsg_contact, sendmsg_head)
+                elif old_request['approved'] == -1 and new_request['approved'] == 1:
+                    notification.sendApprovedRequestEmail(sendmsg_contact, sendmsg_head)
 
         return ret
 
