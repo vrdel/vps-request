@@ -75,12 +75,22 @@ class RequestsViewset(viewsets.ModelViewSet):
 
     @action(detail=False)
     def approved(self, request):
-        requests = models.Request.objects.filter(approved__gte=1).order_by('-approved_date')
-        serializer = serializers.RequestsListSerializer(requests, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        user = request.user
+
+        if user.is_staff or user.is_superuser:
+            requests = models.Request.objects.filter(approved__gte=1).order_by('-approved_date')
+            serializer = serializers.RequestsListSerializer(requests, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
 
     @action(detail=False, methods=['patch', 'get'])
     def vmissued_retire(self, request):
+        user = request.user
+
+        if not user.is_staff and not user.is_superuser:
+            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+
         if request.method == 'PATCH':
             req = request.data
             id = req['id']
@@ -106,6 +116,11 @@ class RequestsViewset(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['patch', 'get'])
     def vmissued_retire_stats(self, request):
+        user = request.user
+
+        if not user.is_staff and not user.is_superuser:
+            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+
         yes, no, unknown = None, None, None
 
         yes = len(models.Request.objects.filter(approved=2).filter(vm_isactive=1))
@@ -120,6 +135,11 @@ class RequestsViewset(viewsets.ModelViewSet):
 
     @action(detail=False)
     def rejected(self, request):
+        user = request.user
+
+        if not user.is_staff and not user.is_superuser:
+            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+
         requests = models.Request.objects.filter(approved=0).order_by('-approved_date')
         serializer = serializers.RequestsListSerializer(requests, many=True)
 
@@ -127,6 +147,11 @@ class RequestsViewset(viewsets.ModelViewSet):
 
     @action(detail=False)
     def new(self, request):
+        user = request.user
+
+        if not user.is_staff and not user.is_superuser:
+            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+
         requests = models.Request.objects.filter(approved=-1).order_by('-request_date')
         serializer = serializers.RequestsListSerializer(requests, many=True)
 
@@ -134,6 +159,11 @@ class RequestsViewset(viewsets.ModelViewSet):
 
     @action(detail=True)
     def handlenew(self, request, pk=None):
+        user = request.user
+
+        if not user.is_staff and not user.is_superuser:
+            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+
         request = models.Request.objects.get(pk=pk)
         serializer = serializers.RequestsListSerializer(request)
 
@@ -141,6 +171,11 @@ class RequestsViewset(viewsets.ModelViewSet):
 
     @action(detail=False)
     def stats(self, request):
+        user = request.user
+
+        if not user.is_staff and not user.is_superuser:
+            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+
         active, retired = None, None
 
         active = len(models.Request.objects.filter(approved=2))
@@ -152,16 +187,21 @@ class RequestsViewset(viewsets.ModelViewSet):
         }, status=status.HTTP_200_OK)
 
     def partial_update(self, request, pk=None):
+        user = self.request.user
+        old_req = models.Request.objects.get(pk=pk)
+
+        if not user.is_staff and not user.is_superuser:
+            if old_req.user.pk != user.pk:
+                return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+
+        if (old_req.approved in [1, 2, 3]
+            and not user.is_staff
+            and not user.is_superuser):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
         changed_contact = request.data.pop('changedContact', False)
         sendmsg_contact = request.data.pop('sendMsgContact', False)
         sendmsg_head = request.data.pop('sendMsgHead', False)
-        status_vm = request.data.get('approved', None)
-        user = self.request.user
-
-        old_req = models.Request.objects.get(pk=pk)
-
-        if (status_vm in [1, 2, 3] and not user.is_staff and not user.is_superuser):
-            return Response(status=status.HTTP_403_FORBIDDEN)
 
         if changed_contact:
             data = request.data
