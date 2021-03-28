@@ -159,12 +159,7 @@ class RequestsViewset(viewsets.ModelViewSet):
 
     @action(detail=True)
     def handlenew(self, request, pk=None):
-        user = request.user
 
-        if not user.is_staff and not user.is_superuser:
-            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
-
-        request = models.Request.objects.get(pk=pk)
         serializer = serializers.RequestsListSerializer(request)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -191,13 +186,12 @@ class RequestsViewset(viewsets.ModelViewSet):
         old_req = models.Request.objects.get(pk=pk)
 
         if not user.is_staff and not user.is_superuser:
-            if old_req.user.pk != user.pk:
-                return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+            if old_req.approved in [1, 2, 3]:
+                return Response(status=status.HTTP_403_FORBIDDEN)
 
-        if (old_req.approved in [1, 2, 3]
-            and not user.is_staff
-            and not user.is_superuser):
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            for skip in ["head_institution", "approved", "timestamp",
+                         "vm_reason", "vm_ip", "vm_admin_remark", "approvedby"]:
+                request.data.pop(skip, None)
 
         changed_contact = request.data.pop('changedContact', False)
         sendmsg_contact = request.data.pop('sendMsgContact', False)
