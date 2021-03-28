@@ -155,9 +155,13 @@ class RequestsViewset(viewsets.ModelViewSet):
         changed_contact = request.data.pop('changedContact', False)
         sendmsg_contact = request.data.pop('sendMsgContact', False)
         sendmsg_head = request.data.pop('sendMsgHead', False)
+        status_vm = request.data.get('approved', None)
         user = self.request.user
 
         old_req = models.Request.objects.get(pk=pk)
+
+        if (status_vm in [1, 2, 3] and not user.is_staff and not user.is_superuser):
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
         if changed_contact:
             data = request.data
