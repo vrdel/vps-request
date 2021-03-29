@@ -46,6 +46,10 @@ class RequestsViewset(viewsets.ModelViewSet):
         if request.method == 'PATCH':
             rets = list()
 
+            if not settings.VMISACTIVE_SHOULDASK_DATE:
+                return Response({'detail': 'Istekao period izjašnjavanja'},
+                                status=status.HTTP_403_FORBIDDEN)
+
             for req in request.data:
                 id = req['id']
                 req_db = models.Request.objects.get(id=id)
@@ -58,6 +62,7 @@ class RequestsViewset(viewsets.ModelViewSet):
                 if serializer.is_valid():
                     serializer.save()
                     rets.append(serializer.data)
+
                 else:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -159,7 +164,7 @@ class RequestsViewset(viewsets.ModelViewSet):
 
     @action(detail=True)
     def handlenew(self, request, pk=None):
-
+        request = models.Request.objects.get(pk=pk)
         serializer = serializers.RequestsListSerializer(request)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -187,7 +192,8 @@ class RequestsViewset(viewsets.ModelViewSet):
 
         if not user.is_staff and not user.is_superuser:
             if old_req.approved in [1, 2, 3]:
-                return Response(status=status.HTTP_403_FORBIDDEN)
+                return Response({'detail': 'Nije moguće mijenjati'},
+                                status=status.HTTP_403_FORBIDDEN)
 
             for skip in ["head_institution", "approved", "timestamp",
                          "vm_reason", "vm_ip", "vm_admin_remark", "approvedby"]:
@@ -216,29 +222,33 @@ class RequestsViewset(viewsets.ModelViewSet):
             old_req.user = user
             old_req.save()
 
-        serializer = serializers.RequestsListSerializer(old_req)
-        old_request = serializer.data
-        ret = super().partial_update(request, pk)
+        serializer = serializers.RequestsListSerializer(old_req, data=request.data)
+        if serializer.is_valid():
+            old_request = serializer.data
+            ret = super().partial_update(request, pk)
 
-        if not changed_contact:
-            new_request = ret.data
-            if settings.MAIL_SEND:
-                notification = Notification(new_request['id'])
+            if not changed_contact:
+                new_request = ret.data
+                if settings.MAIL_SEND:
+                    notification = Notification(new_request['id'])
 
-                # state transitions mail sending
-                if (old_request['approved'] == 2 and new_request['approved'] > 1) or (old_request['approved'] == 1 and new_request['approved'] == 2):
-                    notification.sendChangedRequestEmail(old_request)
-                elif old_request['approved'] == -1 and new_request['approved'] == -1:
-                    if user.is_staff:
-                        notification.sendFixRequestEmail(sendmsg_contact, sendmsg_head)
-                    else:
+                    # state transitions mail sending
+                    if (old_request['approved'] == 2 and new_request['approved'] > 1) or (old_request['approved'] == 1 and new_request['approved'] == 2):
                         notification.sendChangedRequestEmail(old_request)
-                elif old_request['approved'] == -1 and new_request['approved'] == 0:
-                    notification.sendRejecedRequestEmail(sendmsg_contact, sendmsg_head)
-                elif old_request['approved'] == -1 and new_request['approved'] == 1:
-                    notification.sendApprovedRequestEmail(sendmsg_contact, sendmsg_head)
+                    elif old_request['approved'] == -1 and new_request['approved'] == -1:
+                        if user.is_staff:
+                            notification.sendFixRequestEmail(sendmsg_contact, sendmsg_head)
+                        else:
+                            notification.sendChangedRequestEmail(old_request)
+                    elif old_request['approved'] == -1 and new_request['approved'] == 0:
+                        notification.sendRejecedRequestEmail(sendmsg_contact, sendmsg_head)
+                    elif old_request['approved'] == -1 and new_request['approved'] == 1:
+                        notification.sendApprovedRequestEmail(sendmsg_contact, sendmsg_head)
 
-        return ret
+            return rt
+
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
         response = super().create(request)
