@@ -201,36 +201,38 @@ class RequestsViewset(viewsets.ModelViewSet):
                                "approvedby"]:
                 request.data[skip_field] = dict_exist_requestdb[skip_field]
 
-        changed_contact = request.data.pop('changedContact', False)
-        sendmsg_contact = request.data.pop('sendMsgContact', False)
-        sendmsg_head = request.data.pop('sendMsgHead', False)
+        else:
+            changed_contact = request.data.pop('changedContact', False)
+            sendmsg_contact = request.data.pop('sendMsgContact', False)
+            sendmsg_head = request.data.pop('sendMsgHead', False)
 
-        if changed_contact:
-            data = request.data
-            user = None
-            user_model = get_user_model()
-            try:
-                user = user_model.objects.get(username=data['aaieduhr'])
-            except user_model.DoesNotExist:
-                user = user_model.objects.create(username=data['aaieduhr'],
-                                                 first_name=data['first_name'],
-                                                 last_name=data['last_name'],
-                                                 email=data['email'],
-                                                 role=data['role'],
-                                                 aaieduhr=data['aaieduhr'],
-                                                 institution=data['institution'],
-                                                 is_staff=False,
-                                                 is_active=True)
-            existing_requestdb.user = user
-            existing_requestdb.save()
+            if changed_contact:
+                data = request.data
+                user = None
+                user_model = get_user_model()
+                try:
+                    user = user_model.objects.get(username=data['aaieduhr'])
+                except user_model.DoesNotExist:
+                    user = user_model.objects.create(username=data['aaieduhr'],
+                                                    first_name=data['first_name'],
+                                                    last_name=data['last_name'],
+                                                    email=data['email'],
+                                                    role=data['role'],
+                                                    aaieduhr=data['aaieduhr'],
+                                                    institution=data['institution'],
+                                                    is_staff=False,
+                                                    is_active=True)
+                existing_requestdb.user = user
+                existing_requestdb.save()
 
-        serializer = serializers.RequestsListSerializer(existing_requestdb, data=request.data)
+        serializer = serializers.RequestsListSerializer(existing_requestdb,
+                                                        data=request.data)
         if serializer.is_valid():
             old_request = serializer.data
-            ret = super().partial_update(request, pk)
+            response_update = super().partial_update(request, pk)
 
             if not changed_contact:
-                new_request = ret.data
+                new_request = response_update.data
                 if settings.MAIL_SEND:
                     notification = Notification(new_request['id'])
 
@@ -247,7 +249,7 @@ class RequestsViewset(viewsets.ModelViewSet):
                     elif old_request['approved'] == -1 and new_request['approved'] == 1:
                         notification.sendApprovedRequestEmail(sendmsg_contact, sendmsg_head)
 
-            return ret
+            return response_update
 
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
