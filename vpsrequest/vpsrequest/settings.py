@@ -44,7 +44,7 @@ try:
     RELATIVE_PATH = config.get('GENERAL', 'RelativePath')
     VMISACTIVE_RESPONSEDATE = config.get('GENERAL', 'VmIsActiveResponseDate')
     VMISACTIVE_RESPONSEASK = config.getboolean('GENERAL', 'VmIsActiveResponseAsk')
-    TODAY = datetime.datetime.today()
+    TODAY = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
     DATETO = datetime.datetime.strptime('{}.{}'.format(VMISACTIVE_RESPONSEDATE, TODAY.year), '%d.%m.%Y')
     VMISACTIVE_RESPONSEDATE = datetime.datetime.strftime(DATETO, '%d.%m.%Y')
     if (TODAY <= DATETO and VMISACTIVE_RESPONSEASK):
