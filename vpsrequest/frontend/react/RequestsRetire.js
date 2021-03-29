@@ -131,7 +131,7 @@ const RetireRequests = (props) => {
 
     if (response.ok)
       NotifyOk({
-        msg: 'Status poslužitelja uspješno promijenjeni',
+        msg: 'Status poslužitelja uspješno promijenjen',
         title: `Uspješno - HTTP ${response.status}`});
     else
       NotifyError({

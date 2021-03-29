@@ -28,6 +28,7 @@ export const DropDownMyActive = ({field, data=[], ...props}) =>
   <Field component="select"
     name={field.name}
     required={true}
+    disabled={props.disabled}
     className={`form-control custom-select text-center
                 ${field.value === 'Da' ? 'bg-success border-success text-white' : field.value === 'Ne' ? 'bg-danger border-danger text-white' : ' bg-warning border-warning'}`}
     {...props}
@@ -193,6 +194,7 @@ const MyRequestsActive = (props) => {
                                     name={`activeRequests.${index}.vm_isactive_comment`}
                                     as="textarea"
                                     spellCheck={false}
+                                    disabled={request.approved === 3}
                                     rows={1}
                                   />
                                 </td>
@@ -201,6 +203,7 @@ const MyRequestsActive = (props) => {
                                     name={`activeRequests.${index}.vm_isactive`}
                                     component={DropDownMyActive}
                                     data={['-', 'Da', 'Ne']}
+                                    disabled={request.approved === 3}
                                   />
                                   {
                                     props.errors && props.errors.activeRequests
