@@ -188,16 +188,18 @@ class RequestsViewset(viewsets.ModelViewSet):
 
     def partial_update(self, request, pk=None):
         user = self.request.user
-        old_req = models.Request.objects.get(pk=pk)
+        existing_requestdb = models.Request.objects.get(pk=pk)
 
         if not user.is_staff and not user.is_superuser:
-            if old_req.approved in [1, 2, 3]:
+            if existing_requestdb.approved in [1, 2, 3]:
                 return Response({'detail': 'Nije moguće mijenjati'},
                                 status=status.HTTP_403_FORBIDDEN)
 
-            for skip in ["head_institution", "approved", "timestamp",
-                         "vm_reason", "vm_ip", "vm_admin_remark", "approvedby"]:
-                request.data.pop(skip, None)
+            dict_exist_requestdb = models.Request.objects.values().get(pk=pk)
+            for skip_field in ["head_institution", "approved", "timestamp",
+                               "vm_reason", "vm_ip", "vm_admin_remark",
+                               "approvedby"]:
+                request.data[skip_field] = dict_exist_requestdb[skip_field]
 
         changed_contact = request.data.pop('changedContact', False)
         sendmsg_contact = request.data.pop('sendMsgContact', False)
@@ -219,10 +221,10 @@ class RequestsViewset(viewsets.ModelViewSet):
                                                  institution=data['institution'],
                                                  is_staff=False,
                                                  is_active=True)
-            old_req.user = user
-            old_req.save()
+            existing_requestdb.user = user
+            existing_requestdb.save()
 
-        serializer = serializers.RequestsListSerializer(old_req, data=request.data)
+        serializer = serializers.RequestsListSerializer(existing_requestdb, data=request.data)
         if serializer.is_valid():
             old_request = serializer.data
             ret = super().partial_update(request, pk)
@@ -245,7 +247,7 @@ class RequestsViewset(viewsets.ModelViewSet):
                     elif old_request['approved'] == -1 and new_request['approved'] == 1:
                         notification.sendApprovedRequestEmail(sendmsg_contact, sendmsg_head)
 
-            return rt
+            return ret
 
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
