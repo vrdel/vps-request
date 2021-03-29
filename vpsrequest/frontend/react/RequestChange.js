@@ -56,10 +56,23 @@ const ChangeRequest = (props) => {
       NotifyOk({
         msg: 'Zahtjev uspješno promijenjen',
         title: `Uspješno - HTTP ${response.status}`});
-    else
+    else {
+      let json = ''
+      let errorText = ''
+      try {
+        json = await response.json()
+        if (json['detail'])
+          errorText = json['detail']
+        else
+          errorText = JSON.stringify(json)
+      }
+      catch (e) {
+        errorText = response.statusText
+      }
       NotifyError({
-        msg: response.statusText,
+        msg: errorText,
         title: `Greška - HTTP ${response.status}`});
+    }
   }
 
   if (userDetails && requestDetails)
