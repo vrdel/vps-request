@@ -198,22 +198,30 @@ const MyRequestsActive = (props) => {
                                     rows={1}
                                   />
                                 </td>
-                                <td className="align-middle text-center">
-                                  <Field
-                                    name={`activeRequests.${index}.vm_isactive`}
-                                    component={DropDownMyActive}
-                                    data={['-', 'Da', 'Ne']}
-                                    disabled={request.approved === 3}
-                                  />
-                                  {
-                                    props.errors && props.errors.activeRequests
-                                      && props.errors.activeRequests[index] ?
-                                        <span className="text-danger" style={{fontSize: 'small'}}>
-                                          {props.errors.activeRequests[index].vm_isactive}
-                                        </span >
-                                      : null
-                                  }
-                                </td>
+                                {
+                                  request.approved !== 3 ?
+                                    <td className="align-middle text-center">
+                                      <Field
+                                        name={`activeRequests.${index}.vm_isactive`}
+                                        component={DropDownMyActive}
+                                        data={['-', 'Da', 'Ne']}
+                                      />
+                                      {
+                                        props.errors && props.errors.activeRequests
+                                          && props.errors.activeRequests[index] ?
+                                            <span className="text-danger" style={{fontSize: 'small'}}>
+                                              {props.errors.activeRequests[index].vm_isactive}
+                                            </span >
+                                          : null
+                                      }
+                                    </td>
+                                  :
+                                    <td className="align-middle text-center">
+                                      <div className="p-2 text-white bg-danger rounded">
+                                        { request.vm_isactive }
+                                      </div>
+                                    </td>
+                                }
                               </tr>)
                           }
                         </tbody>
