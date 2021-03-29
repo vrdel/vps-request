@@ -53,6 +53,11 @@ class RequestsViewset(viewsets.ModelViewSet):
             for req in request.data:
                 id = req['id']
                 req_db = models.Request.objects.get(id=id)
+
+                if req_db.user.pk != user.pk:
+                    return Response({'detail': 'Nemate dozvole nad {}'.format(id)},
+                                    status=status.HTTP_401_UNAUTHORIZED)
+
                 req['vm_isactive'] = settings.STATUSESVMACTIVE[req['vm_isactive']]
                 if req_db.vm_isactive != req['vm_isactive']:
                     req['vm_isactive_response'] = datetime.datetime.now()
@@ -87,14 +92,14 @@ class RequestsViewset(viewsets.ModelViewSet):
             serializer = serializers.RequestsListSerializer(requests, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+            return Response(data=None, status=status.HTTP_401_UNAUTHORIZED)
 
     @action(detail=False, methods=['patch', 'get'])
     def vmissued_retire(self, request):
         user = request.user
 
         if not user.is_staff and not user.is_superuser:
-            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+            return Response(data=None, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == 'PATCH':
             req = request.data
@@ -124,7 +129,7 @@ class RequestsViewset(viewsets.ModelViewSet):
         user = request.user
 
         if not user.is_staff and not user.is_superuser:
-            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+            return Response(data=None, status=status.HTTP_401_UNAUTHORIZED)
 
         yes, no, unknown = None, None, None
 
@@ -143,7 +148,7 @@ class RequestsViewset(viewsets.ModelViewSet):
         user = request.user
 
         if not user.is_staff and not user.is_superuser:
-            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+            return Response(data=None, status=status.HTTP_401_UNAUTHORIZED)
 
         requests = models.Request.objects.filter(approved=0).order_by('-approved_date')
         serializer = serializers.RequestsListSerializer(requests, many=True)
@@ -155,7 +160,7 @@ class RequestsViewset(viewsets.ModelViewSet):
         user = request.user
 
         if not user.is_staff and not user.is_superuser:
-            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+            return Response(data=None, status=status.HTTP_401_UNAUTHORIZED)
 
         requests = models.Request.objects.filter(approved=-1).order_by('-request_date')
         serializer = serializers.RequestsListSerializer(requests, many=True)
@@ -174,7 +179,7 @@ class RequestsViewset(viewsets.ModelViewSet):
         user = request.user
 
         if not user.is_staff and not user.is_superuser:
-            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+            return Response(data=None, status=status.HTTP_401_UNAUTHORIZED)
 
         active, retired = None, None
 
