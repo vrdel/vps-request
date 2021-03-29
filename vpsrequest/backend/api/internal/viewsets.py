@@ -58,6 +58,9 @@ class RequestsViewset(viewsets.ModelViewSet):
                     return Response({'detail': 'Nemate dozvole nad {}'.format(id)},
                                     status=status.HTTP_401_UNAUTHORIZED)
 
+                if req_db.approved == 3:
+                    continue
+
                 req['vm_isactive'] = settings.STATUSESVMACTIVE[req['vm_isactive']]
                 if req_db.vm_isactive != req['vm_isactive']:
                     req['vm_isactive_response'] = datetime.datetime.now()
