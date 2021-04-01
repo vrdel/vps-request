@@ -38,6 +38,7 @@ import {
   faUserEdit,
   faThumbsDown,
   faBatteryHalf,
+  faCouch
 } from '@fortawesome/free-solid-svg-icons';
 import { NotificationManager } from 'react-notifications';
 import { Field } from 'formik';
@@ -72,7 +73,7 @@ export const Icon = props => {
   linkIcon.set('odbijeni-zahtjevi', faThumbsDown);
   linkIcon.set('novi-zahtjev', faFileSignature);
   linkIcon.set('stanje-zahtjeva', faBatteryHalf);
-  linkIcon.set('predumirovljenje', faBatteryHalf);
+  linkIcon.set('predumirovljenje', faCouch);
   linkIcon.set('aktivni-posluzitelji', faBatteryHalf);
 
   return <FontAwesomeIcon
