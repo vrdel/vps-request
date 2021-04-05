@@ -28,7 +28,7 @@ import PapaParse from 'papaparse';
 import './RequestsRetire.css';
 
 export const SearchField = ({field, ...rest}) =>
-  <input type="text" placeholder="Pretraži" {...field} {...rest}/>
+  <input type="text" aria-label="Pretraži" placeholder="Pretraži" {...field} {...rest}/>
 
 
 function matchItem(item, value) {
@@ -621,6 +621,8 @@ const RetireRequests = (props) => {
                                           <Field
                                             disabled={request.approved === 3}
                                             className="form-control"
+                                            aria-label="Komentar:"
+                                            label="Komentar:"
                                             name={`requestsFormik.${index}.vm_isactive_comment`}
                                             as="textarea"
                                             rows={2}
@@ -639,6 +641,7 @@ const RetireRequests = (props) => {
                                             id="submit-button"
                                             onClick={(e) => handleClickSubmit(e, index)}
                                             type="submit"
+                                            aria-label="Spremi"
                                             size="sm"
                                             disabled={request.approved === 3}
                                           >

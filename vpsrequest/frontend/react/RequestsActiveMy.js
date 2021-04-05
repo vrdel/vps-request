@@ -192,6 +192,8 @@ const MyRequestsActive = (props) => {
                                   <Field
                                     className="form-control"
                                     name={`activeRequests.${index}.vm_isactive_comment`}
+                                    label="Komentar"
+                                    aria-label="Komentar"
                                     as="textarea"
                                     spellCheck={false}
                                     disabled={request.approved === 3}
