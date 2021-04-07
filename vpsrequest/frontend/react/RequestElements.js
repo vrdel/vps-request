@@ -51,7 +51,7 @@ export const RowRequestDropDown = ({field, ...propsRest}) =>
 
 export const RowRequestField = ({field, ...propsRest}) =>
 (
-  <Row className={`${propsRest.plain ? "from-group mb-2" : "form-group align-items-center"}`}>
+  <Row className={`${propsRest.plain ? "form-group mb-2" : "form-group align-items-center"}`}>
     <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
       <Label
         htmlFor={propsRest.labelFor}
@@ -204,12 +204,24 @@ export const HeadFields = ({disabled=false, institutionDisabled=true}) =>
 )
 
 
-export const RequestDateField = () =>
+export const RequestDateField = ({date}) =>
 (
   <React.Fragment>
-    <div className="mt-5">
-      <Field name="request_date" component={RowRequestField} label="Datum podnošenja:" labelFor="dateRequest" fieldType="text" disabled={true} required={false} plain={true}/>
-    </div>
+    <Row className="form-group mb-2 mt-5">
+      <Col md={{size: 2, offset: 1}} className="d-flex justify-content-end">
+        <Label
+          htmlFor="dateRequest"
+          aria-label="dateRequest"
+          className="mr-2 text-right">
+          {"Datum podnošenja:"}
+        </Label>
+      </Col>
+      <Col md={{size: 7}}>
+        <span>
+          {date}
+        </span>
+      </Col>
+    </Row>
     <RequestHorizontalRule/>
   </React.Fragment>
 )

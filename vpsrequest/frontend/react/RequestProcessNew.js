@@ -132,7 +132,7 @@ export const ProcessNewRequest = (props) => {
         >
           {props => (
             <Form>
-              <RequestDateField/>
+              <RequestDateField date={props.values.request_date}/>
               <ContactUserFields/>
               <VMFields listVMOSes={[requestDetails.vm_os]} disabled={true}/>
               <SysAdminFields disabled={true}/>
