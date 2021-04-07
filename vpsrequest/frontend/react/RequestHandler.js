@@ -11,7 +11,7 @@ import { Formik, Form } from 'formik';
 import {
   ContactUserFields,
   HeadFields,
-  RequestDateField,
+  RequestDateFieldAndDelete,
   StateFields,
   SubmitChangeRequest,
   SysAdminFields,
@@ -190,7 +190,7 @@ export const ApprovedRequestHandler = (props) => {
         >
           {props => (
             <Form>
-              <RequestDateField date={props.values.request_date} deleteRequest={true} modalHandle={modalHandle}/>
+              <RequestDateFieldAndDelete date={props.values.request_date} deleteRequest={true} modalHandle={modalHandle}/>
               {
                 initValues.approved === 2 ?
                   <ContactUserFields disabled={false}/>

@@ -204,7 +204,7 @@ export const HeadFields = ({disabled=false, institutionDisabled=true}) =>
 )
 
 
-export const RequestDateField = ({date, deleteRequest=false, modalHandle=false}) =>
+export const RequestDateFieldAndDelete = ({date, deleteRequest=false, modalHandle=false}) =>
 (
   <React.Fragment>
     <Row className="form-group mb-2 mt-5">

@@ -13,7 +13,7 @@ import {
   ContactUserFields,
   HeadFields,
   ProcessFields,
-  RequestDateField,
+  RequestDateFieldAndDelete,
   SubmitChangeRequest,
   SysAdminFields,
   VMFields,
@@ -171,7 +171,7 @@ export const ProcessNewRequest = (props) => {
         >
           {props => (
             <Form>
-              <RequestDateField date={props.values.request_date} deleteRequest={true} modalHandle={modalHandle}/>
+              <RequestDateFieldAndDelete date={props.values.request_date} deleteRequest={true} modalHandle={modalHandle}/>
               <ContactUserFields/>
               <VMFields listVMOSes={[requestDetails.vm_os]} disabled={true}/>
               <SysAdminFields disabled={true}/>

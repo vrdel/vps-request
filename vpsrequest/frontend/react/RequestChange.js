@@ -10,7 +10,7 @@ import { Backend } from './DataManager';
 import {
   ContactUserFields,
   HeadFields,
-  RequestDateField,
+  RequestDateFieldAndDelete,
   StateFields,
   SubmitChangeRequest,
   SysAdminFields,
@@ -127,7 +127,7 @@ const ChangeRequest = (props) => {
         >
           {props => (
             <Form>
-              <RequestDateField/>
+              <RequestDateFieldAndDelete date={props.values.request_date}/>
               <ContactUserFields/>
               <VMFields listVMOSes={listVMOSes}/>
               <SysAdminFields/>
