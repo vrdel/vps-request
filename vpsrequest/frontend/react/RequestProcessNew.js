@@ -27,6 +27,10 @@ export const ProcessNewRequest = (props) => {
   let {params} = props.match
   const requestID = params.id
   const [loading, setLoading] = useState(false);
+  const [areYouSureModal, setAreYouSureModal] = useState(false)
+  const [modalTitle, setModalTitle] = useState(undefined)
+  const [modalMsg, setModalMsg] = useState(undefined)
+  const [onYes, setOnYes] = useState('')
   const [requestApproved, setRequestApproved] = useState(undefined);
   const [requestDetails, setRequestDetails] = useState(undefined);
   const [userDetails, setUserDetails] = useState(undefined);
@@ -76,6 +80,12 @@ export const ProcessNewRequest = (props) => {
     setSendMsgContact(!sendMsgContact)
   }
 
+  const onYesCallback = () => {
+    if (onYes === 'delete') {
+      console.log(onYes)
+    }
+  }
+
   if (userDetails && requestDetails && requestApproved !== undefined)
     var initValues = {
       location: '',
@@ -113,9 +123,23 @@ export const ProcessNewRequest = (props) => {
     return (<LoadingAnim />)
 
   else if (!loading && initValues) {
+    let modalHandle = new Object({
+      areYouSureModal,
+      'modalFunc': onYesCallback,
+      modalTitle,
+      modalMsg,
+      setAreYouSureModal,
+      setModalTitle,
+      setModalMsg,
+      setOnYes
+    })
+
     return (
       <BaseView
         title='Obradi zahtjev'
+        modal={true}
+        toggle={() => setAreYouSureModal(!areYouSureModal)}
+        state={modalHandle}
         isHandleNewView={true}>
         <Formik
           initialValues={initValues}
@@ -132,7 +156,7 @@ export const ProcessNewRequest = (props) => {
         >
           {props => (
             <Form>
-              <RequestDateField date={props.values.request_date}/>
+              <RequestDateField date={props.values.request_date} deleteRequest={true} modalHandle={modalHandle}/>
               <ContactUserFields/>
               <VMFields listVMOSes={[requestDetails.vm_os]} disabled={true}/>
               <SysAdminFields disabled={true}/>

@@ -204,7 +204,7 @@ export const HeadFields = ({disabled=false, institutionDisabled=true}) =>
 )
 
 
-export const RequestDateField = ({date}) =>
+export const RequestDateField = ({date, deleteRequest=false, modalHandle=false}) =>
 (
   <React.Fragment>
     <Row className="form-group mb-2 mt-5">
@@ -216,11 +216,26 @@ export const RequestDateField = ({date}) =>
           {"Datum podnošenja:"}
         </Label>
       </Col>
-      <Col md={{size: 7}}>
+      <Col md={{size: 4}}>
         <span>
           {date}
         </span>
       </Col>
+      {
+        deleteRequest &&
+          <Col md={{size: 2, offset: 3}}>
+            <Button color="danger"
+              id="button-save" type="button"
+              onClick={() => {
+                modalHandle.setAreYouSureModal(!modalHandle.areYouSureModal);
+                modalHandle.setModalTitle("Brisanje zahtjeva");
+                modalHandle.setModalMsg("Da li se sigurni da želite zahtjev obrisati?");
+                modalHandle.setOnYes('delete')
+              }}>
+                Obriši zahtjev
+            </Button>
+          </Col>
+      }
     </Row>
     <RequestHorizontalRule/>
   </React.Fragment>
