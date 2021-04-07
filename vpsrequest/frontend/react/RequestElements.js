@@ -224,12 +224,12 @@ export const RequestDateField = ({date, deleteRequest=false, modalHandle=false})
       {
         deleteRequest &&
           <Col md={{size: 2, offset: 3}}>
-            <Button color="danger"
+            <Button color="secondary"
               id="button-save" type="button"
               onClick={() => {
                 modalHandle.setAreYouSureModal(!modalHandle.areYouSureModal);
                 modalHandle.setModalTitle("Brisanje zahtjeva");
-                modalHandle.setModalMsg("Da li se sigurni da želite zahtjev obrisati?");
+                modalHandle.setModalMsg("Da li se sigurni da želite obrisati zahtjev?");
                 modalHandle.setOnYes('delete')
               }}>
                 Obriši zahtjev

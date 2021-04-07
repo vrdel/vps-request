@@ -77,6 +77,21 @@ export const ApprovedRequestHandler = (props) => {
         title: `Greška - HTTP ${response.status}`})
   }
 
+  const doDelete = async () => {
+    const response = await backend.deleteObject(`${apiListRequests}/${requestID}/`)
+
+    if (response.ok)
+      NotifyOk({
+        msg: 'Zahtjev uspješno izbrisan',
+        title: `Uspješno - HTTP ${response.status}`,
+        callback: () => history.push('/ui/odobreni-zahtjevi')
+      })
+    else
+      NotifyError({
+        msg: response.statusText,
+        title: `Greška - HTTP ${response.status}`})
+  }
+
   const onYesCallback = () => {
     let callback = undefined
 
@@ -94,6 +109,8 @@ export const ApprovedRequestHandler = (props) => {
       callback = () => history.push('/ui/odobreni-zahtjevi')
       handleOnSubmit(formikValues, callback);
     }
+    else if (onYes === 'delete')
+      doDelete()
   }
 
   if (userDetails && requestDetails)
@@ -133,6 +150,17 @@ export const ApprovedRequestHandler = (props) => {
     return (<LoadingAnim />)
 
   else if (!loading && listVMOSes && initValues) {
+    let modalHandle = new Object({
+      areYouSureModal,
+      'modalFunc': onYesCallback,
+      modalTitle,
+      modalMsg,
+      setAreYouSureModal,
+      setModalTitle,
+      setModalMsg,
+      setOnYes
+    })
+
     return (
       <BaseView
         title='Obradi zahtjev'
@@ -162,7 +190,7 @@ export const ApprovedRequestHandler = (props) => {
         >
           {props => (
             <Form>
-              <RequestDateField/>
+              <RequestDateField date={props.values.request_date} deleteRequest={true} modalHandle={modalHandle}/>
               {
                 initValues.approved === 2 ?
                   <ContactUserFields disabled={false}/>
