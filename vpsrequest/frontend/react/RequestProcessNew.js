@@ -24,6 +24,7 @@ import { canApprove } from './Util';
 export const ProcessNewRequest = (props) => {
   const backend = new Backend();
   const apiListRequests = CONFIG.listReqUrl
+  const history = props.history
   let {params} = props.match
   const requestID = params.id
   const [loading, setLoading] = useState(false);
@@ -80,10 +81,24 @@ export const ProcessNewRequest = (props) => {
     setSendMsgContact(!sendMsgContact)
   }
 
+  const doDelete = async () => {
+    const response = await backend.deleteObject(`${apiListRequests}/${requestID}/`)
+
+    if (response.ok)
+      NotifyOk({
+        msg: 'Zahtjev uspješno izbrisan',
+        title: `Uspješno - HTTP ${response.status}`,
+        callback: () => history.push('/ui/novi-zahtjevi')
+      })
+    else
+      NotifyError({
+        msg: response.statusText,
+        title: `Greška - HTTP ${response.status}`})
+  }
+
   const onYesCallback = () => {
-    if (onYes === 'delete') {
-      console.log(onYes)
-    }
+    if (onYes === 'delete')
+      doDelete()
   }
 
   if (userDetails && requestDetails && requestApproved !== undefined)

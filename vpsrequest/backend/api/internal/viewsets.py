@@ -273,6 +273,16 @@ class RequestsViewset(viewsets.ModelViewSet):
 
         return response
 
+    def destroy(self, request, pk=None):
+        user = self.request.user
+
+        if not user.is_staff and not user.is_superuser:
+            return Response(data=None, status=status.HTTP_401_UNAUTHORIZED)
+
+        request = models.Request.objects.filter(id=pk)
+        request.delete()
+        return Response(status=status.HTTP_200_OK)
+
 
 class UsersViewset(viewsets.ModelViewSet):
     serializer_class = serializers.UsersSerializer
