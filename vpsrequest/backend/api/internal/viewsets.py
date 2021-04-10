@@ -136,9 +136,9 @@ class RequestsViewset(viewsets.ModelViewSet):
 
         yes, no, unknown = None, None, None
 
-        yes = len(models.Request.objects.filter(approved=2).filter(vm_isactive=1))
+        yes = len(models.Request.objects.filter(approved__in=[2, 3]).filter(vm_isactive=1))
         no = len(models.Request.objects.filter(approved__in=[2, 3]).filter(vm_isactive=0))
-        unknown = len(models.Request.objects.filter(approved=2).filter(vm_isactive=None))
+        unknown = len(models.Request.objects.filter(approved__in=[2, 3]).filter(vm_isactive=None))
 
         return Response({
             'yes': yes,
