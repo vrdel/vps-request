@@ -62,8 +62,7 @@ class RequestsViewset(viewsets.ModelViewSet):
                     continue
 
                 req['vm_isactive'] = settings.STATUSESVMACTIVE[req['vm_isactive']]
-                if req_db.vm_isactive != req['vm_isactive']:
-                    req['vm_isactive_response'] = datetime.datetime.now()
+                req['vm_isactive_response'] = datetime.datetime.now()
 
                 req['user'] = user.pk
                 serializer = serializers.RequestsListActiveSerializer(req_db, data=req)
