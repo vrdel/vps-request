@@ -22,7 +22,7 @@ class ApprovedVPSViewset(viewsets.ModelViewSet):
 
     @action(detail=False)
     def generate(self, request):
-        requests = models.Request.objects.filter(approved__gte=1).order_by('-approved_date')
+        requests = models.Request.objects.filter(approved=2).order_by('-approved_date')
         serializer = serializers.RequestsListSerializer(requests, many=True)
 
         output = ''
