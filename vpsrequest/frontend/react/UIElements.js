@@ -260,14 +260,24 @@ const NavigationLinks = ({location, isStaff, canApproveRequest, showActiveVm}) =
       ?
         ''
       :
-        <NavItem key={i} className='mt-1'>
-          <NavLink
-            tag={Link}
-            active={location.pathname.split('/')[2] === item ? true : false}
-            className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
-            to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
-          </NavLink>
-        </NavItem>
+        item === 'novi-zahtjev'
+        ?
+          <NavItem key={i} className='mt-1'>
+            <NavLink
+              active={false}
+              className={location.pathname.split('/')[2] === item ? "text-dark" : "text-dark"}
+              to=''><Icon i={item}/> {linkTitle.get(item)}
+            </NavLink>
+          </NavItem>
+        :
+          <NavItem key={i} className='mt-1'>
+            <NavLink
+              tag={Link}
+              active={location.pathname.split('/')[2] === item ? true : false}
+              className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
+              to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
+            </NavLink>
+          </NavItem>
   )
   const StaffNavLinks = () => (
     <React.Fragment>
