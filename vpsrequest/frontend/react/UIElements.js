@@ -283,14 +283,24 @@ const NavigationLinks = ({location, isStaff, canApproveRequest, showActiveVm}) =
     <React.Fragment>
       {
         staffPages.map((item, i) =>
-          <NavItem key={i} className='mt-1'>
-            <NavLink
-              tag={Link}
-              active={location.pathname.split('/')[2] === item ? true : false}
-              className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
-              to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
-            </NavLink>
-          </NavItem>)
+          item === 'novi-zahtjev'
+          ?
+            <NavItem key={i} className='mt-1'>
+              <NavLink
+                active={false}
+                className={location.pathname.split('/')[2] === item ? "text-dark" : "text-dark"}
+                to=''><Icon i={item}/> {linkTitle.get(item)}
+              </NavLink>
+            </NavItem>
+          :
+            <NavItem key={i} className='mt-1'>
+              <NavLink
+                tag={Link}
+                active={location.pathname.split('/')[2] === item ? true : false}
+                className={location.pathname.split('/')[2] === item ? "text-white bg-info" : "text-dark"}
+                to={'/ui/' + item}><Icon i={item}/> {linkTitle.get(item)}
+              </NavLink>
+            </NavItem>)
       }
       <Dropdown isOpen={dropdownOpen} toggle={toggle} className='mt-1 text-dark'>
         <DropdownToggle nav caret className={elemInArray(location.pathname.split('/')[2], noStaffPages) ? "text-white bg-info" : "text-dark"}>

@@ -78,9 +78,9 @@ const RedirectAfterLogin = ({userDetails, ...props}) => {
   let referrer = localStorage.getItem('referrer')
 
   if (userDetails.is_staff || userDetails.is_superuser)
-    destination = "/ui/novi-zahtjevi"
+    destination = "/ui/odobreni-zahtjevi"
   else
-    destination = "/ui/novi-zahtjev"
+    destination = "/ui/stanje-zahtjeva"
 
   if (referrer) {
     let urls = JSON.parse(referrer)
@@ -224,24 +224,26 @@ class App extends Component {
                     userDetails={userDetails}
                     {...props}
                   />}/>
-            <Route exact path="/ui/novi-zahtjev"
-              render={(props) =>
-                <VPSPage
-                    {...propsPage}>
-                  <NewRequest {...props}/>
-                </VPSPage>}/>
-            <ProtectedRoute userDetails={userDetails} exact path="/ui/novi-zahtjevi"
-              render={(props) =>
-                <VPSPage
-                    {...propsPage}>
-                  <FreshRequests {...props}/>
-                </VPSPage>}/>
-            <ProtectedRoute userDetails={userDetails} exact path="/ui/novi-zahtjevi/:id"
-              render={(props) =>
-                <VPSPage
-                    {...propsPage}>
-                  <ProcessNewRequest {...props}/>
-                </VPSPage>}/>
+            {
+              //<Route exact path="/ui/novi-zahtjev"
+                //render={(props) =>
+                  //<VPSPage
+                      //{...propsPage}>
+                    //<NewRequest {...props}/>
+                  //</VPSPage>}/>
+              //<ProtectedRoute userDetails={userDetails} exact path="/ui/novi-zahtjevi"
+                //render={(props) =>
+                  //<VPSPage
+                      //{...propsPage}>
+                    //<FreshRequests {...props}/>
+                  //</VPSPage>}/>
+              //<ProtectedRoute userDetails={userDetails} exact path="/ui/novi-zahtjevi/:id"
+                //render={(props) =>
+                  //<VPSPage
+                      //{...propsPage}>
+                    //<ProcessNewRequest {...props}/>
+                  //</VPSPage>}/>
+            }
             <ProtectedRoute userDetails={userDetails} exact path="/ui/odobreni-zahtjevi"
               render={(props) =>
                 <VPSPage
