@@ -53,9 +53,9 @@ import { Helmet } from "react-helmet";
 import './UIElements.css';
 
 
-var staffPages = ['novi-zahtjevi', 'odobreni-zahtjevi', 'odbijeni-zahtjevi',
+var staffPages = ['odobreni-zahtjevi', 'odbijeni-zahtjevi',
                   'predumirovljenje'];
-var noStaffPages = ['aktivni-posluzitelji',  'novi-zahtjev', 'stanje-zahtjeva']
+var noStaffPages = ['aktivni-posluzitelji', 'stanje-zahtjeva']
 
 var linkTitle = new Map();
 linkTitle.set('novi-zahtjevi', 'Novi zahtjevi');
