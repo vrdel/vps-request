@@ -38,7 +38,8 @@ import {
   faUserEdit,
   faThumbsDown,
   faBatteryHalf,
-  faCouch
+  faCouch,
+  faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { NotificationManager } from 'react-notifications';
 import { Field } from 'formik';
@@ -305,14 +306,24 @@ const NavigationLinks = ({location, isStaff, canApproveRequest, showActiveVm}) =
   )
 
   return (
-    <Nav tabs id="vpsreq-navlinks" className="d-flex justify-content-center border-left border-right border-top rounded-top sticky-top">
-      {
-        !isStaff && !canApproveRequest ?
-          <NoStaffNavLinks/>
-        :
-          <StaffNavLinks/>
-      }
-    </Nav>
+    <>
+      <Alert color="danger" className="m-0 p-3">
+        <FontAwesomeIcon size="lg" icon={faInfoCircle}/>{'  '}
+        Od 3. travnja dostupna je usluga VDC{' '}
+        <a href="https://www.srce.hr/vdc" target="_blank" rel="noopener noreferrer">
+          (https://www.srce.hr/vdc)
+        </a>
+        {' '}koja zamjenjuje uslugu VPS, pa vas molim da kreirate novi resurs u usluzi VDC.
+      </Alert>
+      <Nav tabs id="vpsreq-navlinks" className="d-flex justify-content-center border-left border-right border-top rounded-top sticky-top">
+        {
+          !isStaff && !canApproveRequest ?
+            <NoStaffNavLinks/>
+          :
+            <StaffNavLinks/>
+        }
+      </Nav>
+    </>
   )
 }
 

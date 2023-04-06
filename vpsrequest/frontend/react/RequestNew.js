@@ -17,6 +17,7 @@ import {
 } from './RequestElements.js';
 import { CONFIG } from './Config'
 import { useQuery } from 'react-query';
+import { Alert } from 'reactstrap';
 import Cookies from 'universal-cookie';
 
 const NewRequest = (props) => {
@@ -104,42 +105,44 @@ const NewRequest = (props) => {
   else if (!loadingVMOSes && listVMOSes && initValues &&
     acceptConditions !== undefined) {
     return (
-      <BaseView
-        title='Novi zahtjev'
-        isChangeView={false}
-        alert={!cookieAlert && alertVisible && userDetails.vmisactive_shouldask}
-        alertdismiss={() => { cookie.set('alertDismiss', true); setAlertVisible(false)}}
-        alertmsg={`Molimo da se do ${userDetails.vmisactive_responsedate} izjasnite da li su vam u tekućoj godini potrebni izdani poslužitelji. To možete na stavci "Aktivni VM-ovi"`}
-      >
-        <Formik
-          initialValues={initValues}
-          onSubmit={(values, actions) => {
-            values.request_date = new Date().toISOString()
-            values.user = userDetails.pk
-            values.approved = -1
-            values.vm_isactive = 5
-
-            if (!acceptConditions)
-              setAcceptConditionsAlert(true)
-            else
-              handleOnSubmit(values)
-          }}
+      <>
+        <BaseView
+          title='Novi zahtjev'
+          isChangeView={false}
+          alert={!cookieAlert && alertVisible && userDetails.vmisactive_shouldask}
+          alertdismiss={() => { cookie.set('alertDismiss', true); setAlertVisible(false)}}
+          alertmsg={`Molimo da se do ${userDetails.vmisactive_responsedate} izjasnite da li su vam u tekućoj godini potrebni izdani poslužitelji. To možete na stavci "Aktivni VM-ovi"`}
         >
-          {props => (
-            <Form>
-              <ContactUserFields />
-              <VMFields listVMOSes={listVMOSes}/>
-              <SysAdminFields/>
-              <HeadFields/>
-              <SubmitNewRequest
-                acceptConditions={acceptConditions}
-                handleAcceptConditions={handleAcceptConditions}
-                dismissAlert={dismissAlert}
-                stateAcceptConditionsAlert={acceptConditionsAlert}/>
-            </Form>
-          )}
-        </Formik>
-      </BaseView>
+          <Formik
+            initialValues={initValues}
+            onSubmit={(values, actions) => {
+              values.request_date = new Date().toISOString()
+              values.user = userDetails.pk
+              values.approved = -1
+              values.vm_isactive = 5
+
+              if (!acceptConditions)
+                setAcceptConditionsAlert(true)
+              else
+                handleOnSubmit(values)
+            }}
+          >
+            {props => (
+              <Form>
+                <ContactUserFields />
+                <VMFields listVMOSes={listVMOSes}/>
+                <SysAdminFields/>
+                <HeadFields/>
+                <SubmitNewRequest
+                  acceptConditions={acceptConditions}
+                  handleAcceptConditions={handleAcceptConditions}
+                  dismissAlert={dismissAlert}
+                  stateAcceptConditionsAlert={acceptConditionsAlert}/>
+              </Form>
+            )}
+          </Formik>
+        </BaseView>
+      </>
     )
   }
 
